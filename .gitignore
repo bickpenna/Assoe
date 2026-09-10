@@ -1,0 +1,6 @@
+node_modules/
+
+# Temporaneo: file prodotti dal crawl del vecchio sito
+/crawl-rendered/
+/volontariato.assoe.it/
+/tools/crawl-rendered.mjs
