@@ -5,6 +5,7 @@ import type {
   ArticleSummary,
   AssociationInfo,
   ContentRepository,
+  EventDetail,
   EventSummary,
   EventStatus,
   PersonSummary,
@@ -24,6 +25,10 @@ interface SanityProjectDetail extends SanityProject {
   description: Array<{ _type: string; _key?: string }> | null;
 }
 
+interface SanityRelatedProject extends SanityProject {
+  active: boolean | null;
+}
+
 interface SanityArticle {
   _id: string;
   title: string;
@@ -37,6 +42,8 @@ interface SanityArticle {
 interface SanityArticleDetail extends SanityArticle {
   body: Array<{ _type: string; _key?: string }> | null;
   galleryImageUrls: Array<string | null> | null;
+  projects: Array<SanityRelatedProject | null> | null;
+  event: SanityEvent | null;
 }
 
 interface SanityEvent {
@@ -47,6 +54,12 @@ interface SanityEvent {
   place: string | null;
   status: EventStatus;
   imageUrl: string | null;
+}
+
+interface SanityEventDetail extends SanityEvent {
+  description: Array<{ _type: string; _key?: string }> | null;
+  galleryImageUrls: Array<string | null> | null;
+  projects: Array<SanityRelatedProject | null> | null;
 }
 
 interface SanityPerson {
@@ -108,6 +121,29 @@ const projectBySlugQuery = `*[
   "imageUrl": image.asset->url
 }`;
 
+const articlesByProjectQuery = `*[
+  _type == "article" &&
+  references($projectId) &&
+  defined(title) &&
+  defined(slug.current) &&
+  defined(publishedAt)
+] | order(publishedAt desc) {
+  _id, title, "slug": slug.current, summary, publishedAt, featured,
+  "imageUrl": mainImage.asset->url
+}`;
+
+const eventsByProjectQuery = `*[
+  _type == "event" &&
+  references($projectId) &&
+  defined(title) &&
+  defined(slug.current) &&
+  defined(date) &&
+  defined(status)
+] | order(date desc) {
+  _id, title, "slug": slug.current, date, place, status,
+  "imageUrl": poster.asset->url
+}`;
+
 const articlesQuery = `*[
   _type == "article" &&
   defined(title) &&
@@ -137,7 +173,14 @@ const articleBySlugQuery = `*[
   featured,
   "imageUrl": mainImage.asset->url,
   body,
-  "galleryImageUrls": gallery[].asset->url
+  "galleryImageUrls": gallery[].asset->url,
+  "projects": projects[]-> {
+    _id, name, "slug": slug.current, active, "imageUrl": image.asset->url
+  },
+  "event": event-> {
+    _id, title, "slug": slug.current, date, place, status,
+    "imageUrl": poster.asset->url
+  }
 }`;
 
 const eventsQuery = `*[
@@ -154,6 +197,22 @@ const eventsQuery = `*[
   place,
   status,
   "imageUrl": poster.asset->url
+}`;
+
+const eventBySlugQuery = `*[
+  _type == "event" &&
+  defined(title) &&
+  defined(date) &&
+  defined(status) &&
+  slug.current == $slug
+][0] {
+  _id, title, "slug": slug.current, date, place, status,
+  "imageUrl": poster.asset->url,
+  description,
+  "galleryImageUrls": gallery[].asset->url,
+  "projects": projects[]-> {
+    _id, name, "slug": slug.current, active, "imageUrl": image.asset->url
+  }
 }`;
 
 const peopleQuery = `*[
@@ -207,6 +266,48 @@ function toArticleSummary(article: SanityArticle): ArticleSummary {
   };
 }
 
+function toProjectSummary(project: SanityProject): ProjectSummary {
+  return {
+    id: project._id,
+    name: project.name,
+    slug: project.slug,
+    imageUrl: project.imageUrl ?? undefined,
+  };
+}
+
+function toRelatedProjects(projects: Array<SanityRelatedProject | null> | null): ProjectSummary[] {
+  return (projects ?? [])
+    .filter((project): project is SanityRelatedProject =>
+      Boolean(project?.active && project.name && project.slug),
+    )
+    .map(toProjectSummary);
+}
+
+function toEventSummary(event: SanityEvent): EventSummary {
+  return {
+    id: event._id,
+    title: event.title,
+    slug: event.slug,
+    date: event.date,
+    place: event.place ?? undefined,
+    status: event.status,
+    imageUrl: event.imageUrl ?? undefined,
+  };
+}
+
+function hasPublicEventFields(event: SanityEvent | null): event is SanityEvent {
+  return Boolean(event?.title && event.slug && event.date && event.status);
+}
+
+function httpUrlOrUndefined(value: string): string | undefined {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' || url.protocol === 'http:' ? url.toString() : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function createSanityRepository({
   projectId,
   dataset,
@@ -223,12 +324,7 @@ export function createSanityRepository({
     async listProjects(): Promise<ProjectSummary[]> {
       const projects = await client.fetch<SanityProject[]>(projectsQuery);
 
-      return projects.map(({ _id, name, slug, imageUrl }) => ({
-        id: _id,
-        name,
-        slug,
-        imageUrl: imageUrl ?? undefined,
-      }));
+      return projects.map(toProjectSummary);
     },
 
     async getProjectBySlug(slug: string): Promise<ProjectDetail | null> {
@@ -236,12 +332,16 @@ export function createSanityRepository({
 
       if (!project) return null;
 
+      const [articles, events] = await Promise.all([
+        client.fetch<SanityArticle[]>(articlesByProjectQuery, { projectId: project._id }),
+        client.fetch<SanityEvent[]>(eventsByProjectQuery, { projectId: project._id }),
+      ]);
+
       return {
-        id: project._id,
-        name: project.name,
-        slug: project.slug,
-        imageUrl: project.imageUrl ?? undefined,
+        ...toProjectSummary(project),
         descriptionHtml: renderRichText(project.description),
+        relatedArticles: articles.map(toArticleSummary),
+        relatedEvents: events.map(toEventSummary),
       };
     },
 
@@ -262,21 +362,32 @@ export function createSanityRepository({
         galleryImageUrls: (article.galleryImageUrls ?? []).filter(
           (url): url is string => typeof url === 'string',
         ),
+        relatedProjects: toRelatedProjects(article.projects),
+        relatedEvent: hasPublicEventFields(article.event)
+          ? toEventSummary(article.event)
+          : undefined,
       };
     },
 
     async listEvents(): Promise<EventSummary[]> {
       const events = await client.fetch<SanityEvent[]>(eventsQuery);
 
-      return events.map(({ _id, title, slug, date, place, status, imageUrl }) => ({
-        id: _id,
-        title,
-        slug,
-        date,
-        place: place ?? undefined,
-        status,
-        imageUrl: imageUrl ?? undefined,
-      }));
+      return events.map(toEventSummary);
+    },
+
+    async getEventBySlug(slug: string): Promise<EventDetail | null> {
+      const event = await client.fetch<SanityEventDetail | null>(eventBySlugQuery, { slug });
+
+      if (!event) return null;
+
+      return {
+        ...toEventSummary(event),
+        descriptionHtml: renderRichText(event.description),
+        galleryImageUrls: (event.galleryImageUrls ?? []).filter(
+          (url): url is string => typeof url === 'string',
+        ),
+        relatedProjects: toRelatedProjects(event.projects),
+      };
     },
 
     async listPeople(): Promise<PersonSummary[]> {
@@ -310,7 +421,10 @@ export function createSanityRepository({
           city: info.contacts?.city ?? undefined,
           province: info.contacts?.province ?? undefined,
         },
-        socialLinks: (info.socialLinks ?? []).map(({ platform, url }) => ({ name: platform, url })),
+        socialLinks: (info.socialLinks ?? []).flatMap(({ platform, url }) => {
+          const safeUrl = httpUrlOrUndefined(url);
+          return platform && safeUrl ? [{ name: platform, url: safeUrl }] : [];
+        }),
         documents: {
           statuteUrl: info.statuteUrl ?? undefined,
           regulationUrl: info.regulationUrl ?? undefined,

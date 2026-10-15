@@ -1,0 +1,42 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { contentRepository } from '@/content';
+
+const association = await contentRepository.getAssociationInfo();
+const contacts = association?.contacts;
+const hasAddress = Boolean(contacts?.address || contacts?.postalCode || contacts?.city || contacts?.province);
+---
+
+<BaseLayout title="Contatti | Asso è… La Strada ci Insegna ODV" association={association}>
+  <main>
+    <h1>Contatti</h1>
+    {association && <p>{association.name}</p>}
+
+    {
+      !association ? (
+        <p>I contatti dell’associazione non sono ancora disponibili.</p>
+      ) : (
+        <>
+          {contacts?.email && <p>Email: <a href={`mailto:${contacts.email}`}>{contacts.email}</a></p>}
+          {contacts?.phone && <p>Telefono: <a href={`tel:${contacts.phone.replace(/[^+\d]/g, '')}`}>{contacts.phone}</a></p>}
+          {hasAddress && (
+            <address>
+              {contacts?.address && <div>{contacts.address}</div>}
+              <div>{[contacts?.postalCode, contacts?.city, contacts?.province].filter(Boolean).join(' ')}</div>
+            </address>
+          )}
+          {association.socialLinks.length > 0 && (
+            <section aria-labelledby="social-associazione">
+              <h2 id="social-associazione">Social</h2>
+              <ul>
+                {association.socialLinks.map((social) => (
+                  <li><a href={social.url}>{social.name}</a></li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </>
+      )
+    }
+  </main>
+</BaseLayout>

@@ -23,5 +23,31 @@ if (!project) {
     <h1>{project.name}</h1>
     {project.imageUrl && <img src={project.imageUrl} alt={project.name} />}
     {project.descriptionHtml && <div set:html={project.descriptionHtml} />}
+
+    {
+      project.relatedArticles.length > 0 && (
+        <section aria-labelledby="articoli-progetto">
+          <h2 id="articoli-progetto">Articoli collegati</h2>
+          <ul>
+            {project.relatedArticles.map((article) => (
+              <li><a href={`/articoli/${article.slug}/`}>{article.title}</a></li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      project.relatedEvents.length > 0 && (
+        <section aria-labelledby="eventi-progetto">
+          <h2 id="eventi-progetto">Eventi collegati</h2>
+          <ul>
+            {project.relatedEvents.map((event) => (
+              <li><a href={`/eventi/${event.slug}/`}>{event.title}</a></li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
   </main>
 </BaseLayout>

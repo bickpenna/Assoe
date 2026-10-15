@@ -1,13 +1,22 @@
 ---
+import { contentRepository } from '@/content';
+import type { AssociationInfo } from '@/content/types';
+
 interface Props {
   title: string;
   description?: string;
+  association?: AssociationInfo | null;
 }
 
 const {
   title,
   description = 'Associazione Asso è… La Strada ci Insegna ODV',
+  association: providedAssociation,
 } = Astro.props;
+
+const association = providedAssociation === undefined
+  ? await contentRepository.getAssociationInfo()
+  : providedAssociation;
 ---
 
 <!doctype html>
@@ -19,6 +28,21 @@ const {
     <title>{title}</title>
   </head>
   <body>
+    <header>
+      <a href="/" aria-label="Vai alla pagina iniziale">{association?.name ?? 'Asso è… La Strada ci Insegna ODV'}</a>
+      <nav aria-label="Navigazione principale">
+        <a href="/">Home</a>
+        <a href="/progetti/">Progetti</a>
+        <a href="/articoli/">Articoli</a>
+        <a href="/eventi/">Eventi</a>
+        <a href="/chi-siamo/">Chi siamo</a>
+        <a href="/contatti/">Contatti</a>
+      </nav>
+    </header>
     <slot />
+    <footer>
+      <p>{association?.copyright ?? association?.name ?? 'Asso è… La Strada ci Insegna ODV'}</p>
+      <p><a href="/contatti/">Contatti</a></p>
+    </footer>
   </body>
 </html>

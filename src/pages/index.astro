@@ -3,13 +3,13 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import { contentRepository } from '@/content';
 
 const projects = await contentRepository.listProjects();
+const association = await contentRepository.getAssociationInfo();
 ---
 
-<BaseLayout title="Asso è… La Strada ci Insegna ODV">
+<BaseLayout title={association?.name ?? 'Asso è… La Strada ci Insegna ODV'} association={association}>
   <main>
-    <h1>Asso è… La Strada ci Insegna ODV</h1>
+    <h1>{association?.name ?? 'Asso è… La Strada ci Insegna ODV'}</h1>
     <p>Il nuovo sito è in costruzione.</p>
     <p><a href="/progetti/">Progetti pubblicati: {projects.length}</a></p>
-    <p><a href="/articoli/">Articoli</a></p>
   </main>
 </BaseLayout>

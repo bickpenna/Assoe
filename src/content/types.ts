@@ -9,6 +9,8 @@ export interface ProjectSummary {
 export interface ProjectDetail extends ProjectSummary {
   /** HTML prodotto dal provider, senza formati specifici del CMS. */
   descriptionHtml?: string;
+  relatedArticles: ArticleSummary[];
+  relatedEvents: EventSummary[];
 }
 
 export interface ArticleSummary {
@@ -24,6 +26,8 @@ export interface ArticleSummary {
 export interface ArticleDetail extends ArticleSummary {
   bodyHtml?: string;
   galleryImageUrls: string[];
+  relatedProjects: ProjectSummary[];
+  relatedEvent?: EventSummary;
 }
 
 export type EventStatus = 'scheduled' | 'ongoing' | 'completed' | 'cancelled';
@@ -36,6 +40,12 @@ export interface EventSummary {
   place?: string;
   status: EventStatus;
   imageUrl?: string;
+}
+
+export interface EventDetail extends EventSummary {
+  descriptionHtml?: string;
+  galleryImageUrls: string[];
+  relatedProjects: ProjectSummary[];
 }
 
 export type PersonRole =
@@ -86,6 +96,7 @@ export interface ContentRepository {
   listArticles(): Promise<ArticleSummary[]>;
   getArticleBySlug(slug: string): Promise<ArticleDetail | null>;
   listEvents(): Promise<EventSummary[]>;
+  getEventBySlug(slug: string): Promise<EventDetail | null>;
   listPeople(): Promise<PersonSummary[]>;
   getAssociationInfo(): Promise<AssociationInfo | null>;
 }

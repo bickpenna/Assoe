@@ -10,15 +10,19 @@ Il repository contiene due applicazioni indipendenti:
 - `studio/`: Sanity Studio per la gestione dei contenuti;
 - `docs/class.puml`: diagramma del modello dei contenuti;
 
-Astro gestisce pagine, componenti e layout. Sanity gestisce esclusivamente i contenuti modificabili dai volontari: impostazioni del sito, progetti, articoli, eventi e persone.
+Astro gestisce pagine, componenti e layout. Sanity gestisce esclusivamente i contenuti modificabili dai volontari: informazioni dell'associazione, progetti, articoli, eventi e persone.
 
-Nel frontend le pagine leggono i contenuti tramite `src/content/index.ts` e il contratto in `src/content/types.ts`. Le query GROQ e la conversione dei dati Sanity sono isolate in `src/content/providers/sanity.ts`. Per passare a un altro CMS si implementa lo stesso contratto in un nuovo provider e si cambia la scelta in `src/content/index.ts`; pagine e componenti non devono conoscere il CMS. Il contratto verrà ampliato quando saranno realizzate le altre pagine.
+Nel frontend le pagine leggono i contenuti tramite `src/content/index.ts` e il contratto in `src/content/types.ts`. Le query GROQ e la conversione dei dati Sanity sono isolate in `src/content/providers/sanity.ts`. Per passare a un altro CMS si implementa lo stesso contratto in un nuovo provider e si cambia la scelta in `src/content/index.ts`; pagine e componenti non devono conoscere il CMS.
 
-Il contratto espone per ora gli elenchi di progetti, articoli, eventi e persone visibili, oltre alle informazioni dell'associazione (contatti, social e link ai documenti). Immagini e PDF sono restituiti come URL, senza oggetti specifici di Sanity. I dettagli degli altri contenuti saranno definiti insieme alle pagine che li useranno, evitando di imporre ora un formato legato al CMS.
+Il contratto espone elenchi e dettagli di progetti, articoli ed eventi, le persone visibili e le informazioni dell'associazione (contatti, social e link ai documenti). Immagini e PDF sono restituiti come URL, senza oggetti specifici di Sanity. Le relazioni tra contenuti vengono risolte nell'adattatore: sul sito appaiono solo link a contenuti pubblicati e raggiungibili.
 
 I progetti sono il primo percorso completo: `/progetti/` mostra quelli attivi e pubblicati, mentre `/progetti/[slug]/` mostra il singolo progetto. Il testo formattato di Sanity viene convertito in HTML nell'adattatore, prima di arrivare alla pagina Astro. Se non ci sono progetti pubblicati, l'elenco mostra un messaggio e non vengono generate pagine di dettaglio.
 
-Anche gli articoli hanno elenco e dettaglio su `/articoli/` e `/articoli/[slug]/`: mostrano data, sommario, testo e immagini quando presenti. Il testo formattato viene convertito nell'adattatore; i collegamenti tra articoli, progetti ed eventi saranno aggiunti quando sarà definita la navigazione tra contenuti.
+Anche gli articoli hanno elenco e dettaglio su `/articoli/` e `/articoli/[slug]/`: mostrano data, sommario, testo, immagini e collegamenti a progetti ed eventi quando presenti. Il testo formattato viene convertito nell'adattatore.
+
+Gli eventi hanno elenco e dettaglio su `/eventi/` e `/eventi/[slug]/`, con data, luogo, stato, descrizione, immagini e progetti collegati. I dettagli dei progetti rimandano agli articoli ed eventi associati.
+
+`/chi-siamo/` e `/contatti/` sono pagine istituzionali definite in Astro: non sono documenti modificabili nel CMS. Mostrano rispettivamente persone, dati e documenti dell'associazione; contatti e social. I campi opzionali assenti non producono sezioni vuote. Il layout condivide navigazione, nome dell'associazione e footer tra tutte le pagine.
 
 Questo riduce le modifiche al codice, ma non elimina la migrazione dei contenuti: testi, immagini, file e riferimenti andranno esportati da Sanity e importati nel nuovo sistema. Per i contenuti complessi, come il testo formattato, servirà anche una conversione del formato.
 

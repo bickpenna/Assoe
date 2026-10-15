@@ -1,0 +1,63 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { contentRepository } from '@/content';
+import { formatDateTime } from '@/utils/date';
+import { eventStatusLabel } from '@/utils/labels';
+
+export const getStaticPaths = (async () => {
+  const events = await contentRepository.listEvents();
+
+  return events.map(({ slug }) => ({ params: { slug } }));
+}) satisfies GetStaticPaths;
+
+const slug = Astro.params.slug;
+const event = slug ? await contentRepository.getEventBySlug(slug) : null;
+
+if (!event) {
+  throw new Error(`Evento non trovato durante la build: ${slug ?? '(slug mancante)'}`);
+}
+---
+
+<BaseLayout title={`${event.title} | Asso è… La Strada ci Insegna ODV`}>
+  <main>
+    <p><a href="/eventi/">Tutti gli eventi</a></p>
+    <article>
+      <header>
+        <h1>{event.title}</h1>
+        <p><time datetime={event.date}>{formatDateTime(event.date)}</time></p>
+        {event.place && <p>Luogo: {event.place}</p>}
+        <p>Stato: {eventStatusLabel(event.status)}</p>
+      </header>
+
+      {event.imageUrl && <img src={event.imageUrl} alt={`Locandina: ${event.title}`} />}
+      {event.descriptionHtml && <div set:html={event.descriptionHtml} />}
+
+      {
+        event.galleryImageUrls.length > 0 && (
+          <section aria-labelledby="galleria-evento">
+            <h2 id="galleria-evento">Galleria</h2>
+            <ul>
+              {event.galleryImageUrls.map((url, index) => (
+                <li><img src={url} alt={`${event.title}, foto ${index + 1}`} /></li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        event.relatedProjects.length > 0 && (
+          <section aria-labelledby="progetti-evento">
+            <h2 id="progetti-evento">Progetti collegati</h2>
+            <ul>
+              {event.relatedProjects.map((project) => (
+                <li><a href={`/progetti/${project.slug}/`}>{project.name}</a></li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+    </article>
+  </main>
+</BaseLayout>

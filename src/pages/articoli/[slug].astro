@@ -43,6 +43,28 @@ if (!article) {
           </section>
         )
       }
+
+      {
+        article.relatedEvent && (
+          <section aria-labelledby="evento-articolo">
+            <h2 id="evento-articolo">Evento raccontato</h2>
+            <p><a href={`/eventi/${article.relatedEvent.slug}/`}>{article.relatedEvent.title}</a></p>
+          </section>
+        )
+      }
+
+      {
+        article.relatedProjects.length > 0 && (
+          <section aria-labelledby="progetti-articolo">
+            <h2 id="progetti-articolo">Progetti collegati</h2>
+            <ul>
+              {article.relatedProjects.map((project) => (
+                <li><a href={`/progetti/${project.slug}/`}>{project.name}</a></li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
     </article>
   </main>
 </BaseLayout>

@@ -1,0 +1,59 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { contentRepository } from '@/content';
+import { personRoleLabel } from '@/utils/labels';
+
+const [association, people] = await Promise.all([
+  contentRepository.getAssociationInfo(),
+  contentRepository.listPeople(),
+]);
+
+const documents = association ? [
+  { label: 'Statuto', url: association.documents.statuteUrl },
+  { label: 'Regolamento', url: association.documents.regulationUrl },
+  { label: 'Informativa sulla privacy', url: association.documents.privacyPolicyUrl },
+  { label: 'Informativa sui cookie', url: association.documents.cookiePolicyUrl },
+].filter((document): document is { label: string; url: string } => Boolean(document.url)) : [];
+---
+
+<BaseLayout title="Chi siamo | Asso è… La Strada ci Insegna ODV" association={association}>
+  <main>
+    <h1>Chi siamo</h1>
+    {association?.logoUrl && <img src={association.logoUrl} alt={`Logo di ${association.name}`} />}
+    <h2>{association?.name ?? 'Asso è… La Strada ci Insegna ODV'}</h2>
+    {association?.taxCode && <p>Codice fiscale: {association.taxCode}</p>}
+    {association?.registryInfo && <p>Iscrizione al registro: {association.registryInfo}</p>}
+
+    {
+      documents.length > 0 && (
+        <section aria-labelledby="documenti-associazione">
+          <h2 id="documenti-associazione">Documenti</h2>
+          <ul>
+            {documents.map((document) => (
+              <li><a href={document.url}>{document.label} (PDF)</a></li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <section aria-labelledby="persone-associazione">
+      <h2 id="persone-associazione">Le persone</h2>
+      {
+        people.length === 0 ? (
+          <p>Le persone dell’associazione saranno pubblicate presto.</p>
+        ) : (
+          <ul>
+            {people.map((person) => (
+              <li>
+                {person.photoUrl && <img src={person.photoUrl} alt="" />}
+                <h3>{person.firstName} {person.lastName}</h3>
+                <p>{personRoleLabel(person.role)}</p>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </section>
+  </main>
+</BaseLayout>
