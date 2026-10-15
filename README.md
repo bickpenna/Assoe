@@ -9,7 +9,6 @@ Il repository contiene due applicazioni indipendenti:
 - `src/`: frontend Astro pubblico;
 - `studio/`: Sanity Studio per la gestione dei contenuti;
 - `docs/class.puml`: diagramma del modello dei contenuti;
-- `crawl-rendered/`: materiale del vecchio sito, escluso dal repository.
 
 Astro gestisce pagine, componenti e layout. Sanity gestisce esclusivamente i contenuti modificabili dai volontari: impostazioni del sito, progetti, articoli, eventi e persone.
 
