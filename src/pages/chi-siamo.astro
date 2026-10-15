@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import ContentImage from '@/components/ContentImage.astro';
 import { contentRepository } from '@/content';
 import { personRoleLabel } from '@/utils/labels';
 
@@ -14,21 +15,61 @@ const documents = association ? [
   { label: 'Informativa sulla privacy', url: association.documents.privacyPolicyUrl },
   { label: 'Informativa sui cookie', url: association.documents.cookiePolicyUrl },
 ].filter((document): document is { label: string; url: string } => Boolean(document.url)) : [];
+const contacts = association?.contacts;
+const hasAddress = Boolean(contacts?.address || contacts?.postalCode || contacts?.city || contacts?.province);
 ---
 
 <BaseLayout title="Chi siamo | Asso è… La Strada ci Insegna ODV" association={association}>
-  <main>
-    <h1>Chi siamo</h1>
-    {association?.logoUrl && <img src={association.logoUrl} alt={`Logo di ${association.name}`} />}
-    <h2>{association?.name ?? 'Asso è… La Strada ci Insegna ODV'}</h2>
-    {association?.taxCode && <p>Codice fiscale: {association.taxCode}</p>}
-    {association?.registryInfo && <p>Iscrizione al registro: {association.registryInfo}</p>}
+  <main id="contenuto" class="container">
+    <div class="page-intro">
+      <p class="eyebrow">La nostra associazione</p>
+      <h1>Chi siamo</h1>
+      <p>{association?.name ?? 'Asso è… La Strada ci Insegna ODV'}</p>
+    </div>
+
+    <div class="info-grid">
+      <section class="info-card">
+        {association?.logoUrl && <ContentImage src={association.logoUrl} alt={`Logo di ${association.name}`} variant="logo" />}
+        <h2>L’associazione</h2>
+        <p>Conosci le nostre attività attraverso i <a href="/progetti/">progetti</a>, gli <a href="/eventi/">eventi</a> e gli <a href="/articoli/">articoli</a> pubblicati sul sito.</p>
+        {association?.registryInfo && <p>{association.registryInfo}</p>}
+      </section>
+      <section class="info-card">
+        <h2>La sede</h2>
+        {hasAddress ? (
+          <address>
+            {contacts?.address && <div>{contacts.address}</div>}
+            <div>{[contacts?.postalCode, contacts?.city, contacts?.province].filter(Boolean).join(' ')}</div>
+          </address>
+        ) : (
+          <p>Per conoscere la nostra sede, <a href="/contatti/">contattaci</a>.</p>
+        )}
+        <p><a href="/contatti/">Tutti i contatti</a></p>
+      </section>
+    </div>
+
+    <section class="section" aria-labelledby="persone-associazione">
+      <div class="section__header"><div><p class="eyebrow">Le persone</p><h2 id="persone-associazione">Chi fa parte dell’associazione</h2></div></div>
+      {people.length === 0 ? (
+        <p class="notice">Le persone dell’associazione saranno pubblicate presto.</p>
+      ) : (
+        <ul class="people-grid">
+          {people.map((person) => (
+            <li class="person-card">
+              {person.photoUrl && <div class="person-card__image"><ContentImage src={person.photoUrl} alt="" variant="portrait" /></div>}
+              <div class="person-card__body"><h3>{person.firstName} {person.lastName}</h3><p>{personRoleLabel(person.role)}</p></div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
 
     {
       documents.length > 0 && (
-        <section aria-labelledby="documenti-associazione">
+        <section class="section" aria-labelledby="documenti-associazione">
+          <p class="eyebrow">Trasparenza</p>
           <h2 id="documenti-associazione">Documenti</h2>
-          <ul>
+          <ul class="link-list">
             {documents.map((document) => (
               <li><a href={document.url}>{document.label} (PDF)</a></li>
             ))}
@@ -36,24 +77,5 @@ const documents = association ? [
         </section>
       )
     }
-
-    <section aria-labelledby="persone-associazione">
-      <h2 id="persone-associazione">Le persone</h2>
-      {
-        people.length === 0 ? (
-          <p>Le persone dell’associazione saranno pubblicate presto.</p>
-        ) : (
-          <ul>
-            {people.map((person) => (
-              <li>
-                {person.photoUrl && <img src={person.photoUrl} alt="" />}
-                <h3>{person.firstName} {person.lastName}</h3>
-                <p>{personRoleLabel(person.role)}</p>
-              </li>
-            ))}
-          </ul>
-        )
-      }
-    </section>
   </main>
 </BaseLayout>

@@ -24,6 +24,10 @@ Gli eventi hanno elenco e dettaglio su `/eventi/` e `/eventi/[slug]/`, con data,
 
 `/chi-siamo/` e `/contatti/` sono pagine istituzionali definite in Astro: non sono documenti modificabili nel CMS. Mostrano rispettivamente persone, dati e documenti dell'associazione; contatti e social. I campi opzionali assenti non producono sezioni vuote. Il layout condivide navigazione, nome dell'associazione e footer tra tutte le pagine.
 
+La homepage segue la direzione visiva dei mockup Stitch forniti, adattata ai soli dati disponibili: progetti, un evento in programma (o il più recente), articoli e un riquadro 5×1000 prima del footer. Non contiene statistiche, orari o inviti a diventare volontari inventati dal prototipo. `/5x1000/` offre indicazioni generali e rimanda all'Agenzia delle Entrate; il codice fiscale dell'associazione non viene mostrato finché non è confermato.
+
+Le immagini del CMS sono elaborate durante la build da Astro e pubblicate in WebP con dimensioni responsive. Le fotografie nelle card e nei ritratti hanno un ritaglio controllato; locandine, logo e immagini di galleria conservano le proporzioni originali, rilevate da Astro, per non tagliare testi o deformare file di forme diverse. L'host delle immagini autorizzato è configurato in `astro.config.mjs`; in caso di cambio CMS andrà aggiornato insieme al provider.
+
 Questo riduce le modifiche al codice, ma non elimina la migrazione dei contenuti: testi, immagini, file e riferimenti andranno esportati da Sanity e importati nel nuovo sistema. Per i contenuti complessi, come il testo formattato, servirà anche una conversione del formato.
 
 `siteSettings` è un documento unico: nello Studio compare una sola voce "Informazioni associazione", modificabile senza crearne altre copie. Ogni profilo social ha un nome libero e un link.

@@ -1,0 +1,41 @@
+---
+import ContentImage from './ContentImage.astro';
+
+interface Props {
+  href: string;
+  title: string;
+  kind: 'project' | 'article' | 'event';
+  imageUrl?: string;
+  meta?: string;
+  summary?: string;
+  headingLevel?: 2 | 3;
+}
+
+const { href, title, kind, imageUrl, meta, summary, headingLevel = 3 } = Astro.props;
+const kindLabel = {
+  project: 'Progetto',
+  article: 'Articolo',
+  event: 'Evento',
+}[kind];
+---
+
+<article class="content-card">
+  <a class="content-card__link" href={href} aria-label={`Apri ${kindLabel.toLowerCase()}: ${title}`}>
+    <div class="content-card__media">
+      {
+        imageUrl ? (
+          <ContentImage src={imageUrl} alt="" variant={kind === 'event' ? 'poster' : 'card'} />
+        ) : (
+          <span class="content-card__placeholder" aria-hidden="true">Asso è…</span>
+        )
+      }
+    </div>
+    <div class="content-card__body">
+      <p class="eyebrow">{kindLabel}</p>
+      {headingLevel === 2 ? <h2>{title}</h2> : <h3>{title}</h3>}
+      {meta && <p class="content-card__meta">{meta}</p>}
+      {summary && <p class="content-card__summary">{summary}</p>}
+      <span class="text-link">Scopri di più <span aria-hidden="true">↗</span></span>
+    </div>
+  </a>
+</article>

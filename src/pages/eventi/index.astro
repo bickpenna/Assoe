@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import ContentCard from '@/components/ContentCard.astro';
 import { contentRepository } from '@/content';
 import { formatDateTime } from '@/utils/date';
 import { eventStatusLabel } from '@/utils/labels';
@@ -8,26 +9,19 @@ const events = await contentRepository.listEvents();
 ---
 
 <BaseLayout title="Eventi | Asso è… La Strada ci Insegna ODV">
-  <main>
-    <h1>Eventi</h1>
-
-    {
-      events.length === 0 ? (
-        <p>Non ci sono ancora eventi pubblicati.</p>
-      ) : (
-        <ul>
-          {events.map((event) => (
-            <li>
-              <article>
-                <h2><a href={`/eventi/${event.slug}/`}>{event.title}</a></h2>
-                <p><time datetime={event.date}>{formatDateTime(event.date)}</time></p>
-                {event.place && <p>Luogo: {event.place}</p>}
-                <p>Stato: {eventStatusLabel(event.status)}</p>
-              </article>
-            </li>
-          ))}
-        </ul>
-      )
-    }
+  <main id="contenuto" class="container">
+    <div class="page-intro">
+      <p class="eyebrow">Asso è…</p>
+      <h1>Eventi e iniziative</h1>
+    </div>
+    {events.length === 0 ? (
+      <p class="notice">Non ci sono ancora eventi pubblicati.</p>
+    ) : (
+      <div class="content-grid">
+        {events.map((event) => (
+          <ContentCard kind="event" headingLevel={2} href={`/eventi/${event.slug}/`} title={event.title} imageUrl={event.imageUrl} meta={`${formatDateTime(event.date)} · ${eventStatusLabel(event.status)}${event.place ? ` · ${event.place}` : ''}`} />
+        ))}
+      </div>
+    )}
   </main>
 </BaseLayout>

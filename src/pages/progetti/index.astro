@@ -1,24 +1,25 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import ContentCard from '@/components/ContentCard.astro';
 import { contentRepository } from '@/content';
 
 const projects = await contentRepository.listProjects();
 ---
 
 <BaseLayout title="Progetti | Asso è… La Strada ci Insegna ODV">
-  <main>
-    <h1>Progetti</h1>
-
-    {
-      projects.length === 0 ? (
-        <p>Non ci sono ancora progetti pubblicati.</p>
-      ) : (
-        <ul>
-          {projects.map((project) => (
-            <li><a href={`/progetti/${project.slug}/`}>{project.name}</a></li>
-          ))}
-        </ul>
-      )
-    }
+  <main id="contenuto" class="container">
+    <div class="page-intro">
+      <p class="eyebrow">Asso è…</p>
+      <h1>I nostri progetti</h1>
+    </div>
+    {projects.length === 0 ? (
+      <p class="notice">Non ci sono ancora progetti pubblicati.</p>
+    ) : (
+      <div class="content-grid">
+        {projects.map((project) => (
+          <ContentCard kind="project" headingLevel={2} href={`/progetti/${project.slug}/`} title={project.name} imageUrl={project.imageUrl} />
+        ))}
+      </div>
+    )}
   </main>
 </BaseLayout>

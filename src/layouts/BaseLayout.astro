@@ -1,4 +1,5 @@
 ---
+import '@/styles/global.css';
 import { contentRepository } from '@/content';
 import type { AssociationInfo } from '@/content/types';
 
@@ -10,39 +11,79 @@ interface Props {
 
 const {
   title,
-  description = 'Associazione Asso è… La Strada ci Insegna ODV',
+  description = 'Asso è… La Strada ci Insegna ODV',
   association: providedAssociation,
 } = Astro.props;
 
 const association = providedAssociation === undefined
   ? await contentRepository.getAssociationInfo()
   : providedAssociation;
+
+const navigation = [
+  { href: '/', label: 'Home' },
+  { href: '/progetti/', label: 'Progetti' },
+  { href: '/eventi/', label: 'Eventi' },
+  { href: '/articoli/', label: 'Articoli' },
+  { href: '/chi-siamo/', label: 'Chi siamo' },
+  { href: '/contatti/', label: 'Contatti' },
+];
+
+const currentPath = Astro.url.pathname;
+const isCurrent = (href: string) => href === '/' ? currentPath === '/' : currentPath.startsWith(href);
 ---
 
 <!doctype html>
 <html lang="it">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <title>{title}</title>
   </head>
   <body>
-    <header>
-      <a href="/" aria-label="Vai alla pagina iniziale">{association?.name ?? 'Asso è… La Strada ci Insegna ODV'}</a>
-      <nav aria-label="Navigazione principale">
-        <a href="/">Home</a>
-        <a href="/progetti/">Progetti</a>
-        <a href="/articoli/">Articoli</a>
-        <a href="/eventi/">Eventi</a>
-        <a href="/chi-siamo/">Chi siamo</a>
-        <a href="/contatti/">Contatti</a>
-      </nav>
+    <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="brand" href="/" aria-label="Asso è… La Strada ci Insegna, pagina iniziale">
+          <span class="brand__main">Asso è…</span>
+          <span class="brand__sub">LA STRADA CI INSEGNA · ODV</span>
+        </a>
+        <nav class="desktop-nav" aria-label="Navigazione principale">
+          {navigation.map((item) => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
+        </nav>
+        <details class="mobile-nav">
+          <summary>Menu</summary>
+          <nav aria-label="Navigazione mobile">
+            {navigation.map((item) => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
+          </nav>
+        </details>
+      </div>
     </header>
     <slot />
-    <footer>
-      <p>{association?.copyright ?? association?.name ?? 'Asso è… La Strada ci Insegna ODV'}</p>
-      <p><a href="/contatti/">Contatti</a></p>
+    <footer class="site-footer">
+      <div class="container">
+        <div class="site-footer__grid">
+          <div>
+            <a class="brand" href="/"><span class="brand__main">Asso è…</span><span class="brand__sub">LA STRADA CI INSEGNA · ODV</span></a>
+            {association?.name && <p>{association.name}</p>}
+          </div>
+          <div>
+            <h2>Esplora</h2>
+            <a href="/progetti/">Progetti</a>
+            <a href="/eventi/">Eventi</a>
+            <a href="/articoli/">Articoli</a>
+            <a href="/chi-siamo/">Chi siamo</a>
+          </div>
+          <div>
+            <h2>Informazioni</h2>
+            <a href="/contatti/">Contatti</a>
+            {association?.documents.statuteUrl && <a href={association.documents.statuteUrl}>Statuto (PDF)</a>}
+            {association?.documents.privacyPolicyUrl && <a href={association.documents.privacyPolicyUrl}>Privacy (PDF)</a>}
+            {association?.documents.cookiePolicyUrl && <a href={association.documents.cookiePolicyUrl}>Cookie (PDF)</a>}
+          </div>
+        </div>
+        <div class="site-footer__bottom">{association?.copyright ?? 'Asso è… La Strada ci Insegna ODV'}</div>
+      </div>
     </footer>
   </body>
 </html>
