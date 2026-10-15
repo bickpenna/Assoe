@@ -1,4 +1,13 @@
 node_modules/
+.astro/
+dist/
+.sanity/
+
+# Variabili d'ambiente locali
+.env
+.env.*
+!.env.example
+.DS_Store
 
 # Temporaneo: file prodotti dal crawl del vecchio sito
 /crawl-rendered/
