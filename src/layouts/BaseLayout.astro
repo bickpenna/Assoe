@@ -1,9 +1,10 @@
 ---
 import '@/styles/global.css';
 import SiteBrand from '@/components/SiteBrand.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
 import { contentRepository } from '@/content';
 import type { AssociationInfo } from '@/content/types';
-import { footerNavigation, siteNavigation } from '@/config/navigation';
+import { siteNavigation } from '@/config/navigation';
 import { SITE_NAME } from '@/config/site';
 
 interface Props {
@@ -51,27 +52,6 @@ const isCurrent = (href: string) => href === '/' ? currentPath === '/' : current
       </div>
     </header>
     <slot />
-    <footer class="site-footer">
-      <div class="container">
-        <div class="site-footer__grid">
-          <div>
-            <SiteBrand logoUrl={association?.logoUrl} name={association?.name} placement="footer" />
-            {association?.name && <p>{association.name}</p>}
-          </div>
-          <div>
-            <h2>Esplora</h2>
-            {footerNavigation.map((item) => <a href={item.href}>{item.label}</a>)}
-          </div>
-          <div>
-            <h2>Informazioni</h2>
-            <a href="/contatti/">Contatti</a>
-            {association?.documents.statuteUrl && <a href={association.documents.statuteUrl}>Statuto (PDF)</a>}
-            {association?.documents.privacyPolicyUrl && <a href={association.documents.privacyPolicyUrl}>Privacy (PDF)</a>}
-            {association?.documents.cookiePolicyUrl && <a href={association.documents.cookiePolicyUrl}>Cookie (PDF)</a>}
-          </div>
-        </div>
-        <div class="site-footer__bottom">{association?.copyright ?? SITE_NAME}</div>
-      </div>
-    </footer>
+    <SiteFooter association={association} />
   </body>
 </html>

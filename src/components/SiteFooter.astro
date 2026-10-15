@@ -1,0 +1,70 @@
+---
+import SiteBrand from './SiteBrand.astro';
+import { footerNavigation } from '@/config/navigation';
+import { SITE_NAME } from '@/config/site';
+import type { AssociationInfo } from '@/content/types';
+
+interface Props {
+  association: AssociationInfo | null;
+}
+
+const { association } = Astro.props;
+const name = association?.name || SITE_NAME;
+const contacts = association?.contacts;
+const hasAddress = Boolean(contacts?.address || contacts?.postalCode || contacts?.city || contacts?.province);
+const documents = association?.documents;
+const hasDocuments = Boolean(documents?.statuteUrl || documents?.regulationUrl || documents?.privacyPolicyUrl || documents?.cookiePolicyUrl);
+const copyright = association?.copyright?.trim();
+const copyrightLabel = copyright
+  ? copyright.startsWith('©') ? copyright : `© ${copyright}${/^\d{4}$/.test(copyright) ? ` ${name}` : ''}`
+  : `© ${new Date().getFullYear()} ${name}`;
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__grid">
+      <div class="site-footer__intro">
+        <SiteBrand logoUrl={association?.logoUrl} name={name} placement="footer" />
+        <p>Volontariato, presenza e comunità. Una strada si fa insieme.</p>
+      </div>
+
+      <nav class="site-footer__column" aria-label="Esplora">
+        <h2>Esplora</h2>
+        {footerNavigation.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+
+      <nav class="site-footer__column" aria-label="Partecipa">
+        <h2>Partecipa</h2>
+        <a href="/5x1000/">5×1000</a>
+        <a href="/chi-siamo/#sede">La nostra sede</a>
+      </nav>
+
+      <div class="site-footer__column site-footer__legal">
+        <h2>Dati legali</h2>
+        <strong>{name}</strong>
+        {hasAddress && (
+          <address>
+            <span>Sede dell’associazione</span>
+            {contacts?.address && <span>{contacts.address}</span>}
+            {(contacts?.postalCode || contacts?.city || contacts?.province) && (
+              <span>{[contacts?.postalCode, contacts?.city, contacts?.province].filter(Boolean).join(' ')}</span>
+            )}
+          </address>
+        )}
+        {association?.taxCode && <p>Codice fiscale {association.taxCode}</p>}
+        {association?.registryInfo && <p>{association.registryInfo}</p>}
+        <a class="site-footer__contact" href="/contatti/">Contattaci <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <span>{copyrightLabel}</span>
+      {hasDocuments && (
+        <nav aria-label="Informazioni legali">
+          {documents?.privacyPolicyUrl && <a href={documents.privacyPolicyUrl}>Privacy</a>}
+          <a href="/chi-siamo/#documenti-associazione">Documenti</a>
+        </nav>
+      )}
+    </div>
+  </div>
+</footer>

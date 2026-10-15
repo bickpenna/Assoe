@@ -35,7 +35,7 @@ const hasAddress = Boolean(contacts?.address || contacts?.postalCode || contacts
         <p>Conosci le nostre attività attraverso i <a href="/progetti/">progetti</a>, gli <a href="/eventi/">eventi</a> e gli <a href="/articoli/">articoli</a> pubblicati sul sito.</p>
         {association?.registryInfo && <p>{association.registryInfo}</p>}
       </section>
-      <section class="info-card">
+      <section class="info-card" id="sede">
         <h2>La sede</h2>
         {hasAddress ? (
           <address>

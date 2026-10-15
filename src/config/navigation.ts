@@ -1,13 +1,18 @@
-/** Destinazioni principali del sito, condivise da header e footer. */
-export const siteNavigation = [
-  { href: '/', label: 'Home' },
-  { href: '/progetti/', label: 'Progetti' },
-  { href: '/eventi/', label: 'Eventi' },
-  { href: '/articoli/', label: 'Articoli' },
-  { href: '/chi-siamo/', label: 'Chi siamo' },
-  { href: '/contatti/', label: 'Contatti' },
-] as const;
+/** Destinazioni condivise: le etichette possono variare per contesto, non gli URL. */
+const navigation = {
+  home: { href: '/', label: 'Home' },
+  projects: { href: '/progetti/', label: 'Progetti' },
+  events: { href: '/eventi/', label: 'Eventi' },
+  articles: { href: '/articoli/', label: 'Articoli' },
+  about: { href: '/chi-siamo/', label: 'Chi siamo' },
+  contacts: { href: '/contatti/', label: 'Contatti' },
+} as const;
 
-export const footerNavigation = siteNavigation.filter(
-  ({ href }) => href !== '/' && href !== '/contatti/',
-);
+export const siteNavigation = Object.values(navigation);
+
+export const footerNavigation = [
+  { ...navigation.events, label: 'Eventi e archivio' },
+  navigation.articles,
+  navigation.projects,
+  { ...navigation.about, label: 'L’associazione' },
+];
