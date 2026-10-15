@@ -1,0 +1,27 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { contentRepository } from '@/content';
+
+export const getStaticPaths = (async () => {
+  const projects = await contentRepository.listProjects();
+
+  return projects.map(({ slug }) => ({ params: { slug } }));
+}) satisfies GetStaticPaths;
+
+const slug = Astro.params.slug;
+const project = slug ? await contentRepository.getProjectBySlug(slug) : null;
+
+if (!project) {
+  throw new Error(`Progetto non trovato durante la build: ${slug ?? '(slug mancante)'}`);
+}
+---
+
+<BaseLayout title={`${project.name} | Asso è… La Strada ci Insegna ODV`}>
+  <main>
+    <p><a href="/progetti/">Tutti i progetti</a></p>
+    <h1>{project.name}</h1>
+    {project.imageUrl && <img src={project.imageUrl} alt={project.name} />}
+    {project.descriptionHtml && <div set:html={project.descriptionHtml} />}
+  </main>
+</BaseLayout>

@@ -1,4 +1,5 @@
 import { createClient } from '@sanity/client';
+import { toHTML } from '@portabletext/to-html';
 import type {
   ArticleSummary,
   AssociationInfo,
@@ -7,6 +8,7 @@ import type {
   EventStatus,
   PersonSummary,
   PersonRole,
+  ProjectDetail,
   ProjectSummary,
 } from '../types';
 
@@ -15,6 +17,10 @@ interface SanityProject {
   name: string;
   slug: string;
   imageUrl: string | null;
+}
+
+interface SanityProjectDetail extends SanityProject {
+  description: Array<{ _type: string; _key?: string }> | null;
 }
 
 interface SanityArticle {
@@ -80,6 +86,19 @@ const projectsQuery = `*[
   _id,
   name,
   "slug": slug.current,
+  "imageUrl": image.asset->url
+}`;
+
+const projectBySlugQuery = `*[
+  _type == "project" &&
+  active == true &&
+  defined(name) &&
+  slug.current == $slug
+][0] {
+  _id,
+  name,
+  "slug": slug.current,
+  description,
   "imageUrl": image.asset->url
 }`;
 
@@ -171,6 +190,20 @@ export function createSanityRepository({
         slug,
         imageUrl: imageUrl ?? undefined,
       }));
+    },
+
+    async getProjectBySlug(slug: string): Promise<ProjectDetail | null> {
+      const project = await client.fetch<SanityProjectDetail | null>(projectBySlugQuery, { slug });
+
+      if (!project) return null;
+
+      return {
+        id: project._id,
+        name: project.name,
+        slug: project.slug,
+        imageUrl: project.imageUrl ?? undefined,
+        descriptionHtml: project.description?.length ? toHTML(project.description) : undefined,
+      };
     },
 
     async listArticles(): Promise<ArticleSummary[]> {

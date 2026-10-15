@@ -6,6 +6,11 @@ export interface ProjectSummary {
   imageUrl?: string;
 }
 
+export interface ProjectDetail extends ProjectSummary {
+  /** HTML prodotto dal provider, senza formati specifici del CMS. */
+  descriptionHtml?: string;
+}
+
 export interface ArticleSummary {
   id: string;
   title: string;
@@ -72,6 +77,7 @@ export interface AssociationInfo {
 /** Le pagine dipendono da questo contratto, non da un client CMS. */
 export interface ContentRepository {
   listProjects(): Promise<ProjectSummary[]>;
+  getProjectBySlug(slug: string): Promise<ProjectDetail | null>;
   listArticles(): Promise<ArticleSummary[]>;
   listEvents(): Promise<EventSummary[]>;
   listPeople(): Promise<PersonSummary[]>;
