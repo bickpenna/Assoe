@@ -1,13 +1,14 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { contentRepository } from '@/content';
+import { SITE_NAME } from '@/config/site';
 
 const association = await contentRepository.getAssociationInfo();
 const contacts = association?.contacts;
 const hasAddress = Boolean(contacts?.address || contacts?.postalCode || contacts?.city || contacts?.province);
 ---
 
-<BaseLayout title="Contatti | Asso è… La Strada ci Insegna ODV" association={association}>
+<BaseLayout title={`Contatti | ${SITE_NAME}`} association={association}>
   <main id="contenuto" class="container">
     <div class="page-intro">
       <p class="eyebrow">Restiamo in contatto</p>

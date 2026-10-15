@@ -3,6 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import { contentRepository } from '@/content';
 import { personRoleLabel } from '@/utils/labels';
+import { SITE_NAME } from '@/config/site';
 
 const [association, people] = await Promise.all([
   contentRepository.getAssociationInfo(),
@@ -19,12 +20,12 @@ const contacts = association?.contacts;
 const hasAddress = Boolean(contacts?.address || contacts?.postalCode || contacts?.city || contacts?.province);
 ---
 
-<BaseLayout title="Chi siamo | Asso è… La Strada ci Insegna ODV" association={association}>
+<BaseLayout title={`Chi siamo | ${SITE_NAME}`} association={association}>
   <main id="contenuto" class="container">
     <div class="page-intro">
       <p class="eyebrow">La nostra associazione</p>
       <h1>Chi siamo</h1>
-      <p>{association?.name ?? 'Asso è… La Strada ci Insegna ODV'}</p>
+      <p>{association?.name ?? SITE_NAME}</p>
     </div>
 
     <div class="info-grid">

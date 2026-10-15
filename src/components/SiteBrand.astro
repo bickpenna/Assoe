@@ -1,0 +1,27 @@
+---
+import ContentImage from './ContentImage.astro';
+import { BRAND_SUBTITLE, BRAND_WORDMARK, SITE_NAME } from '@/config/site';
+
+interface Props {
+  logoUrl?: string;
+  name?: string;
+  placement: 'header' | 'footer';
+}
+
+const {
+  logoUrl,
+  name = SITE_NAME,
+  placement,
+} = Astro.props;
+---
+
+<a class={`brand brand--${placement}`} href="/" aria-label={`${name}, pagina iniziale`}>
+  {logoUrl ? (
+    <ContentImage src={logoUrl} alt="" variant="logo" eager={placement === 'header'} />
+  ) : (
+    <span class="brand__wordmark">
+      <strong class="brand__main">{BRAND_WORDMARK}</strong>
+      <span class="brand__sub">{BRAND_SUBTITLE}</span>
+    </span>
+  )}
+</a>

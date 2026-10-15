@@ -5,6 +5,7 @@ import ContentCard from '@/components/ContentCard.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import { contentRepository } from '@/content';
 import { formatDateTime, formatDate } from '@/utils/date';
+import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
 
 export const getStaticPaths = (async () => {
   const projects = await contentRepository.listProjects();
@@ -20,11 +21,11 @@ if (!project) {
 }
 ---
 
-<BaseLayout title={`${project.name} | Asso è… La Strada ci Insegna ODV`}>
+<BaseLayout title={`${project.name} | ${SITE_NAME}`}>
   <main id="contenuto" class="container detail">
     <div class="detail__header">
       <a class="text-link" href="/progetti/">← Tutti i progetti</a>
-      <p class="eyebrow">Asso è…</p>
+      <p class="eyebrow">{BRAND_WORDMARK}</p>
       <h1>{project.name}</h1>
     </div>
     {project.imageUrl && <div class="detail__image"><ContentImage src={project.imageUrl} alt={`Immagine del progetto ${project.name}`} variant="hero" eager /></div>}

@@ -4,6 +4,7 @@ import ContentCard from '@/components/ContentCard.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import { contentRepository } from '@/content';
 import { formatDateTime, formatDate } from '@/utils/date';
+import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
 
 const [projects, articles, events, association] = await Promise.all([
   contentRepository.listProjects(),
@@ -19,26 +20,30 @@ const featuredEvent = upcomingEvents[0] ?? events[0];
 const eventHeading = upcomingEvents.length > 0 ? 'Prossimo evento' : 'Eventi e iniziative';
 ---
 
-<BaseLayout title="Asso è… La Strada ci Insegna ODV" association={association}>
+<BaseLayout title={SITE_NAME} association={association}>
   <main id="contenuto">
     <section class="hero">
       <div class="container hero__panel">
         <div class="hero__text">
           <p class="eyebrow">La Strada ci Insegna · ODV</p>
-          <h1>Asso è…<br />La Strada ci Insegna.</h1>
+          <h1>{BRAND_WORDMARK}<br />La Strada ci Insegna.</h1>
           <div class="hero__actions">
             <a class="button" href="/progetti/">Scopri i progetti <span aria-hidden="true">&nbsp;↗</span></a>
             <a class="button button--light" href="/chi-siamo/">Chi siamo</a>
           </div>
         </div>
-        <div class="hero__art" aria-hidden="true"><span>è</span></div>
+        {association?.logoUrl ? (
+          <div class="hero__logo"><ContentImage src={association.logoUrl} alt={`Logo di ${association.name}`} variant="logoLarge" eager /></div>
+        ) : (
+          <div class="hero__art" aria-hidden="true"><span>è</span></div>
+        )}
       </div>
     </section>
 
     <section class="section container" aria-labelledby="progetti-home">
       <div class="section__header">
         <div>
-          <p class="eyebrow">Asso è…</p>
+          <p class="eyebrow">{BRAND_WORDMARK}</p>
           <h2 id="progetti-home">I nostri progetti</h2>
         </div>
         <a class="text-link" href="/progetti/">Tutti i progetti <span aria-hidden="true">↗</span></a>
@@ -59,7 +64,7 @@ const eventHeading = upcomingEvents.length > 0 ? 'Prossimo evento' : 'Eventi e i
     <section class="section container" aria-labelledby="eventi-home">
       <div class="section__header">
         <div>
-          <p class="eyebrow">Asso è…</p>
+          <p class="eyebrow">{BRAND_WORDMARK}</p>
           <h2 id="eventi-home">{eventHeading}</h2>
         </div>
         <a class="text-link" href="/eventi/">Tutti gli eventi <span aria-hidden="true">↗</span></a>
@@ -71,7 +76,7 @@ const eventHeading = upcomingEvents.length > 0 ? 'Prossimo evento' : 'Eventi e i
               {featuredEvent.imageUrl ? (
                 <ContentImage src={featuredEvent.imageUrl} alt={`Locandina di ${featuredEvent.title}`} variant="poster" />
               ) : (
-                <div class="event-feature__placeholder" aria-hidden="true">Asso è…</div>
+                <div class="event-feature__placeholder" aria-hidden="true">{BRAND_WORDMARK}</div>
               )}
             </div>
             <div class="event-feature__body">

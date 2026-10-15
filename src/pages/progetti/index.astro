@@ -2,14 +2,15 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ContentCard from '@/components/ContentCard.astro';
 import { contentRepository } from '@/content';
+import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
 
 const projects = await contentRepository.listProjects();
 ---
 
-<BaseLayout title="Progetti | Asso è… La Strada ci Insegna ODV">
+<BaseLayout title={`Progetti | ${SITE_NAME}`}>
   <main id="contenuto" class="container">
     <div class="page-intro">
-      <p class="eyebrow">Asso è…</p>
+      <p class="eyebrow">{BRAND_WORDMARK}</p>
       <h1>I nostri progetti</h1>
     </div>
     {projects.length === 0 ? (

@@ -3,11 +3,12 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import ContentCard from '@/components/ContentCard.astro';
 import { contentRepository } from '@/content';
 import { formatDate } from '@/utils/date';
+import { SITE_NAME } from '@/config/site';
 
 const articles = await contentRepository.listArticles();
 ---
 
-<BaseLayout title="Articoli | Asso è… La Strada ci Insegna ODV">
+<BaseLayout title={`Articoli | ${SITE_NAME}`}>
   <main id="contenuto" class="container">
     <div class="page-intro">
       <p class="eyebrow">Dal territorio</p>

@@ -1,5 +1,6 @@
 ---
 import ContentImage from './ContentImage.astro';
+import { BRAND_WORDMARK } from '@/config/site';
 
 interface Props {
   href: string;
@@ -26,7 +27,7 @@ const kindLabel = {
         imageUrl ? (
           <ContentImage src={imageUrl} alt="" variant={kind === 'event' ? 'poster' : 'card'} />
         ) : (
-          <span class="content-card__placeholder" aria-hidden="true">Asso è…</span>
+          <span class="content-card__placeholder" aria-hidden="true">{BRAND_WORDMARK}</span>
         )
       }
     </div>

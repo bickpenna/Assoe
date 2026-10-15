@@ -6,6 +6,7 @@ import ContentImage from '@/components/ContentImage.astro';
 import { contentRepository } from '@/content';
 import { formatDateTime } from '@/utils/date';
 import { eventStatusLabel } from '@/utils/labels';
+import { SITE_NAME } from '@/config/site';
 
 export const getStaticPaths = (async () => {
   const events = await contentRepository.listEvents();
@@ -21,7 +22,7 @@ if (!event) {
 }
 ---
 
-<BaseLayout title={`${event.title} | Asso è… La Strada ci Insegna ODV`}>
+<BaseLayout title={`${event.title} | ${SITE_NAME}`}>
   <main id="contenuto" class="container detail">
     <a class="text-link" href="/eventi/">← Tutti gli eventi</a>
     <article>

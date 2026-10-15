@@ -5,6 +5,7 @@ import ContentCard from '@/components/ContentCard.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import { contentRepository } from '@/content';
 import { formatDate } from '@/utils/date';
+import { SITE_NAME } from '@/config/site';
 
 export const getStaticPaths = (async () => {
   const articles = await contentRepository.listArticles();
@@ -20,7 +21,7 @@ if (!article) {
 }
 ---
 
-<BaseLayout title={`${article.title} | Asso è… La Strada ci Insegna ODV`}>
+<BaseLayout title={`${article.title} | ${SITE_NAME}`}>
   <main id="contenuto" class="container detail">
     <a class="text-link" href="/articoli/">← Tutti gli articoli</a>
     <article>

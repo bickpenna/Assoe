@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { SITE_NAME } from '@/config/site';
 ---
 
-<BaseLayout title="Come funziona il 5×1000 | Asso è… La Strada ci Insegna ODV">
+<BaseLayout title={`Come funziona il 5×1000 | ${SITE_NAME}`}>
   <main id="contenuto" class="container">
     <div class="page-intro">
       <p class="eyebrow">5×1000</p>

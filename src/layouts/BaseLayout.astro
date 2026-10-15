@@ -1,7 +1,10 @@
 ---
 import '@/styles/global.css';
+import SiteBrand from '@/components/SiteBrand.astro';
 import { contentRepository } from '@/content';
 import type { AssociationInfo } from '@/content/types';
+import { footerNavigation, siteNavigation } from '@/config/navigation';
+import { SITE_NAME } from '@/config/site';
 
 interface Props {
   title: string;
@@ -11,22 +14,13 @@ interface Props {
 
 const {
   title,
-  description = 'Asso è… La Strada ci Insegna ODV',
+  description = SITE_NAME,
   association: providedAssociation,
 } = Astro.props;
 
 const association = providedAssociation === undefined
   ? await contentRepository.getAssociationInfo()
   : providedAssociation;
-
-const navigation = [
-  { href: '/', label: 'Home' },
-  { href: '/progetti/', label: 'Progetti' },
-  { href: '/eventi/', label: 'Eventi' },
-  { href: '/articoli/', label: 'Articoli' },
-  { href: '/chi-siamo/', label: 'Chi siamo' },
-  { href: '/contatti/', label: 'Contatti' },
-];
 
 const currentPath = Astro.url.pathname;
 const isCurrent = (href: string) => href === '/' ? currentPath === '/' : currentPath.startsWith(href);
@@ -44,17 +38,14 @@ const isCurrent = (href: string) => href === '/' ? currentPath === '/' : current
     <a class="skip-link" href="#contenuto">Vai al contenuto</a>
     <header class="site-header">
       <div class="container site-header__inner">
-        <a class="brand" href="/" aria-label="Asso è… La Strada ci Insegna, pagina iniziale">
-          <span class="brand__main">Asso è…</span>
-          <span class="brand__sub">LA STRADA CI INSEGNA · ODV</span>
-        </a>
+        <SiteBrand logoUrl={association?.logoUrl} name={association?.name} placement="header" />
         <nav class="desktop-nav" aria-label="Navigazione principale">
-          {navigation.map((item) => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
+          {siteNavigation.map((item) => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
         </nav>
         <details class="mobile-nav">
           <summary>Menu</summary>
           <nav aria-label="Navigazione mobile">
-            {navigation.map((item) => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
+            {siteNavigation.map((item) => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
           </nav>
         </details>
       </div>
@@ -64,15 +55,12 @@ const isCurrent = (href: string) => href === '/' ? currentPath === '/' : current
       <div class="container">
         <div class="site-footer__grid">
           <div>
-            <a class="brand" href="/"><span class="brand__main">Asso è…</span><span class="brand__sub">LA STRADA CI INSEGNA · ODV</span></a>
+            <SiteBrand logoUrl={association?.logoUrl} name={association?.name} placement="footer" />
             {association?.name && <p>{association.name}</p>}
           </div>
           <div>
             <h2>Esplora</h2>
-            <a href="/progetti/">Progetti</a>
-            <a href="/eventi/">Eventi</a>
-            <a href="/articoli/">Articoli</a>
-            <a href="/chi-siamo/">Chi siamo</a>
+            {footerNavigation.map((item) => <a href={item.href}>{item.label}</a>)}
           </div>
           <div>
             <h2>Informazioni</h2>
@@ -82,7 +70,7 @@ const isCurrent = (href: string) => href === '/' ? currentPath === '/' : current
             {association?.documents.cookiePolicyUrl && <a href={association.documents.cookiePolicyUrl}>Cookie (PDF)</a>}
           </div>
         </div>
-        <div class="site-footer__bottom">{association?.copyright ?? 'Asso è… La Strada ci Insegna ODV'}</div>
+        <div class="site-footer__bottom">{association?.copyright ?? SITE_NAME}</div>
       </div>
     </footer>
   </body>

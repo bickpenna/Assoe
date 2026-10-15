@@ -4,14 +4,15 @@ import ContentCard from '@/components/ContentCard.astro';
 import { contentRepository } from '@/content';
 import { formatDateTime } from '@/utils/date';
 import { eventStatusLabel } from '@/utils/labels';
+import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
 
 const events = await contentRepository.listEvents();
 ---
 
-<BaseLayout title="Eventi | Asso è… La Strada ci Insegna ODV">
+<BaseLayout title={`Eventi | ${SITE_NAME}`}>
   <main id="contenuto" class="container">
     <div class="page-intro">
-      <p class="eyebrow">Asso è…</p>
+      <p class="eyebrow">{BRAND_WORDMARK}</p>
       <h1>Eventi e iniziative</h1>
     </div>
     {events.length === 0 ? (
