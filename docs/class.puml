@@ -1,0 +1,133 @@
+@startuml
+
+' ============================================================
+' Contenuti globali
+' ============================================================
+
+class InformazioniAssociazione <<singleton>> {
+    -nomeAssociazione: String
+    -logo: Image
+    -codiceFiscale: String
+    -datiRegistro: String
+    -copyright: String
+    -statuto: File
+    -regolamento: File
+    -privacyPolicy: File
+    -cookiePolicy: File
+}
+
+class Contatti {
+    -email: Email
+    -telefono: String
+    -indirizzo: String
+    -cap: String
+    -citta: String
+    -provincia: String
+}
+
+class ProfiloSocial {
+    -nomeSocial: String
+    -linkSocial: URL
+}
+
+' ============================================================
+' Contenuti editoriali
+' ============================================================
+
+class Progetto {
+    -nome: String
+    -slug: Slug
+    -descrizione: RichText
+    -immagine: Image
+    -ordine: Integer
+    -attiva: Boolean
+}
+
+class Articolo {
+    -titolo: String
+    -slug: Slug
+    -sommario: String
+    -testo: RichText
+    -immaginePrincipale: Image
+    -galleria: List<Image> ' massimo 6 '
+    -dataPubblicazione: DateTime
+    -inEvidenza: Boolean
+}
+
+class Evento {
+    -titolo: String
+    -slug: Slug
+    -descrizione: RichText
+    -data: DateTime
+    -luogo: String
+    -locandina: Image
+    -galleria: List<Image> ' massimo 6 '
+    -stato: StatoEvento
+}
+
+class Persona {
+    -nome: String
+    -cognome: String
+    -foto: Image
+    -ruolo: RuoloPersona
+    -ordine: Integer
+    -visibile: Boolean
+}
+
+' ==============================================================
+' Enumerazioni
+' ==============================================================
+
+enum RuoloPersona {
+    Presidente
+    Vicepresidente
+    Segretario
+    Consigliere
+    Volontario
+    VolontarioServizioCivile
+}
+
+enum StatoEvento {
+    Programmato
+    InCorso
+    Concluso
+    Annullato
+}
+
+' ============================================================
+' Relazioni
+' ============================================================
+
+InformazioniAssociazione "1" *-- "1" Contatti
+InformazioniAssociazione "1" *-- "0..*" ProfiloSocial
+
+Articolo "0..*" --> "0..*" Progetto : riguarda
+Evento "0..*" --> "0..*" Progetto : riguarda
+Articolo "0..*" --> "0..1" Evento : racconta
+
+note right of InformazioniAssociazione
+    Documento singleton in Sanity:
+    tipo e ID "siteSettings".
+    Contiene i dati usati
+    nell'header e nel footer.
+end note
+
+note right of ProfiloSocial
+    Nel CMS i campi si chiamano
+    "Nome social" e "Link social".
+    Le chiavi salvate sono
+    "platform" e "url".
+end note
+
+note right of Progetto
+    I volontari possono creare
+    nuovi progetti dal CMS.
+end note
+
+note right of Articolo
+    Il layout è deciso da Astro.
+    I volontari compilano solo
+    contenuti e metadati.
+end note
+
+@enduml
