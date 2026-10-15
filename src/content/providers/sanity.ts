@@ -1,6 +1,7 @@
 import { createClient } from '@sanity/client';
 import { toHTML } from '@portabletext/to-html';
 import type {
+  ArticleDetail,
   ArticleSummary,
   AssociationInfo,
   ContentRepository,
@@ -31,6 +32,11 @@ interface SanityArticle {
   publishedAt: string;
   featured: boolean | null;
   imageUrl: string | null;
+}
+
+interface SanityArticleDetail extends SanityArticle {
+  body: Array<{ _type: string; _key?: string }> | null;
+  galleryImageUrls: Array<string | null> | null;
 }
 
 interface SanityEvent {
@@ -117,6 +123,23 @@ const articlesQuery = `*[
   "imageUrl": mainImage.asset->url
 }`;
 
+const articleBySlugQuery = `*[
+  _type == "article" &&
+  defined(title) &&
+  defined(publishedAt) &&
+  slug.current == $slug
+][0] {
+  _id,
+  title,
+  "slug": slug.current,
+  summary,
+  publishedAt,
+  featured,
+  "imageUrl": mainImage.asset->url,
+  body,
+  "galleryImageUrls": gallery[].asset->url
+}`;
+
 const eventsQuery = `*[
   _type == "event" &&
   defined(title) &&
@@ -168,6 +191,22 @@ const associationQuery = `*[_type == "siteSettings" && defined(associationName)]
   "cookiePolicyUrl": cookiePolicy.asset->url
 }`;
 
+function renderRichText(blocks: Array<{ _type: string; _key?: string }> | null): string | undefined {
+  return blocks?.length ? toHTML(blocks) : undefined;
+}
+
+function toArticleSummary(article: SanityArticle): ArticleSummary {
+  return {
+    id: article._id,
+    title: article.title,
+    slug: article.slug,
+    summary: article.summary ?? undefined,
+    publishedAt: article.publishedAt,
+    featured: article.featured === true,
+    imageUrl: article.imageUrl ?? undefined,
+  };
+}
+
 export function createSanityRepository({
   projectId,
   dataset,
@@ -202,22 +241,28 @@ export function createSanityRepository({
         name: project.name,
         slug: project.slug,
         imageUrl: project.imageUrl ?? undefined,
-        descriptionHtml: project.description?.length ? toHTML(project.description) : undefined,
+        descriptionHtml: renderRichText(project.description),
       };
     },
 
     async listArticles(): Promise<ArticleSummary[]> {
       const articles = await client.fetch<SanityArticle[]>(articlesQuery);
 
-      return articles.map(({ _id, title, slug, summary, publishedAt, featured, imageUrl }) => ({
-        id: _id,
-        title,
-        slug,
-        summary: summary ?? undefined,
-        publishedAt,
-        featured: featured === true,
-        imageUrl: imageUrl ?? undefined,
-      }));
+      return articles.map(toArticleSummary);
+    },
+
+    async getArticleBySlug(slug: string): Promise<ArticleDetail | null> {
+      const article = await client.fetch<SanityArticleDetail | null>(articleBySlugQuery, { slug });
+
+      if (!article) return null;
+
+      return {
+        ...toArticleSummary(article),
+        bodyHtml: renderRichText(article.body),
+        galleryImageUrls: (article.galleryImageUrls ?? []).filter(
+          (url): url is string => typeof url === 'string',
+        ),
+      };
     },
 
     async listEvents(): Promise<EventSummary[]> {

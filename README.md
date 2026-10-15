@@ -18,6 +18,8 @@ Il contratto espone per ora gli elenchi di progetti, articoli, eventi e persone 
 
 I progetti sono il primo percorso completo: `/progetti/` mostra quelli attivi e pubblicati, mentre `/progetti/[slug]/` mostra il singolo progetto. Il testo formattato di Sanity viene convertito in HTML nell'adattatore, prima di arrivare alla pagina Astro. Se non ci sono progetti pubblicati, l'elenco mostra un messaggio e non vengono generate pagine di dettaglio.
 
+Anche gli articoli hanno elenco e dettaglio su `/articoli/` e `/articoli/[slug]/`: mostrano data, sommario, testo e immagini quando presenti. Il testo formattato viene convertito nell'adattatore; i collegamenti tra articoli, progetti ed eventi saranno aggiunti quando sarà definita la navigazione tra contenuti.
+
 Questo riduce le modifiche al codice, ma non elimina la migrazione dei contenuti: testi, immagini, file e riferimenti andranno esportati da Sanity e importati nel nuovo sistema. Per i contenuti complessi, come il testo formattato, servirà anche una conversione del formato.
 
 `siteSettings` è un documento unico: nello Studio compare una sola voce "Informazioni associazione", modificabile senza crearne altre copie. Ogni profilo social ha un nome libero e un link.

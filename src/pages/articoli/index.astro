@@ -1,0 +1,32 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { contentRepository } from '@/content';
+import { formatDate } from '@/utils/date';
+
+const articles = await contentRepository.listArticles();
+---
+
+<BaseLayout title="Articoli | Asso è… La Strada ci Insegna ODV">
+  <main>
+    <p><a href="/">Home</a></p>
+    <h1>Articoli</h1>
+
+    {
+      articles.length === 0 ? (
+        <p>Non ci sono ancora articoli pubblicati.</p>
+      ) : (
+        <ul>
+          {articles.map((article) => (
+            <li>
+              <article>
+                <h2><a href={`/articoli/${article.slug}/`}>{article.title}</a></h2>
+                <time datetime={article.publishedAt}>{formatDate(article.publishedAt)}</time>
+                {article.summary && <p>{article.summary}</p>}
+              </article>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </main>
+</BaseLayout>

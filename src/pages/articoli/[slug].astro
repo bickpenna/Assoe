@@ -1,0 +1,48 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { contentRepository } from '@/content';
+import { formatDate } from '@/utils/date';
+
+export const getStaticPaths = (async () => {
+  const articles = await contentRepository.listArticles();
+
+  return articles.map(({ slug }) => ({ params: { slug } }));
+}) satisfies GetStaticPaths;
+
+const slug = Astro.params.slug;
+const article = slug ? await contentRepository.getArticleBySlug(slug) : null;
+
+if (!article) {
+  throw new Error(`Articolo non trovato durante la build: ${slug ?? '(slug mancante)'}`);
+}
+---
+
+<BaseLayout title={`${article.title} | Asso è… La Strada ci Insegna ODV`}>
+  <main>
+    <p><a href="/articoli/">Tutti gli articoli</a></p>
+    <article>
+      <header>
+        <h1>{article.title}</h1>
+        <time datetime={article.publishedAt}>{formatDate(article.publishedAt)}</time>
+        {article.summary && <p>{article.summary}</p>}
+      </header>
+
+      {article.imageUrl && <img src={article.imageUrl} alt={article.title} />}
+      {article.bodyHtml && <div set:html={article.bodyHtml} />}
+
+      {
+        article.galleryImageUrls.length > 0 && (
+          <section aria-labelledby="galleria">
+            <h2 id="galleria">Galleria</h2>
+            <ul>
+              {article.galleryImageUrls.map((url, index) => (
+                <li><img src={url} alt={`${article.title}, foto ${index + 1}`} /></li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+    </article>
+  </main>
+</BaseLayout>

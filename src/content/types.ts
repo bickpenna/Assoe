@@ -21,6 +21,11 @@ export interface ArticleSummary {
   imageUrl?: string;
 }
 
+export interface ArticleDetail extends ArticleSummary {
+  bodyHtml?: string;
+  galleryImageUrls: string[];
+}
+
 export type EventStatus = 'scheduled' | 'ongoing' | 'completed' | 'cancelled';
 
 export interface EventSummary {
@@ -79,6 +84,7 @@ export interface ContentRepository {
   listProjects(): Promise<ProjectSummary[]>;
   getProjectBySlug(slug: string): Promise<ProjectDetail | null>;
   listArticles(): Promise<ArticleSummary[]>;
+  getArticleBySlug(slug: string): Promise<ArticleDetail | null>;
   listEvents(): Promise<EventSummary[]>;
   listPeople(): Promise<PersonSummary[]>;
   getAssociationInfo(): Promise<AssociationInfo | null>;
