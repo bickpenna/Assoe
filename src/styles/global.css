@@ -133,12 +133,22 @@ p { line-height: 1.65; }
 .gallery-grid { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 .gallery-grid li { background: var(--surface-muted); border-radius: 1rem; overflow: hidden; }
 .gallery-grid .content-image { width: 100%; height: 18rem; object-fit: contain; }
-.people-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; list-style: none; padding: 0; }
-.person-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-.person-card__image { aspect-ratio: 5 / 6; background: var(--surface-muted); overflow: hidden; }
-.person-card__image .content-image { height: 100%; }
-.person-card__body { padding: 1.2rem; }
-.person-card__body p { color: var(--muted); margin: .4rem 0 0; }
+.people-page__intro { display: flex; align-items: center; justify-content: space-between; gap: 2rem; margin-top: 3rem; padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(180deg, var(--surface-muted), var(--card)); }
+.people-page__intro h1 { margin-bottom: .5rem; }
+.people-page__intro p:last-child { margin: 0; color: var(--muted); }
+.people-page__logo { display: grid; place-items: center; flex: 0 0 auto; width: 10rem; min-height: 8rem; padding: .75rem; border-radius: 1rem; background: var(--card); }
+.people-page__logo .content-image { width: auto; max-width: 100%; max-height: 7rem; object-fit: contain; }
+.people-role { padding-top: 3.5rem; }
+.people-role h2 { margin: 0 0 1.5rem; padding-bottom: .75rem; border-bottom: 2px solid var(--green-soft); font-size: clamp(1.5rem, 3vw, 2rem); }
+.people-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; list-style: none; margin: 0; padding: 0; }
+.person-card { display: grid; grid-template-columns: minmax(8.5rem, 35%) minmax(0, 1fr); align-items: center; gap: clamp(1rem, 2.5vw, 1.75rem); min-width: 0; padding: 1rem; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+.person-card__image { display: grid; place-items: center; aspect-ratio: 5 / 6; border: 5px solid var(--green); background: var(--surface-muted); overflow: hidden; }
+.person-card__image .content-image { width: 100%; height: 100%; object-fit: cover; }
+.person-card__initials { color: var(--green-dark); font: 800 clamp(2rem, 5vw, 3.5rem) 'Epilogue Variable', sans-serif; }
+.person-card__body { min-width: 0; }
+.person-card__name { display: grid; justify-items: start; gap: .4rem; margin: 0; font-size: clamp(1.4rem, 2.7vw, 2.25rem); overflow-wrap: anywhere; }
+.person-card__name span { max-width: 100%; padding-bottom: .1rem; border-bottom: 1px solid currentColor; }
+.person-card__role { margin: 1rem 0 0; color: var(--green-dark); font-size: .8rem; font-weight: 800; letter-spacing: .04em; line-height: 1.4; text-transform: uppercase; }
 .info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem; }
 .info-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 1.5rem; }
 .info-card h2 { font-size: 1.25rem; }
@@ -155,7 +165,8 @@ p { line-height: 1.65; }
   .mobile-nav nav { position: absolute; z-index: 10; right: 0; top: calc(100% + .5rem); display: flex; flex-direction: column; gap: 1rem; min-width: 13rem; padding: 1.2rem; background: #fff; border: 1px solid var(--line); border-radius: 1rem; box-shadow: 0 12px 30px rgba(0,0,0,.1); }
   .hero__panel { grid-template-columns: 1fr; }
   .hero__art { display: none; }
-  .content-grid, .people-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .content-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .people-grid { grid-template-columns: 1fr; }
   .site-footer__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem 2rem; }
 }
 
@@ -172,7 +183,12 @@ p { line-height: 1.65; }
   .hero__actions .button { width: 100%; }
   .section { padding-top: 3.5rem; }
   .section__header { align-items: start; flex-direction: column; gap: .5rem; }
-  .content-grid, .people-grid, .info-grid, .site-footer__grid { grid-template-columns: 1fr; }
+  .content-grid, .info-grid, .site-footer__grid { grid-template-columns: 1fr; }
+  .people-page__intro { flex-direction: column-reverse; align-items: flex-start; margin-top: 1.5rem; }
+  .people-page__logo { width: 8rem; min-height: 6rem; }
+  .people-role { padding-top: 2.75rem; }
+  .person-card { grid-template-columns: minmax(6.5rem, 35%) minmax(0, 1fr); gap: 1rem; padding: .75rem; }
+  .person-card__name { font-size: clamp(1.25rem, 5vw, 1.8rem); }
   .site-footer { padding-top: 2.75rem; }
   .site-footer__grid { gap: 2rem; }
   .site-footer__bottom { margin-top: 2.5rem; }

@@ -2,13 +2,9 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import { contentRepository } from '@/content';
-import { personRoleLabel } from '@/utils/labels';
 import { SITE_NAME } from '@/config/site';
 
-const [association, people] = await Promise.all([
-  contentRepository.getAssociationInfo(),
-  contentRepository.listPeople(),
-]);
+const association = await contentRepository.getAssociationInfo();
 
 const documents = association ? [
   { label: 'Statuto', url: association.documents.statuteUrl },
@@ -51,18 +47,8 @@ const hasAddress = Boolean(contacts?.address || contacts?.postalCode || contacts
 
     <section class="section" aria-labelledby="persone-associazione">
       <div class="section__header"><div><p class="eyebrow">Le persone</p><h2 id="persone-associazione">Chi fa parte dell’associazione</h2></div></div>
-      {people.length === 0 ? (
-        <p class="notice">Le persone dell’associazione saranno pubblicate presto.</p>
-      ) : (
-        <ul class="people-grid">
-          {people.map((person) => (
-            <li class="person-card">
-              {person.photoUrl && <div class="person-card__image"><ContentImage src={person.photoUrl} alt="" variant="portrait" /></div>}
-              <div class="person-card__body"><h3>{person.firstName} {person.lastName}</h3><p>{personRoleLabel(person.role)}</p></div>
-            </li>
-          ))}
-        </ul>
-      )}
+      <p class="section__intro">Conosci le persone e i ruoli che animano l’associazione.</p>
+      <p><a class="button" href="/associati/">Scopri gli associati</a></p>
     </section>
 
     {

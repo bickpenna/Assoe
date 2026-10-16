@@ -5,14 +5,23 @@ const navigation = {
   events: { href: '/eventi/', label: 'Eventi' },
   articles: { href: '/articoli/', label: 'Articoli' },
   about: { href: '/chi-siamo/', label: 'Chi siamo' },
+  people: { href: '/associati/', label: 'Associati' },
   contacts: { href: '/contatti/', label: 'Contatti' },
 } as const;
 
-export const siteNavigation = Object.values(navigation);
+export const siteNavigation = [
+  navigation.home,
+  navigation.projects,
+  navigation.events,
+  navigation.articles,
+  navigation.about,
+  navigation.contacts,
+];
 
 export const footerNavigation = [
   { ...navigation.events, label: 'Eventi e archivio' },
   navigation.articles,
   navigation.projects,
   { ...navigation.about, label: 'L’associazione' },
+  navigation.people,
 ];

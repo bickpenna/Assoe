@@ -1,0 +1,26 @@
+---
+import ContentImage from './ContentImage.astro';
+import type { PersonSummary } from '@/content/types';
+import { personRoleLabel } from '@/utils/labels';
+
+interface Props {
+  person: PersonSummary;
+}
+
+const { person } = Astro.props;
+const initials = `${person.firstName.charAt(0)}${person.lastName.charAt(0)}`;
+---
+
+<li class="person-card">
+  <div class="person-card__image">
+    {person.photoUrl ? (
+      <ContentImage src={person.photoUrl} alt="" variant="portrait" />
+    ) : (
+      <span class="person-card__initials" aria-hidden="true">{initials}</span>
+    )}
+  </div>
+  <div class="person-card__body">
+    <h3 class="person-card__name"><span>{person.firstName}</span><span>{person.lastName}</span></h3>
+    <p class="person-card__role">{personRoleLabel(person.role)}</p>
+  </div>
+</li>

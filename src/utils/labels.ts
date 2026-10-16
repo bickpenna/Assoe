@@ -16,6 +16,16 @@ const personRoleLabels: Record<PersonRole, string> = {
   civilServiceVolunteer: 'Volontario del servizio civile',
 };
 
+/** Ordine di presentazione e titoli delle sezioni nella raccolta delle persone. */
+export const personRoleGroups: ReadonlyArray<{ role: PersonRole; title: string }> = [
+  { role: 'president', title: 'Presidenza' },
+  { role: 'vicePresident', title: 'Vicepresidenza' },
+  { role: 'secretary', title: 'Segreteria' },
+  { role: 'boardMember', title: 'Consiglio direttivo' },
+  { role: 'volunteer', title: 'Volontari' },
+  { role: 'civilServiceVolunteer', title: 'Servizio civile' },
+];
+
 export function eventStatusLabel(status: EventStatus): string {
   return eventStatusLabels[status];
 }

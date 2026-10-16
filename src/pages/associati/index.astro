@@ -1,0 +1,47 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PersonCard from '@/components/PersonCard.astro';
+import ContentImage from '@/components/ContentImage.astro';
+import { contentRepository } from '@/content';
+import { personRoleGroups } from '@/utils/labels';
+import { SITE_NAME } from '@/config/site';
+
+const [association, people] = await Promise.all([
+  contentRepository.getAssociationInfo(),
+  contentRepository.listPeople(),
+]);
+
+const groups = personRoleGroups.map(({ role, title }) => ({
+  role,
+  title,
+  people: people.filter((person) => person.role === role),
+})).filter((group) => group.people.length > 0);
+---
+
+<BaseLayout title={`Associati | ${SITE_NAME}`} association={association}>
+  <main id="contenuto" class="container people-page">
+    <header class="people-page__intro">
+      <div>
+        <p class="eyebrow">Associazione di volontariato</p>
+        <h1>Le persone di Asso è…</h1>
+        <p>{SITE_NAME}</p>
+      </div>
+      {association?.logoUrl && (
+        <div class="people-page__logo"><ContentImage src={association.logoUrl} alt={`Logo di ${association.name}`} variant="logo" /></div>
+      )}
+    </header>
+
+    {groups.length === 0 ? (
+      <p class="notice">Le persone dell’associazione saranno pubblicate presto.</p>
+    ) : (
+      groups.map((group) => (
+        <section class="people-role" aria-labelledby={`ruolo-${group.role}`}>
+          <h2 id={`ruolo-${group.role}`}>{group.title}</h2>
+          <ul class="people-grid">
+            {group.people.map((person) => <PersonCard person={person} />)}
+          </ul>
+        </section>
+      ))
+    )}
+  </main>
+</BaseLayout>

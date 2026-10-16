@@ -22,7 +22,7 @@ Anche gli articoli hanno elenco e dettaglio su `/articoli/` e `/articoli/[slug]/
 
 Gli eventi hanno elenco e dettaglio su `/eventi/` e `/eventi/[slug]/`, con data, luogo, stato, descrizione, immagini e progetti collegati. I dettagli dei progetti rimandano agli articoli ed eventi associati.
 
-`/chi-siamo/` e `/contatti/` sono pagine istituzionali definite in Astro: non sono documenti modificabili nel CMS. Mostrano rispettivamente persone, dati e documenti dell'associazione; contatti e social. I campi opzionali assenti non producono sezioni vuote. Il layout condivide navigazione, nome dell'associazione e footer tra tutte le pagine.
+`/chi-siamo/` e `/contatti/` sono pagine istituzionali definite in Astro: non sono documenti modificabili nel CMS. Mostrano rispettivamente dati e documenti dell'associazione; contatti e social. `/associati/` raccoglie le persone visibili, divise per ruolo, con foto, nome e ruolo. I campi opzionali assenti non producono sezioni vuote. Il layout condivide navigazione, nome dell'associazione e footer tra tutte le pagine.
 
 Il logo delle Informazioni associazione è usato nell'header, nel footer e nella homepage tramite `SiteBrand` e `ContentImage`; se non è ancora presente compare il marchio testuale. Le voci di navigazione sono definite una volta in `src/config/navigation.ts` e riutilizzate nei menu e nel footer. Nome e marchio testuali sono centralizzati in `src/config/site.ts`.
 
