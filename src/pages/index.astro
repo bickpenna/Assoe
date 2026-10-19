@@ -41,23 +41,6 @@ const eventHeading = upcomingEvents.length > 0 ? 'Prossimo evento' : 'Eventi e i
       </div>
     </section>
 
-    <section class="section container" aria-labelledby="progetti-home">
-      <div class="section__header">
-        <div>
-          <p class="eyebrow">{BRAND_WORDMARK}</p>
-          <h2 id="progetti-home">I nostri progetti</h2>
-        </div>
-        <a class="text-link" href="/progetti/">Tutti i progetti <span aria-hidden="true">↗</span></a>
-      </div>
-      {
-        projects.length > 0 ? (
-          <ProjectList projects={projects.slice(0, 3)} />
-        ) : (
-          <p class="notice">I progetti saranno pubblicati presto.</p>
-        )
-      }
-    </section>
-
     <section class="section container" aria-labelledby="eventi-home">
       <div class="section__header">
         <div>
@@ -86,6 +69,23 @@ const eventHeading = upcomingEvents.length > 0 ? 'Prossimo evento' : 'Eventi e i
           </article>
         ) : (
           <p class="notice">I prossimi eventi saranno pubblicati qui.</p>
+        )
+      }
+    </section>
+
+    <section class="section container" aria-labelledby="progetti-home">
+      <div class="section__header">
+        <div>
+          <p class="eyebrow">{BRAND_WORDMARK}</p>
+          <h2 id="progetti-home">I nostri progetti</h2>
+        </div>
+        <a class="text-link" href="/progetti/">Tutti i progetti <span aria-hidden="true">↗</span></a>
+      </div>
+      {
+        projects.length > 0 ? (
+          <ProjectList projects={projects.slice(0, 3)} />
+        ) : (
+          <p class="notice">I progetti saranno pubblicati presto.</p>
         )
       }
     </section>
