@@ -184,6 +184,7 @@ p { line-height: 1.65; }
 .detail__body a { color: var(--green-dark); }
 .detail__body img { max-width: 100%; height: auto; }
 .detail__related { margin-top: 3rem; }
+.detail__related-intro { margin-bottom: 1.5rem; }
 .gallery-grid { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 .gallery-grid li { background: var(--surface-muted); border-radius: 1rem; overflow: hidden; }
 .gallery-grid .content-image { width: 100%; height: 18rem; object-fit: contain; }

@@ -4,6 +4,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import EventCard from '@/components/EventCard.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import ProjectList from '@/components/ProjectList.astro';
+import RelatedContentSection from '@/components/RelatedContentSection.astro';
 import { contentRepository } from '@/content';
 import { formatDate } from '@/utils/date';
 import { SITE_NAME } from '@/config/site';
@@ -51,19 +52,17 @@ if (!article) {
 
       {
         article.relatedEvent && (
-          <section class="section detail__related" aria-labelledby="evento-articolo">
-            <h2 id="evento-articolo">Evento raccontato</h2>
+          <RelatedContentSection id="evento-articolo" title="C’è anche un evento" description="Un appuntamento legato a questa storia, da scoprire più da vicino.">
             <div class="content-grid"><EventCard href={`/eventi/${article.relatedEvent.slug}/`} title={article.relatedEvent.title} imageUrl={article.relatedEvent.imageUrl} /></div>
-          </section>
+          </RelatedContentSection>
         )
       }
 
       {
         article.relatedProjects.length > 0 && (
-          <section class="section detail__related" aria-labelledby="progetti-articolo">
-            <h2 id="progetti-articolo">Progetti collegati</h2>
+          <RelatedContentSection id="progetti-articolo" title="Dietro questa storia" description="Scopri i progetti che si intrecciano con questo racconto.">
             <ProjectList projects={article.relatedProjects} />
-          </section>
+          </RelatedContentSection>
         )
       }
     </article>

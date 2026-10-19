@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import ProjectList from '@/components/ProjectList.astro';
+import RelatedContentSection from '@/components/RelatedContentSection.astro';
 import { contentRepository } from '@/content';
 import { formatDateTime } from '@/utils/date';
 import { eventStatusLabel } from '@/utils/labels';
@@ -54,10 +55,9 @@ if (!event) {
 
       {
         event.relatedProjects.length > 0 && (
-          <section class="section detail__related" aria-labelledby="progetti-evento">
-            <h2 id="progetti-evento">Progetti collegati</h2>
+          <RelatedContentSection id="progetti-evento" title="Oltre questo evento" description="Esplora i progetti che accompagnano questa iniziativa.">
             <ProjectList projects={event.relatedProjects} />
-          </section>
+          </RelatedContentSection>
         )
       }
     </article>
