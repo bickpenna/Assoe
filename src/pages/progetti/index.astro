@@ -1,22 +1,13 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import ArchiveLayout from '@/layouts/ArchiveLayout.astro';
 import ProjectList from '@/components/ProjectList.astro';
 import { contentRepository } from '@/content';
-import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
+import { ARCHIVE_PAGE_SIZE } from '@/config/pagination';
+import { BRAND_WORDMARK } from '@/config/site';
 
 const projects = await contentRepository.listProjects();
 ---
 
-<BaseLayout title={`Progetti | ${SITE_NAME}`}>
-  <main id="contenuto" class="container">
-    <div class="page-intro">
-      <p class="eyebrow">{BRAND_WORDMARK}</p>
-      <h1>I nostri progetti</h1>
-    </div>
-    {projects.length === 0 ? (
-      <p class="notice">Non ci sono ancora progetti pubblicati.</p>
-    ) : (
-      <ProjectList projects={projects} headingLevel={2} />
-    )}
-  </main>
-</BaseLayout>
+<ArchiveLayout title="I nostri progetti" eyebrow={BRAND_WORDMARK} emptyMessage="Non ci sono ancora progetti pubblicati." basePath="/progetti/" currentPage={1} totalItems={projects.length}>
+  <ProjectList projects={projects.slice(0, ARCHIVE_PAGE_SIZE)} headingLevel={2} />
+</ArchiveLayout>

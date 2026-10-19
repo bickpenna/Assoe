@@ -1,28 +1,13 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import EventCard from '@/components/EventCard.astro';
+import ArchiveLayout from '@/layouts/ArchiveLayout.astro';
+import EventGrid from '@/components/EventGrid.astro';
 import { contentRepository } from '@/content';
-import { formatDateTime } from '@/utils/date';
-import { eventStatusLabel } from '@/utils/labels';
-import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
+import { ARCHIVE_PAGE_SIZE } from '@/config/pagination';
+import { BRAND_WORDMARK } from '@/config/site';
 
 const events = await contentRepository.listEvents();
 ---
 
-<BaseLayout title={`Eventi | ${SITE_NAME}`}>
-  <main id="contenuto" class="container">
-    <div class="page-intro">
-      <p class="eyebrow">{BRAND_WORDMARK}</p>
-      <h1>Eventi e iniziative</h1>
-    </div>
-    {events.length === 0 ? (
-      <p class="notice">Non ci sono ancora eventi pubblicati.</p>
-    ) : (
-      <div class="content-grid">
-        {events.map((event) => (
-          <EventCard headingLevel={2} href={`/eventi/${event.slug}/`} title={event.title} imageUrl={event.imageUrl} meta={`${formatDateTime(event.date)} · ${eventStatusLabel(event.status)}${event.place ? ` · ${event.place}` : ''}`} />
-        ))}
-      </div>
-    )}
-  </main>
-</BaseLayout>
+<ArchiveLayout title="Eventi e iniziative" eyebrow={BRAND_WORDMARK} emptyMessage="Non ci sono ancora eventi pubblicati." basePath="/eventi/" currentPage={1} totalItems={events.length}>
+  <EventGrid events={events.slice(0, ARCHIVE_PAGE_SIZE)} />
+</ArchiveLayout>

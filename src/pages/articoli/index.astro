@@ -1,22 +1,12 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import ArchiveLayout from '@/layouts/ArchiveLayout.astro';
 import ArticleList from '@/components/ArticleList.astro';
 import { contentRepository } from '@/content';
-import { SITE_NAME } from '@/config/site';
+import { ARCHIVE_PAGE_SIZE } from '@/config/pagination';
 
 const articles = await contentRepository.listArticles();
 ---
 
-<BaseLayout title={`Articoli | ${SITE_NAME}`}>
-  <main id="contenuto" class="container">
-    <div class="page-intro">
-      <p class="eyebrow">Dal territorio</p>
-      <h1>Articoli e storie</h1>
-    </div>
-    {articles.length === 0 ? (
-      <p class="notice">Non ci sono ancora articoli pubblicati.</p>
-    ) : (
-      <ArticleList articles={articles} headingLevel={2} />
-    )}
-  </main>
-</BaseLayout>
+<ArchiveLayout title="Articoli e storie" eyebrow="Dal territorio" emptyMessage="Non ci sono ancora articoli pubblicati." basePath="/articoli/" currentPage={1} totalItems={articles.length}>
+  <ArticleList articles={articles.slice(0, ARCHIVE_PAGE_SIZE)} headingLevel={2} />
+</ArchiveLayout>

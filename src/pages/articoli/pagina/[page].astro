@@ -1,0 +1,23 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import ArchiveLayout from '@/layouts/ArchiveLayout.astro';
+import ArticleList from '@/components/ArticleList.astro';
+import { contentRepository } from '@/content';
+import type { ArticleSummary } from '@/content/types';
+import { ARCHIVE_PAGE_SIZE } from '@/config/pagination';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const articles = await contentRepository.listArticles();
+  return paginate(articles, { pageSize: ARCHIVE_PAGE_SIZE }).slice(1);
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<ArticleSummary>;
+}
+
+const { page } = Astro.props;
+---
+
+<ArchiveLayout title="Articoli e storie" eyebrow="Dal territorio" emptyMessage="Non ci sono ancora articoli pubblicati." basePath="/articoli/" currentPage={page.currentPage} totalItems={page.total}>
+  <ArticleList articles={page.data} headingLevel={2} />
+</ArchiveLayout>

@@ -1,0 +1,30 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Pagination from '@/components/Pagination.astro';
+import { ARCHIVE_PAGE_SIZE } from '@/config/pagination';
+import { SITE_NAME } from '@/config/site';
+
+interface Props {
+  title: string;
+  eyebrow: string;
+  emptyMessage: string;
+  basePath: string;
+  currentPage: number;
+  totalItems: number;
+}
+
+const { title, eyebrow, emptyMessage, basePath, currentPage, totalItems } = Astro.props;
+const lastPage = Math.ceil(totalItems / ARCHIVE_PAGE_SIZE);
+const pageTitle = currentPage === 1 ? title : `${title} · Pagina ${currentPage}`;
+---
+
+<BaseLayout title={`${pageTitle} | ${SITE_NAME}`}>
+  <main id="contenuto" class="container">
+    <div class="page-intro">
+      <p class="eyebrow">{eyebrow}</p>
+      <h1>{title}</h1>
+    </div>
+    {totalItems === 0 ? <p class="notice">{emptyMessage}</p> : <slot />}
+    {lastPage > 1 && <Pagination basePath={basePath} currentPage={currentPage} lastPage={lastPage} label={title} />}
+  </main>
+</BaseLayout>

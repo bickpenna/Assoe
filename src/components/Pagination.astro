@@ -1,0 +1,46 @@
+---
+interface Props {
+  basePath: string;
+  currentPage: number;
+  lastPage: number;
+  label: string;
+}
+
+const { basePath, currentPage, lastPage, label } = Astro.props;
+const pageHref = (pageNumber: number) => pageNumber === 1 ? basePath : `${basePath}pagina/${pageNumber}/`;
+
+const visiblePages = [...new Set([
+  1,
+  lastPage,
+  ...Array.from({ length: 5 }, (_, index) => currentPage + index - 2),
+])]
+  .filter((pageNumber) => pageNumber >= 1 && pageNumber <= lastPage)
+  .sort((first, second) => first - second);
+
+const pageLinks = visiblePages.flatMap((pageNumber, index): Array<number | null> => {
+  const previous = visiblePages[index - 1];
+  if (previous === undefined || pageNumber - previous === 1) return [pageNumber];
+  return pageNumber - previous === 2 ? [previous + 1, pageNumber] : [null, pageNumber];
+});
+---
+
+<nav class="pagination" aria-label={`Paginazione ${label}`}>
+  <p class="pagination__status">Pagina {currentPage} di {lastPage}</p>
+  <div class="pagination__controls">
+    {currentPage > 1 && <a class="pagination__direction" href={pageHref(currentPage - 1)} rel="prev">← Precedente</a>}
+    <ul class="pagination__pages">
+      {pageLinks.map((pageNumber) => (
+        <li>
+          {pageNumber === null ? (
+            <span class="pagination__ellipsis" aria-hidden="true">…</span>
+          ) : pageNumber === currentPage ? (
+            <span class="pagination__number pagination__number--current" aria-current="page">{pageNumber}</span>
+          ) : (
+            <a class="pagination__number" href={pageHref(pageNumber)} aria-label={`Vai alla pagina ${pageNumber}`}>{pageNumber}</a>
+          )}
+        </li>
+      ))}
+    </ul>
+    {currentPage < lastPage && <a class="pagination__direction" href={pageHref(currentPage + 1)} rel="next">Successiva →</a>}
+  </div>
+</nav>
