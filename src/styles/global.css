@@ -148,11 +148,12 @@ p { line-height: 1.65; }
 .event-feature__body h3 { font-size: clamp(1.5rem, 3vw, 2.5rem); }
 .event-feature__body p:not(.eyebrow) { color: var(--muted); margin: .7rem 0; }
 .notice { padding: 1.3rem 1.5rem; border: 1px dashed var(--line); border-radius: 1rem; background: #fff; color: var(--muted); }
-.five-per-mille { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: clamp(1.25rem, 3vw, 2.5rem); margin-top: 5rem; padding: 2rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.five-per-mille__mark { display: grid; place-items: center; width: 7.5rem; aspect-ratio: 1; border-radius: 50%; background: var(--yellow); color: var(--green-dark); font-family: 'Epilogue Variable', system-ui, sans-serif; font-size: 1.25rem; font-weight: 800; letter-spacing: -.04em; }
-.five-per-mille h2 { margin: 0; font-size: clamp(1.5rem, 2.5vw, 2.15rem); }
-.five-per-mille p { max-width: 38rem; margin: .4rem 0 0; color: var(--muted); }
-.five-per-mille .text-link { align-self: center; }
+.five-per-mille { margin-top: 5rem; background: var(--yellow); color: var(--green-dark); border-radius: 1.5rem; padding: clamp(1.8rem, 4vw, 3.3rem); display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: center; }
+.five-per-mille .eyebrow { color: var(--green-dark); }
+.five-per-mille h2 { margin: 0; }
+.five-per-mille p:not(.eyebrow) { color: var(--muted); margin: .7rem 0 0; max-width: 44rem; }
+.five-per-mille .button { background: var(--green-dark); color: #fff; }
+.five-per-mille .button:hover { background: var(--green); color: #fff; }
 .page-intro { padding: 4rem 0 2rem; max-width: 60rem; }
 .page-intro p:not(.eyebrow) { color: var(--muted); }
 .event-archive__nav { display: flex; flex-wrap: wrap; gap: .65rem; margin-bottom: 1.7rem; }
@@ -277,9 +278,8 @@ p { line-height: 1.65; }
   .event-feature__media { min-height: 0; max-height: 20rem; }
   .event-feature__media .content-image { height: 20rem; }
   .event-feature__body { padding: 1.5rem; }
-  .five-per-mille { grid-template-columns: auto minmax(0, 1fr); gap: 1rem; margin-top: 3.5rem; }
-  .five-per-mille__mark { width: 5.5rem; font-size: 1rem; }
-  .five-per-mille .text-link { grid-column: 2; justify-self: start; }
+  .five-per-mille { grid-template-columns: 1fr; margin-top: 3.5rem; }
+  .five-per-mille .button { width: 100%; }
   .gallery-grid { grid-template-columns: 1fr; }
   .page-intro { padding-top: 2.5rem; }
   .pagination__controls { gap: .35rem; }
