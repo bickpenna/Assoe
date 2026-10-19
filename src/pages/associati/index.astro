@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PersonCard from '@/components/PersonCard.astro';
-import ContentImage from '@/components/ContentImage.astro';
 import { contentRepository } from '@/content';
 import { personRoleGroups } from '@/utils/labels';
 import { SITE_NAME } from '@/config/site';
@@ -20,16 +19,11 @@ const groups = personRoleGroups.map(({ role, title }) => ({
 
 <BaseLayout title={`Associati | ${SITE_NAME}`} association={association}>
   <main id="contenuto" class="container people-page">
-    <header class="people-page__intro">
-      <div>
-        <p class="eyebrow">Associazione di volontariato</p>
-        <h1>Le persone di Asso è…</h1>
-        <p>Qui puoi conoscere le persone che fanno parte della nostra associazione.</p>
-      </div>
-      {association?.logoUrl && (
-        <div class="people-page__logo"><ContentImage src={association.logoUrl} alt={`Logo di ${association.name}`} variant="logo" /></div>
-      )}
-    </header>
+    <div class="page-intro">
+      <p class="eyebrow">Associazione di volontariato</p>
+      <h1>Le persone di Asso è…</h1>
+      <p>Qui puoi conoscere le persone che fanno parte della nostra associazione.</p>
+    </div>
 
     {groups.length === 0 ? (
       <p class="notice">Le persone dell’associazione saranno pubblicate presto.</p>
