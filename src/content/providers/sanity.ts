@@ -78,6 +78,8 @@ interface SanityPerson {
 interface SanityAssociation {
   associationName: string;
   logoUrl: string | null;
+  aboutText: string | null;
+  aboutImageUrl: string | null;
   taxCode: string | null;
   bankDetails: {
     iban: string | null;
@@ -250,6 +252,8 @@ const peopleQuery = `*[
 const associationQuery = `*[_type == "siteSettings" && defined(associationName)][0] {
   associationName,
   "logoUrl": logo.asset->url,
+  aboutText,
+  "aboutImageUrl": aboutImage.asset->url,
   taxCode,
   bankDetails { iban, accountHolder, bankName },
   registryInfo,
@@ -366,6 +370,8 @@ export function createSanityRepository({
     return {
       name: info.associationName,
       logoUrl: info.logoUrl ?? undefined,
+      aboutText: info.aboutText?.trim() || undefined,
+      aboutImageUrl: info.aboutImageUrl ?? undefined,
       taxCode: info.taxCode ?? undefined,
       bankDetails: iban && accountHolder ? {
         iban,

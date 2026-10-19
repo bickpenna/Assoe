@@ -78,6 +78,8 @@ export interface ContactInfo {
 export interface AssociationInfo {
   name: string;
   logoUrl?: string;
+  aboutText?: string;
+  aboutImageUrl?: string;
   taxCode?: string;
   bankDetails?: {
     iban: string;

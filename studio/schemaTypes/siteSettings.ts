@@ -13,6 +13,20 @@ export const siteSettings = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({ name: 'logo', title: 'Logo', type: 'image' }),
+    defineField({
+      name: 'aboutText',
+      title: 'Chi siamo · testo',
+      description: 'Racconta in breve cosa fa l’associazione. Separa i paragrafi con una riga vuota; non serve copiare il testo dello statuto.',
+      type: 'text',
+      rows: 8,
+      validation: (rule) => rule.max(2500),
+    }),
+    defineField({
+      name: 'aboutImage',
+      title: 'Chi siamo · foto',
+      description: 'Facoltativa. Usa una foto rappresentativa dell’associazione e verifica il consenso delle persone riconoscibili.',
+      type: 'image',
+    }),
     defineField({ name: 'taxCode', title: 'Codice fiscale', type: 'string' }),
     defineField({
       name: 'bankDetails',

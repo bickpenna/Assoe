@@ -158,6 +158,17 @@ p { line-height: 1.65; }
 .five-per-mille .button:hover { background: var(--green); color: #fff; }
 .page-intro { padding: 4rem 0 2rem; max-width: 60rem; }
 .page-intro p:not(.eyebrow) { color: var(--muted); }
+.about-story { padding: clamp(2rem, 5vw, 4rem); border-radius: 1.5rem; background: var(--surface-muted); }
+.about-story--with-image { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(2rem, 4vw, 4rem); align-items: center; }
+.about-story__content { min-width: 0; max-width: 48rem; }
+.about-story__content h2 { margin-bottom: 1.5rem; }
+.about-story__content p:not(.eyebrow) { max-width: 58ch; margin: 0 0 1rem; font-size: clamp(1.05rem, 1.5vw, 1.2rem); line-height: 1.7; }
+.about-story__content .text-link { display: inline-block; margin-top: .65rem; }
+.about-story__media .content-image { display: block; width: 100%; max-height: 36rem; object-fit: contain; background: transparent; border-radius: 1rem; }
+.about-place { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); align-items: start; gap: 2rem; margin-top: 2rem; padding: 2rem 0; }
+.about-place__details address { font-size: 1.15rem; font-style: normal; line-height: 1.7; }
+.about-place__details .text-link { display: inline-block; margin-top: 1rem; }
+.about-place__registry { color: var(--muted); }
 .support-page__intro { max-width: 49rem; padding-bottom: 1.5rem; }
 .support-method { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: center; scroll-margin-top: 1.5rem; padding: clamp(1.5rem, 4vw, 3rem); border-radius: 1.5rem; }
 .support-method + .support-method { margin-top: 1.5rem; }
@@ -251,6 +262,8 @@ p { line-height: 1.65; }
   .mobile-nav nav { position: absolute; z-index: 10; right: 0; top: calc(100% + .5rem); display: flex; flex-direction: column; gap: 1rem; min-width: 13rem; padding: 1.2rem; background: var(--green-dark); border: 1px solid var(--green); border-radius: 1rem; box-shadow: 0 12px 30px rgba(0,0,0,.1); }
   .hero__panel { grid-template-columns: 1fr; }
   .hero__art { display: none; }
+  .about-story--with-image { grid-template-columns: 1fr; }
+  .about-story__media .content-image { max-height: 28rem; }
   .content-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .people-grid { grid-template-columns: 1fr; }
   .site-footer__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem 2rem; }
@@ -282,6 +295,7 @@ p { line-height: 1.65; }
   .article-list__date { padding-top: 0; }
   .article-list__media { width: 11rem; margin-top: .35rem; }
   .section { padding-top: 3.5rem; }
+  .about-place { grid-template-columns: 1fr; gap: .5rem; padding-top: 1.5rem; }
   .section__header { align-items: start; flex-direction: column; gap: .5rem; }
   .content-grid, .info-grid, .site-footer__grid { grid-template-columns: 1fr; }
   .support-method { grid-template-columns: 1fr; }

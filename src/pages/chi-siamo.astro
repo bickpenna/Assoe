@@ -3,14 +3,21 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import PersonCard from '@/components/PersonCard.astro';
 import { contentRepository } from '@/content';
-import { SITE_NAME } from '@/config/site';
+import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
 import { getBoardMembers } from '@/utils/people';
+import { toParagraphs } from '@/utils/paragraphs';
+
+// Bozza breve ricavata dal vecchio sito: il testo pubblicato in Sanity la sostituisce.
+const defaultAboutText = `L’associazione promuove iniziative di solidarietà sociale, educative e culturali, rivolte in particolare ai minori e alle loro famiglie.
+
+Il contributo dei volontari dà forma ad attività sul territorio e a occasioni di incontro, crescita e sostegno.`;
 
 const [association, people] = await Promise.all([
   contentRepository.getAssociationInfo(),
   contentRepository.listPeople(),
 ]);
 const boardMembers = getBoardMembers(people);
+const aboutParagraphs = toParagraphs(association?.aboutText || defaultAboutText);
 
 const documents = association ? [
   { label: 'Statuto', url: association.documents.statuteUrl },
@@ -26,31 +33,40 @@ const hasContactMethods = Boolean(contacts?.email || contacts?.phone || associat
 <BaseLayout title={`Chi siamo | ${SITE_NAME}`} association={association}>
   <main id="contenuto" class="container">
     <div class="page-intro">
-      <p class="eyebrow">La nostra associazione</p>
+      <p class="eyebrow">{BRAND_WORDMARK}</p>
       <h1>Chi siamo</h1>
-      <p>{association?.name ?? SITE_NAME}</p>
     </div>
 
-    <div class="info-grid">
-      <section class="info-card">
-        {association?.logoUrl && <ContentImage src={association.logoUrl} alt={`Logo di ${association.name}`} variant="logo" />}
-        <h2>L’associazione</h2>
-        <p>Conosci le nostre attività attraverso i <a href="/progetti/">progetti</a>, gli <a href="/eventi/">eventi</a> e gli <a href="/articoli/">articoli</a> pubblicati sul sito.</p>
-        {association?.registryInfo && <p>{association.registryInfo}</p>}
-      </section>
-      <section class="info-card" id="sede">
-        <h2>La sede</h2>
+    <section class={association?.aboutImageUrl ? 'about-story about-story--with-image' : 'about-story'} aria-labelledby="storia-associazione">
+      <div class="about-story__content">
+        <p class="eyebrow">L’associazione</p>
+        <h2 id="storia-associazione">Il nostro impegno</h2>
+        {aboutParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+        <a class="text-link" href="/progetti/">Scopri i nostri progetti ↗</a>
+      </div>
+      {association?.aboutImageUrl && (
+        <div class="about-story__media"><ContentImage src={association.aboutImageUrl} alt="" variant="gallery" /></div>
+      )}
+    </section>
+
+    <section class="about-place section" id="sede" aria-labelledby="sede-associazione">
+      <div>
+        <p class="eyebrow">Dove siamo</p>
+        <h2 id="sede-associazione">La nostra sede</h2>
+      </div>
+      <div class="about-place__details">
         {hasAddress ? (
           <address>
             {contacts?.address && <div>{contacts.address}</div>}
             <div>{[contacts?.postalCode, contacts?.city, contacts?.province].filter(Boolean).join(' ')}</div>
           </address>
         ) : (
-          <p>Per conoscere la nostra sede, <a href="#contatti">contattaci</a>.</p>
+          <p>Per conoscere la nostra sede, scrivici.</p>
         )}
-        <p><a href="#contatti">Come contattarci</a></p>
-      </section>
-    </div>
+        {association?.registryInfo && <p class="about-place__registry">{association.registryInfo}</p>}
+        <a class="text-link" href="#contatti">Come contattarci ↗</a>
+      </div>
+    </section>
 
     <section class="section" aria-labelledby="direttivo-associazione">
       <div class="section__header"><div><p class="eyebrow">Le persone</p><h2 id="direttivo-associazione">Il direttivo</h2></div></div>
