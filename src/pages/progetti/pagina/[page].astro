@@ -20,5 +20,5 @@ const { page } = Astro.props;
 ---
 
 <ArchiveLayout title="I nostri progetti" eyebrow={BRAND_WORDMARK} emptyMessage="Non ci sono ancora progetti pubblicati." basePath="/progetti/" currentPage={page.currentPage} totalItems={page.total}>
-  <ProjectList projects={page.data} headingLevel={2} variant="archive" />
+  <ProjectList projects={page.data} headingLevel={2} />
 </ArchiveLayout>
