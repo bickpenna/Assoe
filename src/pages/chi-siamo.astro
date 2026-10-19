@@ -7,17 +7,12 @@ import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
 import { getBoardMembers } from '@/utils/people';
 import { toParagraphs } from '@/utils/paragraphs';
 
-// Bozza breve ricavata dal vecchio sito: il testo pubblicato in Sanity la sostituisce.
-const defaultAboutText = `L’associazione promuove iniziative di solidarietà sociale, educative e culturali, rivolte in particolare ai minori e alle loro famiglie.
-
-Il contributo dei volontari dà forma ad attività sul territorio e a occasioni di incontro, crescita e sostegno.`;
-
 const [association, people] = await Promise.all([
   contentRepository.getAssociationInfo(),
   contentRepository.listPeople(),
 ]);
 const boardMembers = getBoardMembers(people);
-const aboutParagraphs = toParagraphs(association?.aboutText || defaultAboutText);
+const aboutParagraphs = toParagraphs(association?.aboutText);
 
 const documents = association ? [
   { label: 'Statuto', url: association.documents.statuteUrl },
@@ -37,17 +32,19 @@ const hasContactMethods = Boolean(contacts?.email || contacts?.phone || associat
       <h1>Chi siamo</h1>
     </div>
 
-    <section class={association?.aboutImageUrl ? 'about-story about-story--with-image' : 'about-story'} aria-labelledby="storia-associazione">
-      <div class="about-story__content">
-        <p class="eyebrow">L’associazione</p>
-        <h2 id="storia-associazione">Il nostro impegno</h2>
-        {aboutParagraphs.map((paragraph) => <p>{paragraph}</p>)}
-        <a class="text-link" href="/progetti/">Scopri i nostri progetti ↗</a>
-      </div>
-      {association?.aboutImageUrl && (
-        <div class="about-story__media"><ContentImage src={association.aboutImageUrl} alt="" variant="gallery" /></div>
-      )}
-    </section>
+    {aboutParagraphs.length > 0 && (
+      <section class={association?.aboutImageUrl ? 'about-story about-story--with-image' : 'about-story'} aria-labelledby="storia-associazione">
+        <div class="about-story__content">
+          <p class="eyebrow">L’associazione</p>
+          <h2 id="storia-associazione">Il nostro impegno</h2>
+          {aboutParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+          <a class="text-link" href="/progetti/">Scopri i nostri progetti ↗</a>
+        </div>
+        {association?.aboutImageUrl && (
+          <div class="about-story__media"><ContentImage src={association.aboutImageUrl} alt="" variant="gallery" /></div>
+        )}
+      </section>
+    )}
 
     <section class="about-place section" id="sede" aria-labelledby="sede-associazione">
       <div>
