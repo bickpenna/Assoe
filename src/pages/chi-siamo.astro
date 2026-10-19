@@ -94,6 +94,18 @@ const hasContactMethods = Boolean(contacts?.email || contacts?.phone || associat
       <p><a class="text-link" href="/associati/">Conosci tutti gli associati ↗</a></p>
     </section>
 
+    {hasContactMethods && (
+      <section class="about-join section" aria-labelledby="unisciti-associazione">
+        <div class="about-join__panel">
+          <div>
+            <h2 id="unisciti-associazione">Vuoi unirti a noi?</h2>
+            <p>Ti piacerebbe dare una mano? Scrivici e raccontaci come vorresti partecipare.</p>
+          </div>
+          <a class="button" href="#contatti">Contattaci ↗</a>
+        </div>
+      </section>
+    )}
+
     {
       documents.length > 0 && (
         <section class="section" aria-labelledby="documenti-associazione">
