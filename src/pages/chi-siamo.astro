@@ -46,22 +46,38 @@ const hasContactMethods = Boolean(contacts?.email || contacts?.phone || associat
       </section>
     )}
 
-    <section class="about-place section" id="sede" aria-labelledby="sede-associazione">
-      <div>
-        <p class="eyebrow">Dove siamo</p>
-        <h2 id="sede-associazione">La nostra sede</h2>
-      </div>
-      <div class="about-place__details">
-        {hasAddress ? (
-          <address>
-            {contacts?.address && <div>{contacts.address}</div>}
-            <div>{[contacts?.postalCode, contacts?.city, contacts?.province].filter(Boolean).join(' ')}</div>
-          </address>
-        ) : (
-          <p>Per conoscere la nostra sede, scrivici.</p>
+    <section class="about-contact section" id="contatti" aria-labelledby="sede-associazione">
+      <div class:list={['about-contact__panel', { 'about-contact__panel--split': hasContactMethods }]}>
+        <div class="about-contact__place" id="sede">
+          <p class="eyebrow">Dove siamo</p>
+          <h2 id="sede-associazione">La nostra sede</h2>
+          {hasAddress ? (
+            <address>
+              {contacts?.address && <span>{contacts.address}</span>}
+              {[contacts?.postalCode, contacts?.city, contacts?.province].some(Boolean) && (
+                <span>{[contacts?.postalCode, contacts?.city, contacts?.province].filter(Boolean).join(' ')}</span>
+              )}
+            </address>
+          ) : (
+            <p>Per conoscere la nostra sede, scrivici.</p>
+          )}
+          {association?.registryInfo && <p class="about-contact__registry">{association.registryInfo}</p>}
+        </div>
+        {hasContactMethods && (
+          <div class="about-contact__channels">
+            <h3>Restiamo in contatto</h3>
+            <dl>
+              {contacts?.email && <div><dt>Email</dt><dd><a href={`mailto:${contacts.email}`}>{contacts.email}</a></dd></div>}
+              {contacts?.phone && <div><dt>Telefono</dt><dd><a href={`tel:${contacts.phone.replace(/[^+\d]/g, '')}`}>{contacts.phone}</a></dd></div>}
+              {association && association.socialLinks.length > 0 && (
+                <div>
+                  <dt>Seguici</dt>
+                  <dd><ul>{association.socialLinks.map((social) => <li><a href={social.url}>{social.name}</a></li>)}</ul></dd>
+                </div>
+              )}
+            </dl>
+          </div>
         )}
-        {association?.registryInfo && <p class="about-place__registry">{association.registryInfo}</p>}
-        <a class="text-link" href="#contatti">Come contattarci ↗</a>
       </div>
     </section>
 
@@ -76,27 +92,6 @@ const hasContactMethods = Boolean(contacts?.email || contacts?.phone || associat
         <p class="notice">Le persone del direttivo saranno pubblicate presto.</p>
       )}
       <p><a class="text-link" href="/associati/">Conosci tutti gli associati ↗</a></p>
-    </section>
-
-    <section class="section" id="contatti" aria-labelledby="contatti-associazione">
-      <p class="eyebrow">Restiamo in contatto</p>
-      <h2 id="contatti-associazione">Come contattarci</h2>
-      {hasContactMethods ? (
-        <div class="info-grid">
-          {contacts?.email && <section class="info-card"><h3>Email</h3><p><a href={`mailto:${contacts.email}`}>{contacts.email}</a></p></section>}
-          {contacts?.phone && <section class="info-card"><h3>Telefono</h3><p><a href={`tel:${contacts.phone.replace(/[^+\d]/g, '')}`}>{contacts.phone}</a></p></section>}
-          {association && association.socialLinks.length > 0 && (
-            <section class="info-card">
-              <h3>Social</h3>
-              <ul class="link-list">
-                {association.socialLinks.map((social) => <li><a href={social.url}>{social.name}</a></li>)}
-              </ul>
-            </section>
-          )}
-        </div>
-      ) : (
-        <p class="notice">I contatti dell’associazione non sono ancora disponibili.</p>
-      )}
     </section>
 
     {
