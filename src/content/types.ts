@@ -26,6 +26,8 @@ export interface ArticleSummary {
 export interface ArticleDetail extends ArticleSummary {
   bodyHtml?: string;
   galleryImageUrls: string[];
+  /** Link esterno facoltativo per continuare la conversazione. */
+  discussionUrl?: string;
   relatedProjects: ProjectSummary[];
   relatedEvent?: EventSummary;
 }

@@ -51,6 +51,18 @@ if (!article) {
       }
 
       {
+        article.discussionUrl && (
+          <section class="article-discussion" aria-label="Conversazione su Facebook">
+            <p class="eyebrow">La conversazione continua</p>
+            <p>Puoi leggere i commenti e dire la tua nel post che abbiamo pubblicato su Facebook.</p>
+            <a class="text-link" href={article.discussionUrl} target="_blank" rel="noopener noreferrer">
+              Vai al post su Facebook <span aria-hidden="true">↗</span><span class="visually-hidden"> (si apre in una nuova scheda)</span>
+            </a>
+          </section>
+        )
+      }
+
+      {
         article.relatedEvent && (
           <RelatedContentSection id="evento-articolo" title="C’è anche un evento" description="Un appuntamento legato a questa storia, da scoprire più da vicino.">
             <div class="content-grid"><EventCard href={`/eventi/${article.relatedEvent.slug}/`} title={article.relatedEvent.title} imageUrl={article.relatedEvent.imageUrl} /></div>

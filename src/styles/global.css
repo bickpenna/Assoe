@@ -188,6 +188,8 @@ p { line-height: 1.65; }
 .detail__body p { line-height: inherit; }
 .detail__body a { color: var(--green-dark); }
 .detail__body img { max-width: 100%; height: auto; }
+.article-discussion { max-width: 48rem; margin-top: 3rem; padding: .2rem 0 .3rem 1.35rem; border-left: 3px solid var(--green); }
+.article-discussion p:not(.eyebrow) { margin: .45rem 0 .75rem; color: var(--muted); }
 .detail__related { margin-top: 3rem; }
 .detail__related-intro { margin-bottom: 1.5rem; }
 .gallery-grid { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }

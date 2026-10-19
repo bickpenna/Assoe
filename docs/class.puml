@@ -48,6 +48,7 @@ class Articolo {
     -slug: Slug
     -sommario: String
     -testo: RichText
+    -postFacebook: URL (opzionale)
     -immaginePrincipale: Image
     -galleria: List<Image> ' massimo 6 '
     -dataPubblicazione: DateTime

@@ -1,5 +1,6 @@
 import { createClient } from '@sanity/client';
 import { toHTML } from '@portabletext/to-html';
+import { facebookPostUrlOrUndefined } from '../../utils/facebook';
 import type {
   ArticleDetail,
   ArticleSummary,
@@ -42,6 +43,7 @@ interface SanityArticle {
 interface SanityArticleDetail extends SanityArticle {
   body: Array<{ _type: string; _key?: string }> | null;
   galleryImageUrls: Array<string | null> | null;
+  facebookPostUrl: string | null;
   projects: Array<SanityRelatedProject | null> | null;
   event: SanityEvent | null;
 }
@@ -174,6 +176,7 @@ const articleBySlugQuery = `*[
   featured,
   "imageUrl": mainImage.asset->url,
   body,
+  facebookPostUrl,
   "galleryImageUrls": gallery[].asset->url,
   "projects": projects[]-> {
     _id, name, "slug": slug.current, active, "imageUrl": image.asset->url
@@ -360,6 +363,7 @@ export function createSanityRepository({
       return {
         ...toArticleSummary(article),
         bodyHtml: renderRichText(article.body),
+        discussionUrl: facebookPostUrlOrUndefined(article.facebookPostUrl),
         galleryImageUrls: (article.galleryImageUrls ?? []).filter(
           (url): url is string => typeof url === 'string',
         ),

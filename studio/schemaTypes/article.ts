@@ -21,6 +21,24 @@ export const article = defineType({
     defineField({ name: 'summary', title: 'Sommario', type: 'text', rows: 3 }),
     defineField({ name: 'body', title: 'Testo', type: 'richText' }),
     defineField({
+      name: 'facebookPostUrl',
+      title: 'Post Facebook',
+      description: 'Facoltativo. Incolla il link a un post pubblico dove si possono leggere o lasciare commenti.',
+      type: 'url',
+      validation: (rule) => rule.uri({ scheme: ['https'] }).custom((value) => {
+        if (!value) return true;
+
+        try {
+          const hostname = new URL(value).hostname.toLowerCase();
+          return hostname === 'facebook.com' || hostname.endsWith('.facebook.com') || hostname === 'fb.watch'
+            ? true
+            : 'Inserisci un link a un post di Facebook.';
+        } catch {
+          return 'Inserisci un link valido a un post di Facebook.';
+        }
+      }),
+    }),
+    defineField({
       name: 'mainImage',
       title: 'Immagine principale',
       type: 'image',

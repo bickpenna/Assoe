@@ -20,6 +20,8 @@ I progetti sono il primo percorso completo: `/progetti/` mostra quelli attivi e 
 
 Anche gli articoli hanno elenco e dettaglio su `/articoli/` e `/articoli/[slug]/`: mostrano data, sommario, testo, immagini e collegamenti a progetti ed eventi quando presenti. Il testo formattato viene convertito nell'adattatore.
 
+Ogni articolo può avere un link facoltativo a un post Facebook pubblico: nello Studio si compila **Post Facebook** con l'URL del post. In fondo all'articolo compare un invito a leggere i commenti e partecipare alla conversazione, senza incorporare Facebook nella pagina. Se il campo è vuoto, il richiamo non compare. Il racconto e le immagini principali devono comunque restare sul sito: il post esterno potrebbe non essere accessibile a tutti. Per vedere il nuovo campo nello Studio online va distribuita la nuova build dello Studio; per vedere il link sul sito statico va ricompilato il frontend dopo la pubblicazione dell'articolo.
+
 Gli eventi hanno elenco e dettaglio su `/eventi/` e `/eventi/[slug]/`, con data, luogo, stato, descrizione, immagini e progetti collegati. I dettagli dei progetti rimandano agli articoli ed eventi associati.
 
 `/chi-siamo/` e `/contatti/` sono pagine istituzionali definite in Astro: non sono documenti modificabili nel CMS. Mostrano rispettivamente dati e documenti dell'associazione; contatti e social. `/associati/` raccoglie le persone visibili, divise per ruolo, con foto, nome e ruolo. I campi opzionali assenti non producono sezioni vuote. Il layout condivide navigazione, nome dell'associazione e footer tra tutte le pagine.
