@@ -58,7 +58,13 @@ Controlli e build:
 ```bash
 npm run check
 npm run build
+npm test
+npm run test:coverage
+npm run build:demo
+npm run check:build
 ```
+
+`test:coverage` verifica le funzioni di utilità con soglie minime del 95% sulle linee, 90% sui rami e 100% sulle funzioni. `check:build` controlla l’output statico dopo una build demo o reale: ogni pagina deve avere title, description e un solo H1, senza URL non sicuri.
 
 ## Sviluppo dello Studio Sanity
 

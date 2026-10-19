@@ -10,17 +10,21 @@
     "build:demo": "CONTENT_SOURCE=demo astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "node --experimental-strip-types --test tests/*.test.mjs"
+    "check:build": "node scripts/check-static-output.mjs",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "test:coverage": "node --experimental-strip-types --experimental-test-coverage --test-coverage-include='src/utils/*.ts' --test-coverage-lines=95 --test-coverage-branches=90 --test-coverage-functions=100 --test tests/*.test.mjs"
   },
   "dependencies": {
     "@fontsource-variable/epilogue": "^5.3.0",
     "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
     "@portabletext/to-html": "^6.0.0",
     "@sanity/client": "^8.9.0",
-    "astro": "^7.4.0"
+    "astro": "^7.4.0",
+    "sanitize-html": "^2.18.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@types/sanitize-html": "^2.16.2",
     "typescript": "^6.0.3"
   }
 }

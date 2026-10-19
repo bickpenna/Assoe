@@ -1,4 +1,6 @@
 ---
+import { paginationItems } from '@/utils/pagination';
+
 interface Props {
   basePath: string;
   currentPage: number;
@@ -8,20 +10,7 @@ interface Props {
 
 const { basePath, currentPage, lastPage, label } = Astro.props;
 const pageHref = (pageNumber: number) => pageNumber === 1 ? basePath : `${basePath}pagina/${pageNumber}/`;
-
-const visiblePages = [...new Set([
-  1,
-  lastPage,
-  ...Array.from({ length: 5 }, (_, index) => currentPage + index - 2),
-])]
-  .filter((pageNumber) => pageNumber >= 1 && pageNumber <= lastPage)
-  .sort((first, second) => first - second);
-
-const pageLinks = visiblePages.flatMap((pageNumber, index): Array<number | null> => {
-  const previous = visiblePages[index - 1];
-  if (previous === undefined || pageNumber - previous === 1) return [pageNumber];
-  return pageNumber - previous === 2 ? [previous + 1, pageNumber] : [null, pageNumber];
-});
+const pageLinks = paginationItems(currentPage, lastPage);
 ---
 
 <nav class="pagination" aria-label={`Paginazione ${label}`}>

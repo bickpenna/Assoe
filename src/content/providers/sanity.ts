@@ -1,6 +1,7 @@
 import { createClient } from '@sanity/client';
 import { toHTML } from '@portabletext/to-html';
 import { facebookPostUrlOrUndefined } from '../../utils/facebook';
+import { sanitizeRichTextHtml } from '../../utils/sanitizeHtml';
 import { httpsUrlOrUndefined } from '../../../shared/url';
 import { projectImageUrl, type SanityImage } from './sanityImage';
 import type {
@@ -262,7 +263,7 @@ const associationQuery = `*[_type == "siteSettings" && defined(associationName)]
 }`;
 
 function renderRichText(blocks: Array<{ _type: string; _key?: string }> | null): string | undefined {
-  return blocks?.length ? toHTML(blocks) : undefined;
+  return blocks?.length ? sanitizeRichTextHtml(toHTML(blocks)) : undefined;
 }
 
 function toArticleSummary(article: SanityArticle): ArticleSummary {
