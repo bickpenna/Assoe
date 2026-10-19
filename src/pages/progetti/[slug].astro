@@ -7,20 +7,17 @@ import ContentImage from '@/components/ContentImage.astro';
 import RelatedContentSection from '@/components/RelatedContentSection.astro';
 import { contentRepository } from '@/content';
 import { formatDateTime } from '@/utils/date';
+import { requireBySlug, staticPathsFromSlugs } from '@/utils/content';
 import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
 
 export const getStaticPaths = (async () => {
   const projects = await contentRepository.listProjects();
 
-  return projects.map(({ slug }) => ({ params: { slug } }));
+  return staticPathsFromSlugs(projects);
 }) satisfies GetStaticPaths;
 
 const slug = Astro.params.slug;
-const project = slug ? await contentRepository.getProjectBySlug(slug) : null;
-
-if (!project) {
-  throw new Error(`Progetto non trovato durante la build: ${slug ?? '(slug mancante)'}`);
-}
+const project = await requireBySlug(slug, contentRepository.getProjectBySlug, 'Progetto');
 ---
 
 <BaseLayout title={`${project.name} | ${SITE_NAME}`}>

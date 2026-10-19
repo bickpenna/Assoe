@@ -22,7 +22,7 @@ export const socialLink = defineType({
       name: 'url',
       title: 'Link social',
       type: 'url',
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.required().uri({ scheme: ['https'] }),
     }),
   ],
   preview: {

@@ -1,0 +1,23 @@
+---
+import ContentImage from './ContentImage.astro';
+
+interface Props {
+  id: string;
+  title: string;
+  imageAlt: string;
+  imageUrls: string[];
+}
+
+const { id, title, imageAlt, imageUrls } = Astro.props;
+---
+
+{imageUrls.length > 0 && (
+  <section class="section" aria-labelledby={id}>
+    <h2 id={id}>{title}</h2>
+    <ul class="gallery-grid">
+      {imageUrls.map((url, index) => (
+        <li><ContentImage src={url} alt={`${imageAlt}, foto ${index + 1}`} variant="gallery" /></li>
+      ))}
+    </ul>
+  </section>
+)}

@@ -19,7 +19,6 @@ export interface ArticleSummary {
   slug: string;
   summary?: string;
   publishedAt: string;
-  featured: boolean;
   imageUrl?: string;
 }
 

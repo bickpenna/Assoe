@@ -117,7 +117,6 @@ export function createDemoRepository(): ContentRepository {
     slug,
     summary,
     publishedAt: dateFromToday(-index * 7 - 2),
-    featured: index === 0,
   }));
 
   const projectBySlug = new Map(projects.map((project) => [project.slug, project]));

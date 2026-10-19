@@ -2,10 +2,13 @@
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ContentImage from '@/components/ContentImage.astro';
+import DetailGallery from '@/components/DetailGallery.astro';
+import RichTextContent from '@/components/RichTextContent.astro';
 import ProjectList from '@/components/ProjectList.astro';
 import RelatedContentSection from '@/components/RelatedContentSection.astro';
 import FacebookDiscussion from '@/components/FacebookDiscussion.astro';
 import { contentRepository } from '@/content';
+import { requireBySlug, staticPathsFromSlugs } from '@/utils/content';
 import { formatDateTime } from '@/utils/date';
 import { eventStatusLabel } from '@/utils/labels';
 import { SITE_NAME } from '@/config/site';
@@ -13,15 +16,11 @@ import { SITE_NAME } from '@/config/site';
 export const getStaticPaths = (async () => {
   const events = await contentRepository.listEvents();
 
-  return events.map(({ slug }) => ({ params: { slug } }));
+  return staticPathsFromSlugs(events);
 }) satisfies GetStaticPaths;
 
 const slug = Astro.params.slug;
-const event = slug ? await contentRepository.getEventBySlug(slug) : null;
-
-if (!event) {
-  throw new Error(`Evento non trovato durante la build: ${slug ?? '(slug mancante)'}`);
-}
+const event = await requireBySlug(slug, contentRepository.getEventBySlug, 'Evento');
 ---
 
 <BaseLayout title={`${event.title} | ${SITE_NAME}`}>
@@ -39,20 +38,8 @@ if (!event) {
       </header>
 
       {event.imageUrl && <div class="detail__image detail__image--poster"><ContentImage src={event.imageUrl} alt={`Locandina: ${event.title}`} variant="poster" eager /></div>}
-      {event.descriptionHtml && <div class="detail__body" set:html={event.descriptionHtml} />}
-
-      {
-        event.galleryImageUrls.length > 0 && (
-          <section class="section" aria-labelledby="galleria-evento">
-            <h2 id="galleria-evento">Galleria</h2>
-            <ul class="gallery-grid">
-              {event.galleryImageUrls.map((url, index) => (
-                <li><ContentImage src={url} alt={`${event.title}, foto ${index + 1}`} variant="gallery" /></li>
-              ))}
-            </ul>
-          </section>
-        )
-      }
+      <RichTextContent html={event.descriptionHtml} />
+      <DetailGallery id="galleria-evento" title="Galleria" imageAlt={event.title} imageUrls={event.galleryImageUrls} />
 
       {event.discussionUrl && <FacebookDiscussion url={event.discussionUrl} />}
 

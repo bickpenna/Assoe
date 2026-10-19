@@ -3,25 +3,24 @@ import type { GetStaticPaths } from 'astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import EventCard from '@/components/EventCard.astro';
 import ContentImage from '@/components/ContentImage.astro';
+import DetailGallery from '@/components/DetailGallery.astro';
+import RichTextContent from '@/components/RichTextContent.astro';
 import ProjectList from '@/components/ProjectList.astro';
 import RelatedContentSection from '@/components/RelatedContentSection.astro';
 import FacebookDiscussion from '@/components/FacebookDiscussion.astro';
 import { contentRepository } from '@/content';
 import { formatDate } from '@/utils/date';
+import { requireBySlug, staticPathsFromSlugs } from '@/utils/content';
 import { SITE_NAME } from '@/config/site';
 
 export const getStaticPaths = (async () => {
   const articles = await contentRepository.listArticles();
 
-  return articles.map(({ slug }) => ({ params: { slug } }));
+  return staticPathsFromSlugs(articles);
 }) satisfies GetStaticPaths;
 
 const slug = Astro.params.slug;
-const article = slug ? await contentRepository.getArticleBySlug(slug) : null;
-
-if (!article) {
-  throw new Error(`Articolo non trovato durante la build: ${slug ?? '(slug mancante)'}`);
-}
+const article = await requireBySlug(slug, contentRepository.getArticleBySlug, 'Articolo');
 ---
 
 <BaseLayout title={`${article.title} | ${SITE_NAME}`}>
@@ -36,20 +35,8 @@ if (!article) {
       </header>
 
       {article.imageUrl && <div class="detail__image"><ContentImage src={article.imageUrl} alt={`Immagine dell’articolo ${article.title}`} variant="hero" eager /></div>}
-      {article.bodyHtml && <div class="detail__body" set:html={article.bodyHtml} />}
-
-      {
-        article.galleryImageUrls.length > 0 && (
-          <section class="section" aria-labelledby="galleria">
-            <h2 id="galleria">Galleria</h2>
-            <ul class="gallery-grid">
-              {article.galleryImageUrls.map((url, index) => (
-                <li><ContentImage src={url} alt={`${article.title}, foto ${index + 1}`} variant="gallery" /></li>
-              ))}
-            </ul>
-          </section>
-        )
-      }
+      <RichTextContent html={article.bodyHtml} />
+      <DetailGallery id="galleria" title="Galleria" imageAlt={article.title} imageUrls={article.galleryImageUrls} />
 
       {article.discussionUrl && <FacebookDiscussion url={article.discussionUrl} />}
 

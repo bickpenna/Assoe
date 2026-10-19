@@ -1,6 +1,7 @@
 import { createClient } from '@sanity/client';
 import { toHTML } from '@portabletext/to-html';
 import { facebookPostUrlOrUndefined } from '../../utils/facebook';
+import { httpsUrlOrUndefined } from '../../../shared/url';
 import type {
   ArticleDetail,
   ArticleSummary,
@@ -9,7 +10,6 @@ import type {
   EventDetail,
   EventSummary,
   EventStatus,
-  PersonSummary,
   PersonRole,
   ProjectDetail,
   ProjectSummary,
@@ -36,7 +36,6 @@ interface SanityArticle {
   slug: string;
   summary: string | null;
   publishedAt: string;
-  featured: boolean | null;
   imageUrl: string | null;
 }
 
@@ -132,7 +131,7 @@ const articlesByProjectQuery = `*[
   defined(slug.current) &&
   defined(publishedAt)
 ] | order(publishedAt desc) {
-  _id, title, "slug": slug.current, summary, publishedAt, featured,
+  _id, title, "slug": slug.current, summary, publishedAt,
   "imageUrl": mainImage.asset->url
 }`;
 
@@ -159,7 +158,6 @@ const articlesQuery = `*[
   "slug": slug.current,
   summary,
   publishedAt,
-  featured,
   "imageUrl": mainImage.asset->url
 }`;
 
@@ -174,7 +172,6 @@ const articleBySlugQuery = `*[
   "slug": slug.current,
   summary,
   publishedAt,
-  featured,
   "imageUrl": mainImage.asset->url,
   body,
   facebookPostUrl,
@@ -267,7 +264,6 @@ function toArticleSummary(article: SanityArticle): ArticleSummary {
     slug: article.slug,
     summary: article.summary ?? undefined,
     publishedAt: article.publishedAt,
-    featured: article.featured === true,
     imageUrl: article.imageUrl ?? undefined,
   };
 }
@@ -305,15 +301,6 @@ function hasPublicEventFields(event: SanityEvent | null): event is SanityEvent {
   return Boolean(event?.title && event.slug && event.date && event.status);
 }
 
-function httpUrlOrUndefined(value: string): string | undefined {
-  try {
-    const url = new URL(value);
-    return url.protocol === 'https:' || url.protocol === 'http:' ? url.toString() : undefined;
-  } catch {
-    return undefined;
-  }
-}
-
 export function createSanityRepository({
   projectId,
   dataset,
@@ -326,12 +313,66 @@ export function createSanityRepository({
     useCdn: false,
   });
 
-  return {
-    async listProjects(): Promise<ProjectSummary[]> {
-      const projects = await client.fetch<SanityProject[]>(projectsQuery);
+  const listProjects = cachePromise(async () => {
+    const projects = await client.fetch<SanityProject[]>(projectsQuery);
+    return projects.map(toProjectSummary);
+  });
 
-      return projects.map(toProjectSummary);
-    },
+  const listArticles = cachePromise(async () => {
+    const articles = await client.fetch<SanityArticle[]>(articlesQuery);
+    return articles.map(toArticleSummary);
+  });
+
+  const listEvents = cachePromise(async () => {
+    const events = await client.fetch<SanityEvent[]>(eventsQuery);
+    return events.map(toEventSummary);
+  });
+
+  const listPeople = cachePromise(async () => {
+    const people = await client.fetch<SanityPerson[]>(peopleQuery);
+    return people.map(({ _id, firstName, lastName, role, photoUrl }) => ({
+      id: _id,
+      firstName,
+      lastName,
+      role,
+      photoUrl: photoUrl ?? undefined,
+    }));
+  });
+
+  const getAssociationInfo = cachePromise(async (): Promise<AssociationInfo | null> => {
+    const info = await client.fetch<SanityAssociation | null>(associationQuery);
+
+    if (!info) return null;
+
+    return {
+      name: info.associationName,
+      logoUrl: info.logoUrl ?? undefined,
+      taxCode: info.taxCode ?? undefined,
+      registryInfo: info.registryInfo ?? undefined,
+      copyright: info.copyright ?? undefined,
+      contacts: {
+        email: info.contacts?.email ?? undefined,
+        phone: info.contacts?.phone ?? undefined,
+        address: info.contacts?.address ?? undefined,
+        postalCode: info.contacts?.postalCode ?? undefined,
+        city: info.contacts?.city ?? undefined,
+        province: info.contacts?.province ?? undefined,
+      },
+      socialLinks: (info.socialLinks ?? []).flatMap(({ platform, url }) => {
+        const safeUrl = httpsUrlOrUndefined(url);
+        return platform && safeUrl ? [{ name: platform, url: safeUrl }] : [];
+      }),
+      documents: {
+        statuteUrl: info.statuteUrl ?? undefined,
+        regulationUrl: info.regulationUrl ?? undefined,
+        privacyPolicyUrl: info.privacyPolicyUrl ?? undefined,
+        cookiePolicyUrl: info.cookiePolicyUrl ?? undefined,
+      },
+    };
+  });
+
+  return {
+    listProjects,
 
     async getProjectBySlug(slug: string): Promise<ProjectDetail | null> {
       const project = await client.fetch<SanityProjectDetail | null>(projectBySlugQuery, { slug });
@@ -351,11 +392,7 @@ export function createSanityRepository({
       };
     },
 
-    async listArticles(): Promise<ArticleSummary[]> {
-      const articles = await client.fetch<SanityArticle[]>(articlesQuery);
-
-      return articles.map(toArticleSummary);
-    },
+    listArticles,
 
     async getArticleBySlug(slug: string): Promise<ArticleDetail | null> {
       const article = await client.fetch<SanityArticleDetail | null>(articleBySlugQuery, { slug });
@@ -376,11 +413,7 @@ export function createSanityRepository({
       };
     },
 
-    async listEvents(): Promise<EventSummary[]> {
-      const events = await client.fetch<SanityEvent[]>(eventsQuery);
-
-      return events.map(toEventSummary);
-    },
+    listEvents,
 
     async getEventBySlug(slug: string): Promise<EventDetail | null> {
       const event = await client.fetch<SanityEventDetail | null>(eventBySlugQuery, { slug });
@@ -398,48 +431,17 @@ export function createSanityRepository({
       };
     },
 
-    async listPeople(): Promise<PersonSummary[]> {
-      const people = await client.fetch<SanityPerson[]>(peopleQuery);
+    listPeople,
 
-      return people.map(({ _id, firstName, lastName, role, photoUrl }) => ({
-        id: _id,
-        firstName,
-        lastName,
-        role,
-        photoUrl: photoUrl ?? undefined,
-      }));
-    },
+    getAssociationInfo,
+  };
+}
 
-    async getAssociationInfo(): Promise<AssociationInfo | null> {
-      const info = await client.fetch<SanityAssociation | null>(associationQuery);
+function cachePromise<T>(factory: () => Promise<T>): () => Promise<T> {
+  let cached: Promise<T> | undefined;
 
-      if (!info) return null;
-
-      return {
-        name: info.associationName,
-        logoUrl: info.logoUrl ?? undefined,
-        taxCode: info.taxCode ?? undefined,
-        registryInfo: info.registryInfo ?? undefined,
-        copyright: info.copyright ?? undefined,
-        contacts: {
-          email: info.contacts?.email ?? undefined,
-          phone: info.contacts?.phone ?? undefined,
-          address: info.contacts?.address ?? undefined,
-          postalCode: info.contacts?.postalCode ?? undefined,
-          city: info.contacts?.city ?? undefined,
-          province: info.contacts?.province ?? undefined,
-        },
-        socialLinks: (info.socialLinks ?? []).flatMap(({ platform, url }) => {
-          const safeUrl = httpUrlOrUndefined(url);
-          return platform && safeUrl ? [{ name: platform, url: safeUrl }] : [];
-        }),
-        documents: {
-          statuteUrl: info.statuteUrl ?? undefined,
-          regulationUrl: info.regulationUrl ?? undefined,
-          privacyPolicyUrl: info.privacyPolicyUrl ?? undefined,
-          cookiePolicyUrl: info.cookiePolicyUrl ?? undefined,
-        },
-      };
-    },
+  return () => {
+    cached ??= factory();
+    return cached;
   };
 }

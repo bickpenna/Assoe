@@ -7,10 +7,9 @@ interface Props {
   title: string;
   imageUrl?: string;
   meta?: string;
-  headingLevel?: 2 | 3;
 }
 
-const { href, title, imageUrl, meta, headingLevel = 3 } = Astro.props;
+const { href, title, imageUrl, meta } = Astro.props;
 ---
 
 <article class="content-card">
@@ -26,7 +25,7 @@ const { href, title, imageUrl, meta, headingLevel = 3 } = Astro.props;
     </div>
     <div class="content-card__body">
       <p class="eyebrow">Evento</p>
-      {headingLevel === 2 ? <h2>{title}</h2> : <h3>{title}</h3>}
+      <h3>{title}</h3>
       {meta && <p class="content-card__meta">{meta}</p>}
       <span class="text-link">Scopri di più <span aria-hidden="true">↗</span></span>
     </div>

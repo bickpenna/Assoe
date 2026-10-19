@@ -39,7 +39,8 @@ class Progetto {
     -slug: Slug
     -descrizione: RichText
     -immagine: Image
-    -ordine: Integer
+    -orderRank: String
+    -ordine: Integer (legacy)
     -attiva: Boolean
 }
 
@@ -52,7 +53,6 @@ class Articolo {
     -immaginePrincipale: Image
     -galleria: List<Image> ' massimo 6 '
     -dataPubblicazione: DateTime
-    -inEvidenza: Boolean
 }
 
 class Evento {

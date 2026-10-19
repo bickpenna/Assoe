@@ -41,7 +41,6 @@ export const article = defineType({
       type: 'datetime',
       validation: (rule) => rule.required(),
     }),
-    defineField({ name: 'featured', title: 'In evidenza', type: 'boolean', initialValue: false }),
     defineField({
       name: 'projects',
       title: 'Progetti collegati',
