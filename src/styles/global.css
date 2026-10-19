@@ -185,10 +185,6 @@ p { line-height: 1.65; }
 .about-contact__channels a:hover { color: var(--yellow); }
 .about-contact__channels ul { display: flex; flex-wrap: wrap; gap: .4rem 1.25rem; padding: 0; margin: 0; list-style: none; }
 .about-contact :focus-visible { outline-color: var(--yellow); }
-.about-join__panel { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem 2rem; padding: clamp(1.5rem, 3vw, 2.5rem); border-radius: 1.5rem; background: var(--surface-muted); }
-.about-join h2 { margin: 0 0 .4rem; font-size: clamp(1.6rem, 2.5vw, 2.3rem); }
-.about-join p { max-width: 35rem; margin: 0; color: var(--muted); }
-.about-join .button { flex: 0 0 auto; }
 .support-page__intro { max-width: 49rem; padding-bottom: 1.5rem; }
 .support-method { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: center; scroll-margin-top: 1.5rem; padding: clamp(1.5rem, 4vw, 3rem); border-radius: 1.5rem; }
 .support-method + .support-method { margin-top: 1.5rem; }
@@ -293,7 +289,6 @@ p { line-height: 1.65; }
   .project-list:not(.project-list--single) { grid-template-columns: 1fr; }
   .about-contact__panel--split { grid-template-columns: 1fr; gap: 1.75rem; }
   .about-contact__channels { padding: 1.5rem 0 0; border-top: 1px solid var(--green); border-left: 0; }
-  .about-join__panel { align-items: flex-start; flex-direction: column; }
 }
 
 @media (max-width: 620px) {

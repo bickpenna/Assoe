@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import JoinUsCta from '@/components/JoinUsCta.astro';
 import PersonCard from '@/components/PersonCard.astro';
 import { contentRepository } from '@/content';
 import { personRoleGroups } from '@/utils/labels';
@@ -37,5 +38,7 @@ const groups = personRoleGroups.map(({ role, title }) => ({
         </section>
       ))
     )}
+
+    <JoinUsCta association={association} href="/chi-siamo/#contatti" />
   </main>
 </BaseLayout>
