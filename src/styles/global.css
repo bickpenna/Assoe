@@ -50,9 +50,8 @@ p { line-height: 1.65; }
 .desktop-nav a, .mobile-nav a { color: var(--surface); text-decoration: none; font-size: .9rem; font-weight: 700; }
 .desktop-nav a:hover, .mobile-nav a:hover { color: var(--green-soft); }
 .desktop-nav a[aria-current='page'], .mobile-nav a[aria-current='page'] { color: var(--green-soft); text-decoration: underline; text-underline-offset: .4em; }
-.desktop-nav a.nav-cta, .mobile-nav a.nav-cta { padding: .65rem .95rem; border-radius: .6rem; background: var(--yellow); color: var(--green-dark); font-weight: 800; }
-.desktop-nav a.nav-cta:hover, .mobile-nav a.nav-cta:hover { background: var(--surface); color: var(--green-dark); }
-.desktop-nav a.nav-cta[aria-current='page'], .mobile-nav a.nav-cta[aria-current='page'] { color: var(--green-dark); text-underline-offset: .2em; }
+.desktop-nav a.nav-cta, .mobile-nav a.nav-cta, .desktop-nav a.nav-cta[aria-current='page'], .mobile-nav a.nav-cta[aria-current='page'] { color: var(--yellow); font-weight: 800; }
+.desktop-nav a.nav-cta:hover, .mobile-nav a.nav-cta:hover { color: var(--surface); }
 .mobile-nav { display: none; }
 .site-header :focus-visible, .site-footer :focus-visible { outline-color: var(--surface); }
 .demo-notice { padding: .7rem 0; background: var(--yellow); color: var(--green-dark); font-size: .85rem; font-weight: 800; line-height: 1.4; text-align: center; }
