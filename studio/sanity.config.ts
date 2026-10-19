@@ -13,13 +13,15 @@ export default defineConfig({
       structure: (S, context) =>
         S.list()
           .title('Contenuti')
-          .items(
-            S.documentTypeListItems().map((item) =>
+          .items([
+            S.listItem().singleton('siteSettings'),
+            S.divider(),
+            ...S.documentTypeListItems().map((item) =>
               item.getId() === 'project'
                 ? orderableDocumentListDeskItem({ type: 'project', title: 'Progetti', S, context })
                 : item,
             ),
-          ),
+          ]),
     }),
   ],
   document: {
