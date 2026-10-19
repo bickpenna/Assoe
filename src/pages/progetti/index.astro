@@ -9,5 +9,5 @@ const projects = await contentRepository.listProjects();
 ---
 
 <ArchiveLayout title="I nostri progetti" eyebrow={BRAND_WORDMARK} emptyMessage="Non ci sono ancora progetti pubblicati." basePath="/progetti/" currentPage={1} totalItems={projects.length}>
-  <ProjectList projects={projects.slice(0, ARCHIVE_PAGE_SIZE)} headingLevel={2} />
+  <ProjectList projects={projects.slice(0, ARCHIVE_PAGE_SIZE)} headingLevel={2} variant="archive" />
 </ArchiveLayout>

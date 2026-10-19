@@ -5,12 +5,14 @@ import type { ProjectSummary } from '@/content/types';
 interface Props {
   projects: ProjectSummary[];
   headingLevel?: 2 | 3;
+  variant?: 'list' | 'archive';
 }
 
-const { projects, headingLevel = 3 } = Astro.props;
+const { projects, headingLevel = 3, variant = 'list' } = Astro.props;
+const archiveHasImages = variant === 'archive' && projects.some(({ imageUrl }) => Boolean(imageUrl));
 ---
 
-<ul class="project-list">
+<ul class:list={['project-list', { 'project-list--archive': variant === 'archive', 'project-list--archive-with-images': archiveHasImages }]}>
   {projects.map((project) => (
     <li class="project-list__item">
       <a class:list={['project-list__link', { 'project-list__link--text-only': !project.imageUrl }]} href={`/progetti/${project.slug}/`}>
