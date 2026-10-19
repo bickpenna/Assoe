@@ -18,12 +18,14 @@ const hasImages = projects.some(({ imageUrl }) => Boolean(imageUrl));
         <div class="project-list__content">
           <p class="eyebrow">Asso è…</p>
           {headingLevel === 2 ? <h2>{project.name}</h2> : <h3>{project.name}</h3>}
-          <span class="project-list__more">Scopri il progetto</span>
+          <span class="project-list__bottom">
+            <span class="project-list__more">Scopri il progetto</span>
+            <span class="project-list__arrow" aria-hidden="true">↗</span>
+          </span>
         </div>
         {project.imageUrl && (
           <span class="project-list__media"><ContentImage src={project.imageUrl} alt="" variant="card" /></span>
         )}
-        <span class="project-list__arrow" aria-hidden="true">↗</span>
       </a>
     </li>
   ))}
