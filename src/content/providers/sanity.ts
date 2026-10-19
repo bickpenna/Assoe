@@ -3,6 +3,7 @@ import { toHTML } from '@portabletext/to-html';
 import { facebookPostUrlOrUndefined } from '../../utils/facebook';
 import { sanitizeRichTextHtml } from '../../utils/sanitizeHtml';
 import { httpsUrlOrUndefined } from '../../../shared/url';
+import { validIbanOrUndefined } from '../../../shared/iban';
 import { projectImageUrl, type SanityImage } from './sanityImage';
 import type {
   ArticleDetail,
@@ -78,6 +79,11 @@ interface SanityAssociation {
   associationName: string;
   logoUrl: string | null;
   taxCode: string | null;
+  bankDetails: {
+    iban: string | null;
+    accountHolder: string | null;
+    bankName: string | null;
+  } | null;
   registryInfo: string | null;
   copyright: string | null;
   contacts: {
@@ -245,6 +251,7 @@ const associationQuery = `*[_type == "siteSettings" && defined(associationName)]
   associationName,
   "logoUrl": logo.asset->url,
   taxCode,
+  bankDetails { iban, accountHolder, bankName },
   registryInfo,
   copyright,
   contacts {
@@ -353,10 +360,18 @@ export function createSanityRepository({
 
     if (!info) return null;
 
+    const iban = validIbanOrUndefined(info.bankDetails?.iban);
+    const accountHolder = info.bankDetails?.accountHolder?.trim();
+
     return {
       name: info.associationName,
       logoUrl: info.logoUrl ?? undefined,
       taxCode: info.taxCode ?? undefined,
+      bankDetails: iban && accountHolder ? {
+        iban,
+        accountHolder,
+        bankName: info.bankDetails?.bankName?.trim() || undefined,
+      } : undefined,
       registryInfo: info.registryInfo ?? undefined,
       copyright: info.copyright ?? undefined,
       contacts: {

@@ -4,7 +4,7 @@ const navigation = {
   projects: { href: '/progetti/', label: 'Progetti' },
   events: { href: '/eventi/', label: 'Eventi' },
   articles: { href: '/articoli/', label: 'Articoli' },
-  fivePerMille: { href: '/5x1000/', label: '5×1000' },
+  support: { href: '/sostienici/', label: 'Sostienici' },
   about: { href: '/chi-siamo/', label: 'Chi siamo' },
   people: { href: '/associati/', label: 'Associati' },
   contacts: { href: '/contatti/', label: 'Contatti' },
@@ -15,7 +15,7 @@ export const siteNavigation = [
   navigation.projects,
   navigation.events,
   navigation.articles,
-  navigation.fivePerMille,
+  navigation.support,
   navigation.about,
   navigation.contacts,
 ];

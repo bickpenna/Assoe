@@ -22,6 +22,17 @@ for (const filePath of pages) {
   const html = fs.readFileSync(filePath, 'utf8');
   const relativePath = path.relative(process.cwd(), filePath);
   const h1Count = (html.match(/<h1\b/g) ?? []).length;
+  const redirectTarget = html.match(/<meta http-equiv="refresh" content="0;url=([^"]+)"/i)?.[1];
+
+  if (redirectTarget) {
+    if (relativePath !== path.join('dist', '5x1000', 'index.html') || redirectTarget !== '/sostienici/#cinque-per-mille') {
+      throw new Error(`${relativePath}: redirect non previsto.`);
+    }
+    if (!/<meta name="robots" content="noindex"/i.test(html)) {
+      throw new Error(`${relativePath}: redirect indicizzabile.`);
+    }
+    continue;
+  }
 
   if (!/<title>[^<]+<\/title>/i.test(html)) throw new Error(`${relativePath}: title mancante.`);
   if (!/<meta name="description" content="[^"]+"/i.test(html)) {

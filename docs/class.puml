@@ -8,6 +8,7 @@ class InformazioniAssociazione <<singleton>> {
     -nomeAssociazione: String
     -logo: Image
     -codiceFiscale: String
+    -datiBancari: DatiBancari (opzionale)
     -datiRegistro: String
     -copyright: String
     -statuto: File
@@ -28,6 +29,12 @@ class Contatti {
 class ProfiloSocial {
     -nomeSocial: String
     -linkSocial: URL
+}
+
+class DatiBancari {
+    -iban: String
+    -intestatario: String
+    -banca: String (opzionale)
 }
 
 ' ============================================================
@@ -102,6 +109,7 @@ enum StatoEvento {
 
 InformazioniAssociazione "1" *-- "1" Contatti
 InformazioniAssociazione "1" *-- "0..*" ProfiloSocial
+InformazioniAssociazione "1" *-- "0..1" DatiBancari
 
 Articolo "0..*" --> "0..*" Progetto : riguarda
 Evento "0..*" --> "0..*" Progetto : riguarda
@@ -111,7 +119,10 @@ note right of InformazioniAssociazione
     Documento singleton in Sanity:
     tipo e ID "siteSettings".
     Contiene i dati usati
-    nell'header e nel footer.
+    nell'header, nel footer e
+    nella pagina Sostienici.
+    Le coordinate bancarie sono
+    mostrate solo se complete.
 end note
 
 note right of ProfiloSocial

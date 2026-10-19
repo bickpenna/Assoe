@@ -156,6 +156,27 @@ p { line-height: 1.65; }
 .five-per-mille .button:hover { background: var(--green); color: #fff; }
 .page-intro { padding: 4rem 0 2rem; max-width: 60rem; }
 .page-intro p:not(.eyebrow) { color: var(--muted); }
+.support-page__intro { max-width: 49rem; padding-bottom: 1.5rem; }
+.support-page__nav { display: flex; flex-wrap: wrap; gap: .65rem; margin-bottom: 1.5rem; }
+.support-page__nav a { padding: .65rem .95rem; border: 1px solid var(--line); border-radius: 100rem; background: var(--card); color: var(--green-dark); font-size: .88rem; font-weight: 800; text-decoration: none; }
+.support-page__nav a:hover { border-color: var(--green); background: var(--surface-muted); }
+.support-method { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: center; scroll-margin-top: 1.5rem; padding: clamp(1.5rem, 4vw, 3rem); border-radius: 1.5rem; }
+.support-method + .support-method { margin-top: 1.5rem; }
+.support-method--tax { background: var(--surface-muted); }
+.support-method--donation { background: var(--card); border: 1px solid var(--line); }
+.support-method__intro h2 { max-width: 18ch; margin-bottom: 1rem; }
+.support-method__intro p:not(.eyebrow) { max-width: 38rem; color: var(--muted); }
+.support-method__intro a, .support-method__panel a { color: var(--green-dark); font-weight: 700; }
+.support-method__panel { min-width: 0; padding: clamp(1.4rem, 3vw, 2.2rem); border-radius: 1rem; background: var(--card); }
+.support-method__panel--bank { background: var(--surface-muted); }
+.support-method__panel p:last-child { margin-bottom: 0; }
+.support-method__name { margin: .7rem 0 0; color: var(--muted); }
+.support-method__code { margin: .55rem 0 0; color: var(--green-dark); font-family: 'Epilogue Variable', system-ui, sans-serif; font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 800; letter-spacing: .02em; overflow-wrap: anywhere; }
+.support-method__bank-details { display: grid; gap: 1rem; margin: 0; }
+.support-method__bank-details > div + div { padding-top: 1rem; border-top: 1px solid var(--line); }
+.support-method__bank-details dt { color: var(--green-dark); font-size: .72rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.support-method__bank-details dd { margin: .4rem 0 0; font-weight: 700; line-height: 1.5; overflow-wrap: anywhere; }
+.support-method__iban { font-family: 'Epilogue Variable', system-ui, sans-serif; font-size: clamp(1.05rem, 2vw, 1.4rem); letter-spacing: .03em; }
 .event-archive__nav { display: flex; flex-wrap: wrap; gap: .65rem; margin-bottom: 1.7rem; }
 .event-archive__nav a { padding: .65rem .9rem; border: 1px solid var(--line); border-radius: .65rem; background: var(--card); color: var(--green-dark); font-size: .88rem; font-weight: 800; text-decoration: none; }
 .event-archive__nav a:hover { border-color: var(--green); background: var(--surface-muted); }
@@ -211,8 +232,6 @@ p { line-height: 1.65; }
 .info-card p { margin: .4rem 0; }
 .info-card a { color: var(--green-dark); }
 .info-card address { font-style: normal; line-height: 1.7; }
-.info-card .five-per-mille-code__value { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .35rem 1rem; margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--line); }
-.five-per-mille-code__value strong { color: var(--green-dark); font-family: 'Epilogue Variable', system-ui, sans-serif; font-size: clamp(1.3rem, 2.5vw, 1.8rem); letter-spacing: .03em; overflow-wrap: anywhere; }
 .link-list { padding-left: 1.2rem; line-height: 2; }
 
 @media (max-width: 1000px) {
@@ -266,6 +285,7 @@ p { line-height: 1.65; }
   .section { padding-top: 3.5rem; }
   .section__header { align-items: start; flex-direction: column; gap: .5rem; }
   .content-grid, .info-grid, .site-footer__grid { grid-template-columns: 1fr; }
+  .support-method { grid-template-columns: 1fr; }
   .people-page__intro { flex-direction: column-reverse; align-items: flex-start; gap: 1rem; margin-top: 1.5rem; }
   .people-page__logo { width: 6rem; min-height: 5rem; }
   .people-role { padding-top: 2.75rem; }

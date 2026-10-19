@@ -79,6 +79,11 @@ export interface AssociationInfo {
   name: string;
   logoUrl?: string;
   taxCode?: string;
+  bankDetails?: {
+    iban: string;
+    accountHolder: string;
+    bankName?: string;
+  };
   registryInfo?: string;
   copyright?: string;
   contacts: ContactInfo;
