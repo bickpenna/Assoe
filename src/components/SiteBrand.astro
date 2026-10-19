@@ -17,10 +17,7 @@ const {
 
 <a class={`brand brand--${placement}`} href="/" aria-label={`${name}, pagina iniziale`}>
   {logoUrl ? (
-    <>
-      <ContentImage src={logoUrl} alt="" variant="logo" eager={placement === 'header'} />
-      {placement === 'footer' && <span class="brand__footer-name">{name}</span>}
-    </>
+    <ContentImage src={logoUrl} alt="" variant="logo" eager={placement === 'header'} />
   ) : (
     <span class="brand__wordmark">
       <strong class="brand__main">{BRAND_WORDMARK}</strong>
