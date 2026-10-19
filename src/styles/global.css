@@ -151,7 +151,7 @@ p { line-height: 1.65; }
 .five-per-mille .button:hover { background: var(--green); color: #fff; }
 .page-intro { padding: 4rem 0 2rem; max-width: 60rem; }
 .page-intro p:not(.eyebrow) { color: var(--muted); }
-.pagination { display: grid; justify-items: center; gap: 1rem; margin-top: 2.5rem; padding-top: 1.75rem; border-top: 1px solid var(--line); }
+.pagination { display: grid; justify-items: center; gap: 1rem; margin-top: 2rem; }
 .pagination__status { margin: 0; color: var(--muted); font-size: .88rem; font-weight: 700; }
 .pagination__controls, .pagination__pages { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .45rem; }
 .pagination__pages { list-style: none; margin: 0; padding: 0; }
