@@ -96,12 +96,13 @@ interface SanityConfig {
   dataset: string;
 }
 
+// Keep the legacy numeric order until existing projects receive a drag-and-drop rank.
 const projectsQuery = `*[
   _type == "project" &&
   active == true &&
   defined(name) &&
   defined(slug.current)
-] | order(order asc, name asc) {
+] | order(defined(orderRank) desc, orderRank asc, order asc, name asc) {
   _id,
   name,
   "slug": slug.current,

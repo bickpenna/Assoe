@@ -26,7 +26,7 @@ Gli eventi hanno elenco e dettaglio su `/eventi/` e `/eventi/[slug]/`, con data,
 
 Il logo delle Informazioni associazione è usato nell'header, nel footer e nella homepage tramite `SiteBrand` e `ContentImage`; se non è ancora presente compare il marchio testuale. Le voci di navigazione sono definite una volta in `src/config/navigation.ts` e riutilizzate nei menu e nel footer. Nome e marchio testuali sono centralizzati in `src/config/site.ts`.
 
-La homepage segue la direzione visiva dei mockup Stitch forniti, adattata ai soli dati disponibili: un evento in programma (o il più recente), i primi tre progetti secondo il campo "Ordine" di Sanity, articoli e un riquadro 5×1000 prima del footer. La pagina `/progetti/` mostra tutti i progetti attivi e pubblicati, nello stesso ordine. Non contiene statistiche, orari o inviti a diventare volontari inventati dal prototipo. `/5x1000/` offre indicazioni generali e rimanda all'Agenzia delle Entrate; il codice fiscale dell'associazione non viene mostrato finché non è confermato.
+La homepage segue la direzione visiva dei mockup Stitch forniti, adattata ai soli dati disponibili: un evento in programma (o il più recente), i primi tre progetti nell'ordine impostato in Sanity, articoli e un riquadro 5×1000 prima del footer. La pagina `/progetti/` mostra tutti i progetti attivi e pubblicati, nello stesso ordine. Non contiene statistiche, orari o inviti a diventare volontari inventati dal prototipo. `/5x1000/` offre indicazioni generali e rimanda all'Agenzia delle Entrate; il codice fiscale dell'associazione non viene mostrato finché non è confermato.
 
 La palette attiva del frontend è definita in `src/styles/global.css`: verde principale `#156A28`, verde scuro `#0C4D1D`, giallo lime `#D7ED62`, fondo `#F4F9F3` e testo `#18231C`. Il giallo è l'accento del riquadro 5×1000; l'ambra e l'arancione presenti nei mockup non fanno parte della palette attiva. Il contorno di focus usa il verde scuro per restare leggibile anche sui fondi chiari.
 
@@ -65,6 +65,8 @@ npm run dev
 ```
 
 Prima di avviare lo Studio, copiare `studio/.env.example` in `studio/.env` e impostare `SANITY_STUDIO_PROJECT_ID` e `SANITY_STUDIO_DATASET` con gli stessi valori usati dal frontend.
+
+Nella sezione **Progetti** dello Studio puoi trascinare le righe per cambiarne l'ordine. Al primo utilizzo, se i progetti esistenti non hanno ancora una posizione, apri il menu della lista e scegli **Reset Order**: assegna una posizione a tutti, poi puoi riordinarli trascinandoli. Non usare di nuovo **Reset Order** dopo aver definito l'ordine desiderato, perché lo rigenera. Finché i vecchi progetti non hanno una posizione, il sito mantiene come criterio di riserva il precedente campo numerico `order` e poi il nome. Dopo un riordino, per vedere la modifica sul sito statico è necessaria una nuova build.
 
 ## Principi
 
