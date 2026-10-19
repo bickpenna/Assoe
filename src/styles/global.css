@@ -159,9 +159,6 @@ p { line-height: 1.65; }
 .page-intro { padding: 4rem 0 2rem; max-width: 60rem; }
 .page-intro p:not(.eyebrow) { color: var(--muted); }
 .support-page__intro { max-width: 49rem; padding-bottom: 1.5rem; }
-.support-page__nav { display: flex; flex-wrap: wrap; gap: .65rem; margin-bottom: 1.5rem; }
-.support-page__nav a { padding: .65rem .95rem; border: 1px solid var(--line); border-radius: 100rem; background: var(--card); color: var(--green-dark); font-size: .88rem; font-weight: 800; text-decoration: none; }
-.support-page__nav a:hover { border-color: var(--green); background: var(--surface-muted); }
 .support-method { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: center; scroll-margin-top: 1.5rem; padding: clamp(1.5rem, 4vw, 3rem); border-radius: 1.5rem; }
 .support-method + .support-method { margin-top: 1.5rem; }
 .support-method--tax { background: var(--surface-muted); }
