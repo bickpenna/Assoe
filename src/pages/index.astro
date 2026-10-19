@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ContentCard from '@/components/ContentCard.astro';
 import ContentImage from '@/components/ContentImage.astro';
+import ProjectList from '@/components/ProjectList.astro';
 import { contentRepository } from '@/content';
 import { formatDateTime, formatDate } from '@/utils/date';
 import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
@@ -50,11 +51,7 @@ const eventHeading = upcomingEvents.length > 0 ? 'Prossimo evento' : 'Eventi e i
       </div>
       {
         projects.length > 0 ? (
-          <div class="content-grid">
-            {projects.slice(0, 3).map((project) => (
-              <ContentCard kind="project" href={`/progetti/${project.slug}/`} title={project.name} imageUrl={project.imageUrl} />
-            ))}
-          </div>
+          <ProjectList projects={projects.slice(0, 3)} />
         ) : (
           <p class="notice">I progetti saranno pubblicati presto.</p>
         )

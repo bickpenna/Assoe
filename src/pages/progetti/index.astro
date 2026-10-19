@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import ContentCard from '@/components/ContentCard.astro';
+import ProjectList from '@/components/ProjectList.astro';
 import { contentRepository } from '@/content';
 import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
 
@@ -16,11 +16,7 @@ const projects = await contentRepository.listProjects();
     {projects.length === 0 ? (
       <p class="notice">Non ci sono ancora progetti pubblicati.</p>
     ) : (
-      <div class="content-grid">
-        {projects.map((project) => (
-          <ContentCard kind="project" headingLevel={2} href={`/progetti/${project.slug}/`} title={project.name} imageUrl={project.imageUrl} />
-        ))}
-      </div>
+      <ProjectList projects={projects} headingLevel={2} />
     )}
   </main>
 </BaseLayout>

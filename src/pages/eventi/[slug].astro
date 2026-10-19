@@ -1,8 +1,8 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import ContentCard from '@/components/ContentCard.astro';
 import ContentImage from '@/components/ContentImage.astro';
+import ProjectList from '@/components/ProjectList.astro';
 import { contentRepository } from '@/content';
 import { formatDateTime } from '@/utils/date';
 import { eventStatusLabel } from '@/utils/labels';
@@ -56,11 +56,7 @@ if (!event) {
         event.relatedProjects.length > 0 && (
           <section class="section detail__related" aria-labelledby="progetti-evento">
             <h2 id="progetti-evento">Progetti collegati</h2>
-            <div class="content-grid">
-              {event.relatedProjects.map((project) => (
-                <ContentCard kind="project" href={`/progetti/${project.slug}/`} title={project.name} imageUrl={project.imageUrl} />
-              ))}
-            </div>
+            <ProjectList projects={event.relatedProjects} />
           </section>
         )
       }

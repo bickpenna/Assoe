@@ -44,7 +44,10 @@ const isCurrent = (href: string) => href === '/' ? currentPath === '/' : current
           {siteNavigation.map((item) => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
         </nav>
         <details class="mobile-nav">
-          <summary>Menu</summary>
+          <summary>
+            <span class="visually-hidden">Menu di navigazione</span>
+            <span class="mobile-nav__icon" aria-hidden="true"><span></span><span></span><span></span></span>
+          </summary>
           <nav aria-label="Navigazione mobile">
             {siteNavigation.map((item) => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
           </nav>

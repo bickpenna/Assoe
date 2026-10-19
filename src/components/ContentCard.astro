@@ -5,7 +5,7 @@ import { BRAND_WORDMARK } from '@/config/site';
 interface Props {
   href: string;
   title: string;
-  kind: 'project' | 'article' | 'event';
+  kind: 'article' | 'event';
   imageUrl?: string;
   meta?: string;
   summary?: string;
@@ -14,7 +14,6 @@ interface Props {
 
 const { href, title, kind, imageUrl, meta, summary, headingLevel = 3 } = Astro.props;
 const kindLabel = {
-  project: 'Progetto',
   article: 'Articolo',
   event: 'Evento',
 }[kind];
