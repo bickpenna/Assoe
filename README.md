@@ -28,6 +28,8 @@ Il logo delle Informazioni associazione è usato nell'header, nel footer e nella
 
 La homepage segue la direzione visiva dei mockup Stitch forniti, adattata ai soli dati disponibili: un evento in programma (o il più recente), progetti, articoli e un riquadro 5×1000 prima del footer. Non contiene statistiche, orari o inviti a diventare volontari inventati dal prototipo. `/5x1000/` offre indicazioni generali e rimanda all'Agenzia delle Entrate; il codice fiscale dell'associazione non viene mostrato finché non è confermato.
 
+La palette attiva del frontend è definita in `src/styles/global.css`: verde principale `#156A28`, verde scuro `#0C4D1D`, giallo caldo `#F4DC78`, fondo `#F4F9F3` e testo `#18231C`. Il giallo è l'accento del riquadro 5×1000; l'ambra e l'arancione presenti nei mockup non fanno parte della palette attiva. Il contorno di focus usa il verde scuro per restare leggibile anche sui fondi chiari.
+
 Le immagini del CMS sono elaborate durante la build da Astro e pubblicate in WebP con dimensioni responsive. Le fotografie nelle card e nei ritratti hanno un ritaglio controllato; locandine, logo e immagini di galleria conservano le proporzioni originali, rilevate da Astro, per non tagliare testi o deformare file di forme diverse. L'host delle immagini autorizzato è configurato in `astro.config.mjs`; in caso di cambio CMS andrà aggiornato insieme al provider.
 
 Questo riduce le modifiche al codice, ma non elimina la migrazione dei contenuti: testi, immagini, file e riferimenti andranno esportati da Sanity e importati nel nuovo sistema. Per i contenuti complessi, come il testo formattato, servirà anche una conversione del formato.

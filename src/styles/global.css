@@ -14,8 +14,7 @@
   --green: #156a28;
   --green-dark: #0c4d1d;
   --green-soft: #d7edda;
-  --orange: #a73a06;
-  --yellow-soft: #f4dc78;
+  --yellow: #f4dc78;
   --line: #d6e4d7;
   --radius: 1.2rem;
 }
@@ -26,7 +25,7 @@ body { margin: 0; min-width: 320px; }
 img { max-width: 100%; }
 a { color: inherit; }
 a:hover { color: var(--green-dark); }
-:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
+:focus-visible { outline: 3px solid var(--green-dark); outline-offset: 3px; }
 h1, h2, h3 { font-family: 'Epilogue Variable', system-ui, sans-serif; letter-spacing: -.035em; line-height: 1.17; }
 h1 { font-size: clamp(2.3rem, 5vw, 4.8rem); margin: .35rem 0 1.2rem; }
 h2 { font-size: clamp(1.7rem, 3vw, 2.8rem); margin: .25rem 0 1rem; }
@@ -83,7 +82,7 @@ p { line-height: 1.65; }
 .hero__text { max-width: 42rem; }
 .hero__text h1 { max-width: 14ch; }
 .hero__art { width: min(100%, 320px); aspect-ratio: 1; margin: auto; border-radius: 50%; background: #cae7cd; display: grid; place-items: center; position: relative; box-shadow: 0 0 0 1.8rem rgba(255,255,255,.3), 0 0 0 3.6rem rgba(255,255,255,.17); }
-.hero__art::after { content: '…'; position: absolute; right: 12%; bottom: 7%; color: var(--orange); font: 800 6rem 'Epilogue Variable', sans-serif; }
+.hero__art::after { content: '…'; position: absolute; right: 12%; bottom: 7%; color: var(--green-dark); font: 800 6rem 'Epilogue Variable', sans-serif; }
 .hero__art span { color: var(--green-dark); font: 800 clamp(3.8rem, 7vw, 6rem) 'Epilogue Variable', sans-serif; letter-spacing: -.1em; transform: rotate(-8deg); }
 .hero__logo { min-height: 16rem; display: grid; place-items: center; }
 .hero__logo .content-image--logoLarge { width: auto; max-width: 100%; max-height: 18rem; object-fit: contain; }
@@ -144,7 +143,7 @@ p { line-height: 1.65; }
 .event-feature__body h3 { font-size: clamp(1.5rem, 3vw, 2.5rem); }
 .event-feature__body p:not(.eyebrow) { color: var(--muted); margin: .7rem 0; }
 .notice { padding: 1.3rem 1.5rem; border: 1px dashed var(--line); border-radius: 1rem; background: #fff; color: var(--muted); }
-.five-per-mille { margin-top: 5rem; background: var(--yellow-soft); color: var(--green-dark); border-radius: 1.5rem; padding: clamp(1.8rem, 4vw, 3.3rem); display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: center; }
+.five-per-mille { margin-top: 5rem; background: var(--yellow); color: var(--green-dark); border-radius: 1.5rem; padding: clamp(1.8rem, 4vw, 3.3rem); display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: center; }
 .five-per-mille .eyebrow { color: var(--green-dark); }
 .five-per-mille h2 { margin: 0; }
 .five-per-mille p { color: var(--muted); margin: .7rem 0 0; max-width: 44rem; }
