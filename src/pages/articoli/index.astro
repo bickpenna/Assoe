@@ -3,10 +3,11 @@ import ArchiveLayout from '@/layouts/ArchiveLayout.astro';
 import ArticleList from '@/components/ArticleList.astro';
 import { contentRepository } from '@/content';
 import { ARCHIVE_PAGE_SIZE } from '@/config/pagination';
+import { ARTICLES_TITLE } from '@/config/site';
 
 const articles = await contentRepository.listArticles();
 ---
 
-<ArchiveLayout title="Articoli e storie" eyebrow="Dal territorio" emptyMessage="Non ci sono ancora articoli pubblicati." basePath="/articoli/" currentPage={1} totalItems={articles.length}>
+<ArchiveLayout title={ARTICLES_TITLE} eyebrow="Dal territorio" emptyMessage="Non ci sono ancora articoli pubblicati." basePath="/articoli/" currentPage={1} totalItems={articles.length}>
   <ArticleList articles={articles.slice(0, ARCHIVE_PAGE_SIZE)} headingLevel={2} />
 </ArchiveLayout>

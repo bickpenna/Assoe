@@ -5,7 +5,7 @@ import ContentImage from '@/components/ContentImage.astro';
 import ProjectList from '@/components/ProjectList.astro';
 import { contentRepository } from '@/content';
 import { formatDateTime } from '@/utils/date';
-import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
+import { ARTICLES_TITLE, BRAND_WORDMARK, SITE_NAME } from '@/config/site';
 
 const [projects, articles, events, association] = await Promise.all([
   contentRepository.listProjects(),
@@ -18,7 +18,7 @@ const upcomingEvents = events
   .filter((event) => event.status === 'ongoing' || (event.status === 'scheduled' && new Date(event.date).getTime() >= Date.now()))
   .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 const featuredEvent = upcomingEvents[0] ?? events[0];
-const eventHeading = upcomingEvents.length > 0 ? 'Prossimo evento' : 'Eventi e iniziative';
+const eventHeading = upcomingEvents.length > 0 ? 'Il prossimo appuntamento' : 'Le nostre iniziative';
 ---
 
 <BaseLayout title={SITE_NAME} association={association}>
@@ -46,8 +46,9 @@ const eventHeading = upcomingEvents.length > 0 ? 'Prossimo evento' : 'Eventi e i
         <div>
           <p class="eyebrow">{BRAND_WORDMARK}</p>
           <h2 id="eventi-home">{eventHeading}</h2>
+          <p class="section__intro">Incontri, attività e momenti da condividere.</p>
         </div>
-        <a class="text-link" href="/eventi/">Tutti gli eventi <span aria-hidden="true">↗</span></a>
+        <a class="text-link" href="/eventi/">Vedi tutti gli eventi <span aria-hidden="true">↗</span></a>
       </div>
       {
         featuredEvent ? (
@@ -60,15 +61,15 @@ const eventHeading = upcomingEvents.length > 0 ? 'Prossimo evento' : 'Eventi e i
               )}
             </div>
             <div class="event-feature__body">
-              <p class="eyebrow">{upcomingEvents.length > 0 ? 'In programma' : 'Dal nostro archivio'}</p>
+              <p class="eyebrow">{upcomingEvents.length > 0 ? 'Ci vediamo presto' : 'Dal nostro archivio'}</p>
               <h3>{featuredEvent.title}</h3>
               <p><time datetime={featuredEvent.date}>{formatDateTime(featuredEvent.date)}</time></p>
               {featuredEvent.place && <p>{featuredEvent.place}</p>}
-              <a class="button" href={`/eventi/${featuredEvent.slug}/`}>Dettagli dell’evento</a>
+              <a class="button" href={`/eventi/${featuredEvent.slug}/`}>Scopri l’evento</a>
             </div>
           </article>
         ) : (
-          <p class="notice">I prossimi eventi saranno pubblicati qui.</p>
+          <p class="notice">Per ora non ci sono eventi da segnalare.</p>
         )
       }
     </section>
@@ -78,14 +79,15 @@ const eventHeading = upcomingEvents.length > 0 ? 'Prossimo evento' : 'Eventi e i
         <div>
           <p class="eyebrow">{BRAND_WORDMARK}</p>
           <h2 id="progetti-home">I nostri progetti</h2>
+          <p class="section__intro">Le idee a cui stiamo dando forma, una alla volta.</p>
         </div>
-        <a class="text-link" href="/progetti/">Tutti i progetti <span aria-hidden="true">↗</span></a>
+        <a class="text-link" href="/progetti/">Esplora i progetti <span aria-hidden="true">↗</span></a>
       </div>
       {
         projects.length > 0 ? (
           <ProjectList projects={projects.slice(0, 3)} />
         ) : (
-          <p class="notice">I progetti saranno pubblicati presto.</p>
+          <p class="notice">Per ora non ci sono progetti da mostrarti.</p>
         )
       }
     </section>
@@ -94,15 +96,16 @@ const eventHeading = upcomingEvents.length > 0 ? 'Prossimo evento' : 'Eventi e i
       <div class="section__header">
         <div>
           <p class="eyebrow">Dal territorio</p>
-          <h2 id="articoli-home">Articoli e storie</h2>
+          <h2 id="articoli-home">{ARTICLES_TITLE}</h2>
+          <p class="section__intro">Racconti e aggiornamenti da leggere con calma.</p>
         </div>
-        <a class="text-link" href="/articoli/">Tutti gli articoli <span aria-hidden="true">↗</span></a>
+        <a class="text-link" href="/articoli/">Sfoglia gli articoli <span aria-hidden="true">↗</span></a>
       </div>
       {
         articles.length > 0 ? (
           <ArticleList articles={articles.slice(0, 3)} />
         ) : (
-          <p class="notice">Gli articoli saranno pubblicati presto.</p>
+          <p class="notice">Per ora non ci sono articoli da leggere.</p>
         )
       }
     </section>
@@ -111,7 +114,7 @@ const eventHeading = upcomingEvents.length > 0 ? 'Prossimo evento' : 'Eventi e i
       <div>
         <p class="eyebrow">5×1000</p>
         <h2 id="cinque-per-mille-home">Una scelta che può fare strada.</h2>
-        <p>Scopri come funziona il 5×1000 e dove trovare le indicazioni ufficiali.</p>
+        <p>Vuoi capire come funziona? Qui trovi le indicazioni ufficiali per orientarti.</p>
       </div>
       <a class="button" href="/5x1000/">Come funziona <span aria-hidden="true">&nbsp;↗</span></a>
     </section>
