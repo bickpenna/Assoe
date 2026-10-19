@@ -1,24 +1,30 @@
 ---
 import type { GetStaticPaths, Page } from 'astro';
 import ArchiveLayout from '@/layouts/ArchiveLayout.astro';
-import EventGrid from '@/components/EventGrid.astro';
+import EventArchiveSections from '@/components/EventArchiveSections.astro';
 import { contentRepository } from '@/content';
 import type { EventSummary } from '@/content/types';
 import { ARCHIVE_PAGE_SIZE } from '@/config/pagination';
 import { BRAND_WORDMARK } from '@/config/site';
+import { groupEventsByDate } from '@/utils/events';
 
 export const getStaticPaths = (async ({ paginate }) => {
-  const events = await contentRepository.listEvents();
-  return paginate(events, { pageSize: ARCHIVE_PAGE_SIZE }).slice(1);
+  const { future, past } = groupEventsByDate(await contentRepository.listEvents());
+  return paginate([...future, ...past], {
+    pageSize: ARCHIVE_PAGE_SIZE,
+    props: { futureCount: future.length, pastCount: past.length },
+  }).slice(1);
 }) satisfies GetStaticPaths;
 
 interface Props {
   page: Page<EventSummary>;
+  futureCount: number;
+  pastCount: number;
 }
 
-const { page } = Astro.props;
+const { page, futureCount, pastCount } = Astro.props;
 ---
 
 <ArchiveLayout title="Eventi e iniziative" eyebrow={BRAND_WORDMARK} emptyMessage="Non ci sono ancora eventi pubblicati." basePath="/eventi/" currentPage={page.currentPage} totalItems={page.total}>
-  <EventGrid events={page.data} />
+  <EventArchiveSections events={page.data} futureCount={futureCount} pastCount={pastCount} startIndex={page.start} />
 </ArchiveLayout>

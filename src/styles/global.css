@@ -163,6 +163,11 @@ p { line-height: 1.65; }
 .five-per-mille .button:hover { background: var(--green); color: #fff; }
 .page-intro { padding: 4rem 0 2rem; max-width: 60rem; }
 .page-intro p:not(.eyebrow) { color: var(--muted); }
+.event-archive__nav { display: flex; flex-wrap: wrap; gap: .65rem; margin-bottom: 1.7rem; }
+.event-archive__nav a { padding: .65rem .9rem; border: 1px solid var(--line); border-radius: .65rem; background: var(--card); color: var(--green-dark); font-size: .88rem; font-weight: 800; text-decoration: none; }
+.event-archive__nav a:hover { border-color: var(--green); background: var(--surface-muted); }
+.event-archive__group + .event-archive__group { margin-top: 3.5rem; }
+.event-archive__group h2 { margin-bottom: 1.2rem; font-size: clamp(1.5rem, 2.5vw, 2.1rem); }
 .pagination { display: grid; justify-items: center; gap: 1rem; margin-top: 2rem; }
 .pagination__status { margin: 0; color: var(--muted); font-size: .88rem; font-weight: 700; }
 .pagination__controls, .pagination__pages { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .45rem; }

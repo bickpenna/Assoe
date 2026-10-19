@@ -5,6 +5,7 @@ import ContentImage from '@/components/ContentImage.astro';
 import ProjectList from '@/components/ProjectList.astro';
 import { contentRepository } from '@/content';
 import { formatDateTime } from '@/utils/date';
+import { getNextEvent } from '@/utils/events';
 import { ARTICLES_TITLE, BRAND_WORDMARK, SITE_NAME } from '@/config/site';
 
 const [projects, articles, events, association] = await Promise.all([
@@ -14,11 +15,7 @@ const [projects, articles, events, association] = await Promise.all([
   contentRepository.getAssociationInfo(),
 ]);
 
-const upcomingEvents = events
-  .filter((event) => event.status === 'ongoing' || (event.status === 'scheduled' && new Date(event.date).getTime() >= Date.now()))
-  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-const featuredEvent = upcomingEvents[0] ?? events[0];
-const eventHeading = upcomingEvents.length > 0 ? 'Il prossimo appuntamento' : 'Le nostre iniziative';
+const featuredEvent = getNextEvent(events);
 ---
 
 <BaseLayout title={SITE_NAME} association={association}>
@@ -41,38 +38,34 @@ const eventHeading = upcomingEvents.length > 0 ? 'Il prossimo appuntamento' : 'L
       </div>
     </section>
 
-    <section class="section container" aria-labelledby="eventi-home">
-      <div class="section__header">
-        <div>
-          <p class="eyebrow">{BRAND_WORDMARK}</p>
-          <h2 id="eventi-home">{eventHeading}</h2>
-          <p class="section__intro">Incontri, attività e momenti da condividere.</p>
+    {featuredEvent && (
+      <section class="section container" aria-labelledby="eventi-home">
+        <div class="section__header">
+          <div>
+            <p class="eyebrow">{BRAND_WORDMARK}</p>
+            <h2 id="eventi-home">Il prossimo appuntamento</h2>
+            <p class="section__intro">Incontri, attività e momenti da condividere.</p>
+          </div>
+          <a class="text-link" href="/eventi/">Vedi tutti gli eventi <span aria-hidden="true">↗</span></a>
         </div>
-        <a class="text-link" href="/eventi/">Vedi tutti gli eventi <span aria-hidden="true">↗</span></a>
-      </div>
-      {
-        featuredEvent ? (
-          <article class="event-feature">
-            <div class="event-feature__media">
-              {featuredEvent.imageUrl ? (
-                <ContentImage src={featuredEvent.imageUrl} alt={`Locandina di ${featuredEvent.title}`} variant="poster" />
-              ) : (
-                <div class="event-feature__placeholder" aria-hidden="true">{BRAND_WORDMARK}</div>
-              )}
-            </div>
-            <div class="event-feature__body">
-              <p class="eyebrow">{upcomingEvents.length > 0 ? 'Ci vediamo presto' : 'Dal nostro archivio'}</p>
-              <h3>{featuredEvent.title}</h3>
-              <p><time datetime={featuredEvent.date}>{formatDateTime(featuredEvent.date)}</time></p>
-              {featuredEvent.place && <p>{featuredEvent.place}</p>}
-              <a class="button" href={`/eventi/${featuredEvent.slug}/`}>Scopri l’evento</a>
-            </div>
-          </article>
-        ) : (
-          <p class="notice">Per ora non ci sono eventi da segnalare.</p>
-        )
-      }
-    </section>
+        <article class="event-feature">
+          <div class="event-feature__media">
+            {featuredEvent.imageUrl ? (
+              <ContentImage src={featuredEvent.imageUrl} alt={`Locandina di ${featuredEvent.title}`} variant="poster" />
+            ) : (
+              <div class="event-feature__placeholder" aria-hidden="true">{BRAND_WORDMARK}</div>
+            )}
+          </div>
+          <div class="event-feature__body">
+            <p class="eyebrow">Ci vediamo presto</p>
+            <h3>{featuredEvent.title}</h3>
+            <p><time datetime={featuredEvent.date}>{formatDateTime(featuredEvent.date)}</time></p>
+            {featuredEvent.place && <p>{featuredEvent.place}</p>}
+            <a class="button" href={`/eventi/${featuredEvent.slug}/`}>Scopri l’evento</a>
+          </div>
+        </article>
+      </section>
+    )}
 
     <section class="section container home-projects" aria-labelledby="progetti-home">
       <div class="section__header">

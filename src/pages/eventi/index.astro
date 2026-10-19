@@ -1,13 +1,15 @@
 ---
 import ArchiveLayout from '@/layouts/ArchiveLayout.astro';
-import EventGrid from '@/components/EventGrid.astro';
+import EventArchiveSections from '@/components/EventArchiveSections.astro';
 import { contentRepository } from '@/content';
 import { ARCHIVE_PAGE_SIZE } from '@/config/pagination';
 import { BRAND_WORDMARK } from '@/config/site';
+import { groupEventsByDate } from '@/utils/events';
 
-const events = await contentRepository.listEvents();
+const { future, past } = groupEventsByDate(await contentRepository.listEvents());
+const events = [...future, ...past];
 ---
 
 <ArchiveLayout title="Eventi e iniziative" eyebrow={BRAND_WORDMARK} emptyMessage="Non ci sono ancora eventi pubblicati." basePath="/eventi/" currentPage={1} totalItems={events.length}>
-  <EventGrid events={events.slice(0, ARCHIVE_PAGE_SIZE)} />
+  <EventArchiveSections events={events.slice(0, ARCHIVE_PAGE_SIZE)} futureCount={future.length} pastCount={past.length} startIndex={0} />
 </ArchiveLayout>
