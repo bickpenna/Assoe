@@ -101,6 +101,18 @@ p { line-height: 1.65; }
 .project-list__media .content-image { width: 100%; height: 100%; object-fit: cover; }
 .project-list__arrow { grid-area: arrow; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 1px solid var(--green); border-radius: 50%; color: var(--green-dark); font-size: 1.3rem; transition: transform .2s ease, background .2s ease, color .2s ease; }
 .project-list__link:hover .project-list__arrow { transform: translate(2px, -2px); background: var(--green-dark); color: var(--surface); }
+.section.home-projects { margin-top: 4.5rem; padding: clamp(1.5rem, 3vw, 2.5rem); border-radius: 1.5rem; background: linear-gradient(135deg, var(--surface-muted), #e2f0e3); }
+.home-projects .section__header { margin-bottom: 1.25rem; }
+.home-projects .section__header h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+.home-projects .project-list { display: grid; gap: .65rem; border: 0; }
+.home-projects .project-list__item { border: 0; }
+.home-projects .project-list__link { min-height: 7rem; padding: 1rem 1.3rem; border: 1px solid var(--line); border-radius: .85rem; background: rgba(255,255,255,.8); }
+.home-projects .project-list__link:hover { background: var(--card); }
+.home-projects .project-list__content .eyebrow { margin-bottom: .3rem; font-size: .65rem; }
+.home-projects .project-list__content h3 { font-size: clamp(1.3rem, 2vw, 1.9rem); }
+.home-projects .project-list__more { display: none; }
+.home-projects .project-list__media { height: 5.5rem; }
+.home-projects .project-list__arrow { width: 2.5rem; height: 2.5rem; }
 .article-list { max-width: 66rem; list-style: none; margin: 0; padding: 0 0 0 1.5rem; border-left: 2px solid var(--green-soft); }
 .article-list__item { position: relative; border-bottom: 1px solid var(--line); }
 .article-list__item:first-child { border-top: 1px solid var(--line); }
@@ -229,6 +241,9 @@ p { line-height: 1.65; }
   .hero__logo { min-height: 10rem; }
   .hero__logo .content-image--logoLarge { max-height: 12rem; }
   .hero__actions .button { width: 100%; }
+  .section.home-projects { margin-top: 3.5rem; padding: 1.25rem; }
+  .home-projects .project-list__link { padding: 1rem; }
+  .home-projects .project-list__content h3 { font-size: clamp(1.2rem, 5vw, 1.6rem); }
   .project-list__link { grid-template-areas: 'content arrow' 'media media'; grid-template-columns: minmax(0, 1fr) 2.75rem; gap: .7rem 1rem; padding: 1.35rem .25rem; }
   .project-list__link--text-only { grid-template-areas: 'content arrow'; }
   .project-list__media { max-width: 15rem; height: 8rem; margin-top: .25rem; }
