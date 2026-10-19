@@ -24,7 +24,7 @@ Articoli ed eventi possono avere un link facoltativo a un post Facebook pubblico
 
 Gli eventi hanno elenco e dettaglio su `/eventi/` e `/eventi/[slug]/`, con data, luogo, stato, descrizione, immagini e progetti collegati. I dettagli dei progetti rimandano agli articoli ed eventi associati.
 
-`/chi-siamo/` e `/contatti/` sono pagine istituzionali definite in Astro: non sono documenti modificabili nel CMS. Mostrano rispettivamente dati e documenti dell'associazione; contatti e social. `/associati/` raccoglie le persone visibili, divise per ruolo, con foto, nome e ruolo. I campi opzionali assenti non producono sezioni vuote. Il layout condivide navigazione, nome dell'associazione e footer tra tutte le pagine.
+`/chi-siamo/` è una pagina istituzionale definita in Astro: non è un documento modificabile nel CMS. Riunisce dati e documenti dell'associazione, sede, contatti e social; mostra inoltre il direttivo con un link a `/associati/`, che raccoglie tutte le persone visibili divise per ruolo, con foto, nome e ruolo. Il vecchio `/contatti/` reindirizza alla sezione contatti di Chi siamo. I campi opzionali assenti non producono schede vuote. Il layout condivide navigazione, nome dell'associazione e footer tra tutte le pagine.
 
 Il logo delle Informazioni associazione è usato nell'header, nel footer e nella homepage tramite `SiteBrand` e `ContentImage`; se non è ancora presente compare il marchio testuale. Le voci di navigazione sono definite una volta in `src/config/navigation.ts` e riutilizzate nei menu e nel footer. Nome e marchio testuali sono centralizzati in `src/config/site.ts`.
 

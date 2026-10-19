@@ -35,7 +35,7 @@ const bankDetails = association?.bankDetails;
             <p class="support-method__code" aria-label={`Codice fiscale ${taxCode}`}>{taxCode}</p>
           </>
         ) : (
-          <p>Il codice fiscale non è ancora disponibile su questa pagina. <a href="/contatti/">Contattaci</a> prima di compilare la scelta.</p>
+          <p>Il codice fiscale non è ancora disponibile su questa pagina. <a href="/chi-siamo/#contatti">Contattaci</a> prima di compilare la scelta.</p>
         )}
       </div>
     </section>
@@ -45,7 +45,7 @@ const bankDetails = association?.bankDetails;
         <p class="eyebrow">Donazione</p>
         <h2 id="donazione-title">Una donazione con bonifico</h2>
         <p>Se preferisci sostenerci direttamente, puoi fare un bonifico sul conto dell’associazione. Trovi qui le coordinate da usare.</p>
-        <p>Hai una domanda prima di donare? <a href="/contatti/">Scrivici</a>.</p>
+        <p>Hai una domanda prima di donare? <a href="/chi-siamo/#contatti">Scrivici</a>.</p>
       </div>
       <div class="support-method__panel support-method__panel--bank">
         {bankDetails ? (
@@ -68,7 +68,7 @@ const bankDetails = association?.bankDetails;
         ) : (
           <>
             <p class="eyebrow">Coordinate bancarie</p>
-            <p>Le coordinate per il bonifico non sono ancora disponibili sul sito. <a href="/contatti/">Contattaci</a> per sapere come donare.</p>
+            <p>Le coordinate per il bonifico non sono ancora disponibili sul sito. <a href="/chi-siamo/#contatti">Contattaci</a> per sapere come donare.</p>
           </>
         )}
       </div>

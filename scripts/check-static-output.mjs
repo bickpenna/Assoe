@@ -2,6 +2,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const outputDirectory = path.resolve('dist');
+const allowedRedirects = new Map([
+  [path.join('dist', '5x1000', 'index.html'), '/sostienici/#cinque-per-mille'],
+  [path.join('dist', 'contatti', 'index.html'), '/chi-siamo/#contatti'],
+]);
 
 function htmlFiles(directory) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -25,7 +29,7 @@ for (const filePath of pages) {
   const redirectTarget = html.match(/<meta http-equiv="refresh" content="0;url=([^"]+)"/i)?.[1];
 
   if (redirectTarget) {
-    if (relativePath !== path.join('dist', '5x1000', 'index.html') || redirectTarget !== '/sostienici/#cinque-per-mille') {
+    if (allowedRedirects.get(relativePath) !== redirectTarget) {
       throw new Error(`${relativePath}: redirect non previsto.`);
     }
     if (!/<meta name="robots" content="noindex"/i.test(html)) {

@@ -4,6 +4,7 @@ export default defineConfig({
   site: 'https://volontariato.assoe.it',
   redirects: {
     '/5x1000': '/sostienici/#cinque-per-mille',
+    '/contatti': '/chi-siamo/#contatti',
   },
   image: {
     domains: ['cdn.sanity.io'],

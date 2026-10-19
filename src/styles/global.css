@@ -217,6 +217,7 @@ p { line-height: 1.65; }
 .people-role { padding-top: 3.5rem; }
 .people-role h2 { margin: 0 0 1.5rem; padding-bottom: .75rem; border-bottom: 2px solid var(--green-soft); font-size: clamp(1.5rem, 3vw, 2rem); }
 .people-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; list-style: none; margin: 0; padding: 0; }
+.about-board { margin-top: 1.5rem; }
 .person-card { display: grid; grid-template-columns: minmax(8.5rem, 35%) minmax(0, 1fr); align-items: center; gap: clamp(1rem, 2.5vw, 1.75rem); min-width: 0; padding: 1rem; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
 .person-card__image { display: grid; place-items: center; aspect-ratio: 5 / 6; border: 5px solid var(--green); background: var(--surface-muted); overflow: hidden; }
 .person-card__image .content-image { width: 100%; height: 100%; object-fit: cover; }
@@ -227,7 +228,7 @@ p { line-height: 1.65; }
 .person-card__role { margin: 1rem 0 0; color: var(--green-dark); font-size: .8rem; font-weight: 800; letter-spacing: .04em; line-height: 1.4; text-transform: uppercase; }
 .info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem; }
 .info-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 1.5rem; }
-.info-card h2 { font-size: 1.25rem; }
+.info-card h2, .info-card h3 { font-size: 1.25rem; }
 .info-card p { margin: .4rem 0; }
 .info-card a { color: var(--green-dark); }
 .info-card address { font-style: normal; line-height: 1.7; }

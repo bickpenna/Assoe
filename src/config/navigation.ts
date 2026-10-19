@@ -12,7 +12,6 @@ const navigation = {
   articles: { href: '/articoli/', label: 'Articoli' },
   about: { href: '/chi-siamo/', label: 'Chi siamo' },
   people: { href: '/associati/', label: 'Associati' },
-  contacts: { href: '/contatti/', label: 'Contatti' },
   support: { href: '/sostienici/', label: 'Sostienici', featured: true },
 } as const;
 
@@ -22,7 +21,6 @@ export const siteNavigation: readonly NavigationItem[] = [
   navigation.events,
   navigation.articles,
   navigation.about,
-  navigation.contacts,
   navigation.support,
 ];
 
