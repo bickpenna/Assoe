@@ -89,10 +89,9 @@ p { line-height: 1.65; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.8rem; }
 .project-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
 .project-list__item { border-bottom: 1px solid var(--line); }
-.project-list__link { display: grid; grid-template-areas: 'number content media arrow'; grid-template-columns: 3rem minmax(0, 1fr) 11rem 2.75rem; align-items: center; gap: clamp(1rem, 2.5vw, 2rem); min-height: 10rem; padding: 1.4rem .5rem; color: var(--ink); text-decoration: none; transition: background .2s ease; }
-.project-list__link--text-only { grid-template-areas: 'number content arrow'; grid-template-columns: 3rem minmax(0, 1fr) 2.75rem; }
+.project-list__link { display: grid; grid-template-areas: 'content media arrow'; grid-template-columns: minmax(0, 1fr) 11rem 2.75rem; align-items: center; gap: clamp(1rem, 2.5vw, 2rem); min-height: 10rem; padding: 1.4rem .5rem; color: var(--ink); text-decoration: none; transition: background .2s ease; }
+.project-list__link--text-only { grid-template-areas: 'content arrow'; grid-template-columns: minmax(0, 1fr) 2.75rem; }
 .project-list__link:hover { color: var(--ink); background: var(--surface-muted); }
-.project-list__number { grid-area: number; align-self: start; color: var(--green); font-family: 'Epilogue Variable', sans-serif; font-size: .9rem; font-weight: 800; }
 .project-list__content { grid-area: content; min-width: 0; }
 .project-list__content .eyebrow { margin-bottom: .55rem; }
 .project-list__content h2, .project-list__content h3 { margin: 0; font-size: clamp(1.6rem, 3vw, 2.7rem); overflow-wrap: anywhere; }
@@ -220,8 +219,8 @@ p { line-height: 1.65; }
   .hero__logo { min-height: 10rem; }
   .hero__logo .content-image--logoLarge { max-height: 12rem; }
   .hero__actions .button { width: 100%; }
-  .project-list__link { grid-template-areas: 'number content arrow' '. media media'; grid-template-columns: 2.25rem minmax(0, 1fr) 2.75rem; gap: .7rem 1rem; padding: 1.35rem .25rem; }
-  .project-list__link--text-only { grid-template-areas: 'number content arrow'; }
+  .project-list__link { grid-template-areas: 'content arrow' 'media media'; grid-template-columns: minmax(0, 1fr) 2.75rem; gap: .7rem 1rem; padding: 1.35rem .25rem; }
+  .project-list__link--text-only { grid-template-areas: 'content arrow'; }
   .project-list__media { max-width: 15rem; height: 8rem; margin-top: .25rem; }
   .project-list__content h2, .project-list__content h3 { font-size: clamp(1.5rem, 7vw, 2.2rem); }
   .article-list { padding-left: 1rem; }

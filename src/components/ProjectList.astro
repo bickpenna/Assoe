@@ -10,11 +10,10 @@ interface Props {
 const { projects, headingLevel = 3 } = Astro.props;
 ---
 
-<ol class="project-list">
-  {projects.map((project, index) => (
+<ul class="project-list">
+  {projects.map((project) => (
     <li class="project-list__item">
       <a class:list={['project-list__link', { 'project-list__link--text-only': !project.imageUrl }]} href={`/progetti/${project.slug}/`}>
-        <span class="project-list__number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
         <div class="project-list__content">
           <p class="eyebrow">Asso è…</p>
           {headingLevel === 2 ? <h2>{project.name}</h2> : <h3>{project.name}</h3>}
@@ -27,4 +26,4 @@ const { projects, headingLevel = 3 } = Astro.props;
       </a>
     </li>
   ))}
-</ol>
+</ul>
