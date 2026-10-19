@@ -1,9 +1,13 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { contentRepository } from '@/content';
 import { SITE_NAME } from '@/config/site';
+
+const association = await contentRepository.getAssociationInfo();
+const taxCode = association?.taxCode?.trim();
 ---
 
-<BaseLayout title={`Come funziona il 5×1000 | ${SITE_NAME}`}>
+<BaseLayout title={`Come funziona il 5×1000 | ${SITE_NAME}`} association={association}>
   <main id="contenuto" class="container">
     <div class="page-intro">
       <p class="eyebrow">5×1000</p>
@@ -16,9 +20,16 @@ import { SITE_NAME } from '@/config/site';
         <h2>Dove si indica</h2>
         <p>Nella scheda per la scelta dell’8, del 5 e del 2 per mille è presente il riquadro relativo al 5×1000. Per destinare la quota a un ente specifico, occorre firmare nel riquadro pertinente e indicarne il codice fiscale.</p>
       </section>
-      <section class="info-card">
+      <section class="info-card five-per-mille-code">
         <h2>Il codice dell’associazione</h2>
-        <p>Il codice fiscale da utilizzare sarà pubblicato qui dopo la verifica dei dati con l’associazione.</p>
+        {taxCode ? (
+          <>
+            <p>{association?.name}</p>
+            <p class="five-per-mille-code__value"><span>Codice fiscale</span><strong>{taxCode}</strong></p>
+          </>
+        ) : (
+          <p>Il codice fiscale non è disponibile su questa pagina. <a href="/contatti/">Contattaci</a> per averlo prima di compilare la scelta.</p>
+        )}
       </section>
     </div>
 
