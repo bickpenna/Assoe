@@ -1,0 +1,15 @@
+---
+interface Props {
+  url: string;
+}
+
+const { url } = Astro.props;
+---
+
+<section class="facebook-discussion" aria-label="Conversazione su Facebook">
+  <p class="eyebrow">La conversazione continua</p>
+  <p>Puoi leggere i commenti e dire la tua nel post che abbiamo pubblicato su Facebook.</p>
+  <a class="text-link" href={url} target="_blank" rel="noopener noreferrer">
+    Vai al post su Facebook <span aria-hidden="true">↗</span><span class="visually-hidden"> (si apre in una nuova scheda)</span>
+  </a>
+</section>

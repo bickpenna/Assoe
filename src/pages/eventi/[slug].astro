@@ -4,6 +4,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import ProjectList from '@/components/ProjectList.astro';
 import RelatedContentSection from '@/components/RelatedContentSection.astro';
+import FacebookDiscussion from '@/components/FacebookDiscussion.astro';
 import { contentRepository } from '@/content';
 import { formatDateTime } from '@/utils/date';
 import { eventStatusLabel } from '@/utils/labels';
@@ -52,6 +53,8 @@ if (!event) {
           </section>
         )
       }
+
+      {event.discussionUrl && <FacebookDiscussion url={event.discussionUrl} />}
 
       {
         event.relatedProjects.length > 0 && (

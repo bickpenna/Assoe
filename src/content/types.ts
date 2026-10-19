@@ -47,6 +47,7 @@ export interface EventSummary {
 export interface EventDetail extends EventSummary {
   descriptionHtml?: string;
   galleryImageUrls: string[];
+  discussionUrl?: string;
   relatedProjects: ProjectSummary[];
 }
 

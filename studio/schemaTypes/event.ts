@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity';
+import { facebookPostField } from './facebookPostField';
 
 export const event = defineType({
   name: 'event',
@@ -19,6 +20,7 @@ export const event = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({ name: 'description', title: 'Descrizione', type: 'richText' }),
+    facebookPostField,
     defineField({
       name: 'date',
       title: 'Data e ora',

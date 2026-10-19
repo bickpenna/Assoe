@@ -5,6 +5,7 @@ import EventCard from '@/components/EventCard.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import ProjectList from '@/components/ProjectList.astro';
 import RelatedContentSection from '@/components/RelatedContentSection.astro';
+import FacebookDiscussion from '@/components/FacebookDiscussion.astro';
 import { contentRepository } from '@/content';
 import { formatDate } from '@/utils/date';
 import { SITE_NAME } from '@/config/site';
@@ -50,17 +51,7 @@ if (!article) {
         )
       }
 
-      {
-        article.discussionUrl && (
-          <section class="article-discussion" aria-label="Conversazione su Facebook">
-            <p class="eyebrow">La conversazione continua</p>
-            <p>Puoi leggere i commenti e dire la tua nel post che abbiamo pubblicato su Facebook.</p>
-            <a class="text-link" href={article.discussionUrl} target="_blank" rel="noopener noreferrer">
-              Vai al post su Facebook <span aria-hidden="true">↗</span><span class="visually-hidden"> (si apre in una nuova scheda)</span>
-            </a>
-          </section>
-        )
-      }
+      {article.discussionUrl && <FacebookDiscussion url={article.discussionUrl} />}
 
       {
         article.relatedEvent && (

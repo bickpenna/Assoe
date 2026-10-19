@@ -61,6 +61,7 @@ interface SanityEvent {
 interface SanityEventDetail extends SanityEvent {
   description: Array<{ _type: string; _key?: string }> | null;
   galleryImageUrls: Array<string | null> | null;
+  facebookPostUrl: string | null;
   projects: Array<SanityRelatedProject | null> | null;
 }
 
@@ -213,6 +214,7 @@ const eventBySlugQuery = `*[
   _id, title, "slug": slug.current, date, place, status,
   "imageUrl": poster.asset->url,
   description,
+  facebookPostUrl,
   "galleryImageUrls": gallery[].asset->url,
   "projects": projects[]-> {
     _id, name, "slug": slug.current, active, "imageUrl": image.asset->url
@@ -388,6 +390,7 @@ export function createSanityRepository({
       return {
         ...toEventSummary(event),
         descriptionHtml: renderRichText(event.description),
+        discussionUrl: facebookPostUrlOrUndefined(event.facebookPostUrl),
         galleryImageUrls: (event.galleryImageUrls ?? []).filter(
           (url): url is string => typeof url === 'string',
         ),

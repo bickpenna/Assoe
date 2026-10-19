@@ -59,6 +59,7 @@ class Evento {
     -titolo: String
     -slug: Slug
     -descrizione: RichText
+    -postFacebook: URL (opzionale)
     -data: DateTime
     -luogo: String
     -locandina: Image
