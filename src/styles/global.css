@@ -15,6 +15,7 @@
   --green-dark: #0c4d1d;
   --green-soft: #d7edda;
   --orange: #a73a06;
+  --yellow-soft: #f4dc78;
   --line: #d6e4d7;
   --radius: 1.2rem;
 }
@@ -143,10 +144,12 @@ p { line-height: 1.65; }
 .event-feature__body h3 { font-size: clamp(1.5rem, 3vw, 2.5rem); }
 .event-feature__body p:not(.eyebrow) { color: var(--muted); margin: .7rem 0; }
 .notice { padding: 1.3rem 1.5rem; border: 1px dashed var(--line); border-radius: 1rem; background: #fff; color: var(--muted); }
-.five-per-mille { margin-top: 5rem; background: var(--green-dark); color: #fff; border-radius: 1.5rem; padding: clamp(1.8rem, 4vw, 3.3rem); display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: center; }
-.five-per-mille .eyebrow { color: #b7e9ba; }
+.five-per-mille { margin-top: 5rem; background: var(--yellow-soft); color: var(--green-dark); border-radius: 1.5rem; padding: clamp(1.8rem, 4vw, 3.3rem); display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: center; }
+.five-per-mille .eyebrow { color: var(--green-dark); }
 .five-per-mille h2 { margin: 0; }
-.five-per-mille p { color: #deede0; margin: .7rem 0 0; max-width: 44rem; }
+.five-per-mille p { color: var(--muted); margin: .7rem 0 0; max-width: 44rem; }
+.five-per-mille .button { background: var(--green-dark); color: #fff; }
+.five-per-mille .button:hover { background: var(--green); color: #fff; }
 .page-intro { padding: 4rem 0 2rem; max-width: 60rem; }
 .page-intro p:not(.eyebrow) { color: var(--muted); }
 .detail { padding-top: 3rem; }
