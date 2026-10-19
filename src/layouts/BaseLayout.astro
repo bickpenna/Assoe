@@ -42,7 +42,7 @@ const isCurrent = (href: string) => href === '/' ? currentPath === '/' : current
       <div class="container site-header__inner">
         <SiteBrand logoUrl={association?.logoUrl} name={association?.name} placement="header" />
         <nav class="desktop-nav" aria-label="Navigazione principale">
-          {siteNavigation.map((item) => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
+          {siteNavigation.map((item) => <a href={item.href} class:list={{ 'nav-cta': item.featured }} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
         </nav>
         <details class="mobile-nav">
           <summary>
@@ -50,7 +50,7 @@ const isCurrent = (href: string) => href === '/' ? currentPath === '/' : current
             <span class="mobile-nav__icon" aria-hidden="true"><span></span><span></span><span></span></span>
           </summary>
           <nav aria-label="Navigazione mobile">
-            {siteNavigation.map((item) => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
+            {siteNavigation.map((item) => <a href={item.href} class:list={{ 'nav-cta': item.featured }} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
           </nav>
         </details>
       </div>
