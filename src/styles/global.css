@@ -52,6 +52,7 @@ p { line-height: 1.65; }
 .desktop-nav a[aria-current='page'], .mobile-nav a[aria-current='page'] { color: var(--green-soft); text-decoration: underline; text-underline-offset: .4em; }
 .mobile-nav { display: none; }
 .site-header :focus-visible, .site-footer :focus-visible { outline-color: var(--surface); }
+.demo-notice { padding: .7rem 0; background: var(--yellow); color: var(--green-dark); font-size: .85rem; font-weight: 800; line-height: 1.4; text-align: center; }
 .site-footer { margin-top: 5rem; padding: 3.5rem 0 1.5rem; background: var(--green-dark); color: var(--surface); }
 .site-footer__grid { display: grid; grid-template-columns: minmax(0, 1.55fr) repeat(2, minmax(0, 1fr)) minmax(0, 1.25fr); gap: clamp(1.5rem, 3vw, 3.5rem); }
 .site-footer__intro p { max-width: 21rem; margin: 1.5rem 0 0; color: var(--green-soft); font-size: .95rem; }

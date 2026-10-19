@@ -47,6 +47,8 @@ npm run dev
 
 Prima di avviare Astro, copiare `.env.example` in `.env` nella radice del repository e impostare `PUBLIC_SANITY_PROJECT_ID`. Il dataset predefinito è `production`. La build legge i contenuti pubblicati dal CMS, quindi richiede l'accesso a Sanity durante la compilazione.
 
+Per vedere il sito pieno mentre i contenuti reali sono ancora pochi, usa `npm run dev:demo`: mostra contenuti fittizi locali per progetti, articoli, eventi e associati, senza modificare Sanity e senza richiedere un project ID. Ogni pagina espone un avviso che identifica l'anteprima. `npm run build:demo` genera una build statica dimostrativa, utile per verificare gli archivi e la paginazione, **da non distribuire come sito ufficiale**. I comandi ordinari `npm run dev` e `npm run build` continuano a usare esclusivamente Sanity.
+
 Il frontend è statico: per rendere visibili nuovi progetti o modifiche ai contenuti pubblicati bisogna eseguire una nuova build e distribuire il risultato. L'aggiornamento automatico dopo la pubblicazione nel CMS non è ancora configurato.
 
 Controlli e build:
