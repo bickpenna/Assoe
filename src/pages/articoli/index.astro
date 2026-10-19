@@ -1,8 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import ContentCard from '@/components/ContentCard.astro';
+import ArticleList from '@/components/ArticleList.astro';
 import { contentRepository } from '@/content';
-import { formatDate } from '@/utils/date';
 import { SITE_NAME } from '@/config/site';
 
 const articles = await contentRepository.listArticles();
@@ -17,11 +16,7 @@ const articles = await contentRepository.listArticles();
     {articles.length === 0 ? (
       <p class="notice">Non ci sono ancora articoli pubblicati.</p>
     ) : (
-      <div class="content-grid">
-        {articles.map((article) => (
-          <ContentCard kind="article" headingLevel={2} href={`/articoli/${article.slug}/`} title={article.title} imageUrl={article.imageUrl} meta={formatDate(article.publishedAt)} summary={article.summary} />
-        ))}
-      </div>
+      <ArticleList articles={articles} headingLevel={2} />
     )}
   </main>
 </BaseLayout>

@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import ContentCard from '@/components/ContentCard.astro';
+import EventCard from '@/components/EventCard.astro';
 import { contentRepository } from '@/content';
 import { formatDateTime } from '@/utils/date';
 import { eventStatusLabel } from '@/utils/labels';
@@ -20,7 +20,7 @@ const events = await contentRepository.listEvents();
     ) : (
       <div class="content-grid">
         {events.map((event) => (
-          <ContentCard kind="event" headingLevel={2} href={`/eventi/${event.slug}/`} title={event.title} imageUrl={event.imageUrl} meta={`${formatDateTime(event.date)} · ${eventStatusLabel(event.status)}${event.place ? ` · ${event.place}` : ''}`} />
+          <EventCard headingLevel={2} href={`/eventi/${event.slug}/`} title={event.title} imageUrl={event.imageUrl} meta={`${formatDateTime(event.date)} · ${eventStatusLabel(event.status)}${event.place ? ` · ${event.place}` : ''}`} />
         ))}
       </div>
     )}

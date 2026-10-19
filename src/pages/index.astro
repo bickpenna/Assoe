@@ -1,10 +1,10 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import ContentCard from '@/components/ContentCard.astro';
+import ArticleList from '@/components/ArticleList.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import ProjectList from '@/components/ProjectList.astro';
 import { contentRepository } from '@/content';
-import { formatDateTime, formatDate } from '@/utils/date';
+import { formatDateTime } from '@/utils/date';
 import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
 
 const [projects, articles, events, association] = await Promise.all([
@@ -100,11 +100,7 @@ const eventHeading = upcomingEvents.length > 0 ? 'Prossimo evento' : 'Eventi e i
       </div>
       {
         articles.length > 0 ? (
-          <div class="content-grid">
-            {articles.slice(0, 3).map((article) => (
-              <ContentCard kind="article" href={`/articoli/${article.slug}/`} title={article.title} imageUrl={article.imageUrl} meta={formatDate(article.publishedAt)} summary={article.summary} />
-            ))}
-          </div>
+          <ArticleList articles={articles.slice(0, 3)} />
         ) : (
           <p class="notice">Gli articoli saranno pubblicati presto.</p>
         )

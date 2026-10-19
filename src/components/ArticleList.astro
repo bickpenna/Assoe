@@ -1,0 +1,30 @@
+---
+import ContentImage from './ContentImage.astro';
+import type { ArticleSummary } from '@/content/types';
+import { formatDate } from '@/utils/date';
+
+interface Props {
+  articles: ArticleSummary[];
+  headingLevel?: 2 | 3;
+}
+
+const { articles, headingLevel = 3 } = Astro.props;
+---
+
+<ul class="article-list">
+  {articles.map((article) => (
+    <li class="article-list__item">
+      <a class:list={['article-list__link', { 'article-list__link--text-only': !article.imageUrl }]} href={`/articoli/${article.slug}/`}>
+        <time class="article-list__date" datetime={article.publishedAt}>{formatDate(article.publishedAt)}</time>
+        <div class="article-list__content">
+          {headingLevel === 2 ? <h2>{article.title}</h2> : <h3>{article.title}</h3>}
+          {article.summary && <p>{article.summary}</p>}
+          <span class="article-list__more">Leggi l’articolo <span aria-hidden="true">↗</span></span>
+        </div>
+        {article.imageUrl && (
+          <span class="article-list__media"><ContentImage src={article.imageUrl} alt="" variant="card" /></span>
+        )}
+      </a>
+    </li>
+  ))}
+</ul>

@@ -1,10 +1,11 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import ContentCard from '@/components/ContentCard.astro';
+import ArticleList from '@/components/ArticleList.astro';
+import EventCard from '@/components/EventCard.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import { contentRepository } from '@/content';
-import { formatDateTime, formatDate } from '@/utils/date';
+import { formatDateTime } from '@/utils/date';
 import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
 
 export const getStaticPaths = (async () => {
@@ -35,11 +36,7 @@ if (!project) {
       project.relatedArticles.length > 0 && (
         <section class="section detail__related" aria-labelledby="articoli-progetto">
           <h2 id="articoli-progetto">Articoli collegati</h2>
-          <div class="content-grid">
-            {project.relatedArticles.map((article) => (
-              <ContentCard kind="article" href={`/articoli/${article.slug}/`} title={article.title} imageUrl={article.imageUrl} meta={formatDate(article.publishedAt)} summary={article.summary} />
-            ))}
-          </div>
+          <ArticleList articles={project.relatedArticles} />
         </section>
       )
     }
@@ -50,7 +47,7 @@ if (!project) {
           <h2 id="eventi-progetto">Eventi collegati</h2>
           <div class="content-grid">
             {project.relatedEvents.map((event) => (
-              <ContentCard kind="event" href={`/eventi/${event.slug}/`} title={event.title} imageUrl={event.imageUrl} meta={formatDateTime(event.date)} />
+              <EventCard href={`/eventi/${event.slug}/`} title={event.title} imageUrl={event.imageUrl} meta={formatDateTime(event.date)} />
             ))}
           </div>
         </section>

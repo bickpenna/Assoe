@@ -5,36 +5,29 @@ import { BRAND_WORDMARK } from '@/config/site';
 interface Props {
   href: string;
   title: string;
-  kind: 'article' | 'event';
   imageUrl?: string;
   meta?: string;
-  summary?: string;
   headingLevel?: 2 | 3;
 }
 
-const { href, title, kind, imageUrl, meta, summary, headingLevel = 3 } = Astro.props;
-const kindLabel = {
-  article: 'Articolo',
-  event: 'Evento',
-}[kind];
+const { href, title, imageUrl, meta, headingLevel = 3 } = Astro.props;
 ---
 
 <article class="content-card">
-  <a class="content-card__link" href={href} aria-label={`Apri ${kindLabel.toLowerCase()}: ${title}`}>
+  <a class="content-card__link" href={href} aria-label={`Apri evento: ${title}`}>
     <div class="content-card__media">
       {
         imageUrl ? (
-          <ContentImage src={imageUrl} alt="" variant={kind === 'event' ? 'poster' : 'card'} />
+          <ContentImage src={imageUrl} alt="" variant="poster" />
         ) : (
           <span class="content-card__placeholder" aria-hidden="true">{BRAND_WORDMARK}</span>
         )
       }
     </div>
     <div class="content-card__body">
-      <p class="eyebrow">{kindLabel}</p>
+      <p class="eyebrow">Evento</p>
       {headingLevel === 2 ? <h2>{title}</h2> : <h3>{title}</h3>}
       {meta && <p class="content-card__meta">{meta}</p>}
-      {summary && <p class="content-card__summary">{summary}</p>}
       <span class="text-link">Scopri di più <span aria-hidden="true">↗</span></span>
     </div>
   </a>

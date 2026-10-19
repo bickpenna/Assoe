@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import ContentCard from '@/components/ContentCard.astro';
+import EventCard from '@/components/EventCard.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import ProjectList from '@/components/ProjectList.astro';
 import { contentRepository } from '@/content';
@@ -53,7 +53,7 @@ if (!article) {
         article.relatedEvent && (
           <section class="section detail__related" aria-labelledby="evento-articolo">
             <h2 id="evento-articolo">Evento raccontato</h2>
-            <div class="content-grid"><ContentCard kind="event" href={`/eventi/${article.relatedEvent.slug}/`} title={article.relatedEvent.title} imageUrl={article.relatedEvent.imageUrl} /></div>
+            <div class="content-grid"><EventCard href={`/eventi/${article.relatedEvent.slug}/`} title={article.relatedEvent.title} imageUrl={article.relatedEvent.imageUrl} /></div>
           </section>
         )
       }
