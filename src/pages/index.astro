@@ -78,7 +78,7 @@ const featuredEvent = getNextEvent(events);
       </div>
       {
         projects.length > 0 ? (
-          <ProjectList projects={projects.slice(0, 3)} />
+          <ProjectList projects={projects.slice(0, 4)} columns={2} />
         ) : (
           <p class="notice">Per ora non ci sono progetti da mostrarti.</p>
         )

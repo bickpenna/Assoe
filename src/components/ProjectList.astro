@@ -5,13 +5,14 @@ import type { ProjectSummary } from '@/content/types';
 interface Props {
   projects: ProjectSummary[];
   headingLevel?: 2 | 3;
+  columns?: 2 | 3;
 }
 
-const { projects, headingLevel = 3 } = Astro.props;
+const { projects, headingLevel = 3, columns = 3 } = Astro.props;
 const hasImages = projects.some(({ imageUrl }) => Boolean(imageUrl));
 ---
 
-<ul class:list={['project-list', { 'project-list--with-images': hasImages, 'project-list--single': projects.length === 1, 'project-list--two': projects.length === 2 }]}>
+<ul class:list={['project-list', { 'project-list--two-columns': columns === 2 || hasImages || projects.length === 2, 'project-list--single': projects.length === 1 }]}>
   {projects.map((project) => (
     <li class="project-list__item">
       <a class:list={['project-list__link', { 'project-list__link--text-only': !project.imageUrl }]} href={`/progetti/${project.slug}/`}>

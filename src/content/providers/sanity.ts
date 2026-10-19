@@ -2,6 +2,7 @@ import { createClient } from '@sanity/client';
 import { toHTML } from '@portabletext/to-html';
 import { facebookPostUrlOrUndefined } from '../../utils/facebook';
 import { httpsUrlOrUndefined } from '../../../shared/url';
+import { projectImageUrl, type SanityImage } from './sanityImage';
 import type {
   ArticleDetail,
   ArticleSummary,
@@ -19,7 +20,7 @@ interface SanityProject {
   _id: string;
   name: string;
   slug: string;
-  imageUrl: string | null;
+  image: SanityImage | null;
 }
 
 interface SanityProjectDetail extends SanityProject {
@@ -98,6 +99,13 @@ interface SanityConfig {
   dataset: string;
 }
 
+const projectImageProjection = `"image": image {
+  "url": asset->url,
+  "width": asset->metadata.dimensions.width,
+  "height": asset->metadata.dimensions.height,
+  crop
+}`;
+
 // Keep the legacy numeric order until existing projects receive a drag-and-drop rank.
 const projectsQuery = `*[
   _type == "project" &&
@@ -108,7 +116,7 @@ const projectsQuery = `*[
   _id,
   name,
   "slug": slug.current,
-  "imageUrl": image.asset->url
+  ${projectImageProjection}
 }`;
 
 const projectBySlugQuery = `*[
@@ -121,7 +129,7 @@ const projectBySlugQuery = `*[
   name,
   "slug": slug.current,
   description,
-  "imageUrl": image.asset->url
+  ${projectImageProjection}
 }`;
 
 const articlesByProjectQuery = `*[
@@ -177,7 +185,7 @@ const articleBySlugQuery = `*[
   facebookPostUrl,
   "galleryImageUrls": gallery[].asset->url,
   "projects": projects[]-> {
-    _id, name, "slug": slug.current, active, "imageUrl": image.asset->url
+    _id, name, "slug": slug.current, active, ${projectImageProjection}
   },
   "event": event-> {
     _id, title, "slug": slug.current, date, place, status,
@@ -214,7 +222,7 @@ const eventBySlugQuery = `*[
   facebookPostUrl,
   "galleryImageUrls": gallery[].asset->url,
   "projects": projects[]-> {
-    _id, name, "slug": slug.current, active, "imageUrl": image.asset->url
+    _id, name, "slug": slug.current, active, ${projectImageProjection}
   }
 }`;
 
@@ -273,7 +281,7 @@ function toProjectSummary(project: SanityProject): ProjectSummary {
     id: project._id,
     name: project.name,
     slug: project.slug,
-    imageUrl: project.imageUrl ?? undefined,
+    imageUrl: projectImageUrl(project.image),
   };
 }
 
@@ -441,7 +449,12 @@ function cachePromise<T>(factory: () => Promise<T>): () => Promise<T> {
   let cached: Promise<T> | undefined;
 
   return () => {
-    cached ??= factory();
+    // Keep builds consistent, but let the dev server pick up edits made in Studio.
+    if (import.meta.env.DEV) return factory();
+    cached ??= factory().catch((error: unknown) => {
+      cached = undefined;
+      throw error;
+    });
     return cached;
   };
 }
