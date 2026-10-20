@@ -3,6 +3,7 @@ import SiteBrand from './SiteBrand.astro';
 import { footerNavigation } from '@/config/navigation';
 import { SITE_NAME } from '@/config/site';
 import type { AssociationInfo } from '@/content/types';
+import { sitePath } from '@/utils/sitePath';
 
 interface Props {
   association: AssociationInfo | null;
@@ -34,9 +35,9 @@ const copyrightLabel = copyright
 
       <nav class="site-footer__column" aria-label="Partecipa">
         <h2>Partecipa</h2>
-        <a href="/sostienici/#cinque-per-mille">5×1000</a>
-        <a href="/sostienici/#donazione">Donazioni</a>
-        <a href="/chi-siamo/#sede">La nostra sede</a>
+        <a href={sitePath('/sostienici/#cinque-per-mille')}>5×1000</a>
+        <a href={sitePath('/sostienici/#donazione')}>Donazioni</a>
+        <a href={sitePath('/chi-siamo/#sede')}>La nostra sede</a>
       </nav>
 
       <div class="site-footer__column site-footer__legal">
@@ -53,7 +54,7 @@ const copyrightLabel = copyright
         )}
         {association?.taxCode && <p>Codice fiscale {association.taxCode}</p>}
         {association?.registryInfo && <p>{association.registryInfo}</p>}
-        <a class="site-footer__contact" href="/chi-siamo/#contatti">Contattaci <span aria-hidden="true">↗</span></a>
+        <a class="site-footer__contact" href={sitePath('/chi-siamo/#contatti')}>Contattaci <span aria-hidden="true">↗</span></a>
       </div>
     </div>
 
@@ -62,7 +63,7 @@ const copyrightLabel = copyright
       {hasDocuments && (
         <nav aria-label="Informazioni legali">
           {documents?.privacyPolicyUrl && <a href={documents.privacyPolicyUrl}>Privacy</a>}
-          <a href="/chi-siamo/#documenti-associazione">Documenti</a>
+          <a href={sitePath('/chi-siamo/#documenti-associazione')}>Documenti</a>
         </nav>
       )}
     </div>

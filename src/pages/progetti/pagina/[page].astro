@@ -1,0 +1,15 @@
+---
+import type { GetStaticPaths } from 'astro';
+import LegacyRedirect from '@/components/LegacyRedirect.astro';
+import { contentRepository } from '@/content';
+import { ARCHIVE_PAGE_SIZE } from '@/config/pagination';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const initiatives = await contentRepository.listInitiatives();
+  return paginate(initiatives, { pageSize: ARCHIVE_PAGE_SIZE }).slice(1);
+}) satisfies GetStaticPaths;
+
+const page = Astro.params.page;
+---
+
+<LegacyRedirect destination={`/iniziative/pagina/${page}/`} />

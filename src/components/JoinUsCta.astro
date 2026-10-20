@@ -1,5 +1,6 @@
 ---
 import type { AssociationInfo } from '@/content/types';
+import { sitePath } from '@/utils/sitePath';
 
 interface Props {
   association: AssociationInfo | null;
@@ -17,7 +18,7 @@ const hasContactMethods = Boolean(association?.contacts.email || association?.co
         <h2 id="unisciti-associazione">Vuoi unirti a noi?</h2>
         <p>Ti piacerebbe dare una mano? Scrivici e raccontaci come vorresti partecipare.</p>
       </div>
-      <a class="button" href={href}>Contattaci ↗</a>
+      <a class="button" href={href.startsWith('/') ? sitePath(href) : href}>Contattaci ↗</a>
     </div>
   </section>
 )}

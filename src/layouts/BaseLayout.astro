@@ -6,6 +6,7 @@ import { contentRepository, isDemoContent } from '@/content';
 import type { AssociationInfo } from '@/content/types';
 import { siteNavigation } from '@/config/navigation';
 import { SITE_NAME } from '@/config/site';
+import { sitePath } from '@/utils/sitePath';
 
 interface Props {
   title: string;
@@ -24,7 +25,8 @@ const association = providedAssociation === undefined
   : providedAssociation;
 
 const currentPath = Astro.url.pathname;
-const isCurrent = (href: string) => href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+const homePath = sitePath('/');
+const isCurrent = (href: string) => href === homePath ? currentPath === homePath : currentPath.startsWith(href);
 ---
 
 <!doctype html>
@@ -33,7 +35,7 @@ const isCurrent = (href: string) => href === '/' ? currentPath === '/' : current
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    {isDemoContent && <meta name="robots" content="noindex,nofollow" />}
+    {(isDemoContent || import.meta.env.PUBLIC_SITE_PREVIEW === 'true') && <meta name="robots" content="noindex,nofollow" />}
     <title>{title}</title>
   </head>
   <body>

@@ -1,13 +1,15 @@
 import { defineConfig } from 'astro/config';
 
+const base = process.env.SITE_BASE || '/';
+const redirectBase = base === '/' ? '' : `/${base.replace(/^\/+|\/+$/g, '')}`;
+
 export default defineConfig({
-  site: 'https://volontariato.assoe.it',
+  site: process.env.SITE_URL || 'https://volontariato.assoe.it',
+  base,
   redirects: {
-    '/5x1000': '/sostienici/#cinque-per-mille',
-    '/contatti': '/chi-siamo/#contatti',
-    '/progetti': '/iniziative/',
-    '/progetti/[slug]': '/iniziative/[slug]',
-    '/progetti/pagina/[page]': '/iniziative/pagina/[page]',
+    '/5x1000': `${redirectBase}/sostienici/#cinque-per-mille`,
+    '/contatti': `${redirectBase}/chi-siamo/#contatti`,
+    '/progetti': `${redirectBase}/iniziative/`,
   },
   image: {
     domains: ['cdn.sanity.io'],

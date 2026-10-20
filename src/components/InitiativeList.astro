@@ -1,6 +1,7 @@
 ---
 import ContentImage from './ContentImage.astro';
 import type { InitiativeSummary } from '@/content/types';
+import { sitePath } from '@/utils/sitePath';
 
 interface Props {
   initiatives: InitiativeSummary[];
@@ -15,7 +16,7 @@ const hasImages = initiatives.some(({ imageUrl }) => Boolean(imageUrl));
 <ul class:list={['initiative-list', { 'initiative-list--two-columns': columns === 2 || hasImages || initiatives.length === 2, 'initiative-list--single': initiatives.length === 1 }]}>
   {initiatives.map((initiative) => (
     <li class="initiative-list__item">
-      <a class:list={['initiative-list__link', { 'initiative-list__link--text-only': !initiative.imageUrl }]} href={`/iniziative/${initiative.slug}/`}>
+      <a class:list={['initiative-list__link', { 'initiative-list__link--text-only': !initiative.imageUrl }]} href={sitePath(`/iniziative/${initiative.slug}/`)}>
         <div class="initiative-list__content">
           <p class="eyebrow">Asso è…</p>
           {headingLevel === 2 ? <h2>{initiative.name}</h2> : <h3>{initiative.name}</h3>}

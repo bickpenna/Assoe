@@ -1,0 +1,15 @@
+---
+import type { GetStaticPaths } from 'astro';
+import LegacyRedirect from '@/components/LegacyRedirect.astro';
+import { contentRepository } from '@/content';
+import { staticPathsFromSlugs } from '@/utils/content';
+
+export const getStaticPaths = (async () => {
+  const initiatives = await contentRepository.listInitiatives();
+  return staticPathsFromSlugs(initiatives);
+}) satisfies GetStaticPaths;
+
+const slug = Astro.params.slug;
+---
+
+<LegacyRedirect destination={`/iniziative/${slug}/`} />

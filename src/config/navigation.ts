@@ -1,4 +1,6 @@
 /** Destinazioni condivise: le etichette possono variare per contesto, non gli URL. */
+import { sitePath } from '@/utils/sitePath';
+
 interface NavigationItem {
   href: string;
   label: string;
@@ -6,13 +8,13 @@ interface NavigationItem {
 }
 
 const navigation = {
-  home: { href: '/', label: 'Home' },
-  initiatives: { href: '/iniziative/', label: 'Iniziative' },
-  events: { href: '/eventi/', label: 'Eventi' },
-  articles: { href: '/articoli/', label: 'Articoli' },
-  about: { href: '/chi-siamo/', label: 'Chi siamo' },
-  people: { href: '/associati/', label: 'Associati' },
-  support: { href: '/sostienici/', label: 'Sostienici', featured: true },
+  home: { href: sitePath('/'), label: 'Home' },
+  initiatives: { href: sitePath('/iniziative/'), label: 'Iniziative' },
+  events: { href: sitePath('/eventi/'), label: 'Eventi' },
+  articles: { href: sitePath('/articoli/'), label: 'Articoli' },
+  about: { href: sitePath('/chi-siamo/'), label: 'Chi siamo' },
+  people: { href: sitePath('/associati/'), label: 'Associati' },
+  support: { href: sitePath('/sostienici/'), label: 'Sostienici', featured: true },
 } as const;
 
 export const siteNavigation: readonly NavigationItem[] = [

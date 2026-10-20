@@ -1,5 +1,6 @@
 ---
 import { paginationItems } from '@/utils/pagination';
+import { sitePath } from '@/utils/sitePath';
 
 interface Props {
   basePath: string;
@@ -9,7 +10,7 @@ interface Props {
 }
 
 const { basePath, currentPage, lastPage, label } = Astro.props;
-const pageHref = (pageNumber: number) => pageNumber === 1 ? basePath : `${basePath}pagina/${pageNumber}/`;
+const pageHref = (pageNumber: number) => sitePath(pageNumber === 1 ? basePath : `${basePath}pagina/${pageNumber}/`);
 const pageLinks = paginationItems(currentPage, lastPage);
 ---
 

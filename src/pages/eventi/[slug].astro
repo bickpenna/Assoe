@@ -12,6 +12,7 @@ import { requireBySlug, staticPathsFromSlugs } from '@/utils/content';
 import { formatDateTime } from '@/utils/date';
 import { eventStatusLabel } from '@/utils/labels';
 import { SITE_NAME } from '@/config/site';
+import { sitePath } from '@/utils/sitePath';
 
 export const getStaticPaths = (async () => {
   const events = await contentRepository.listEvents();
@@ -25,7 +26,7 @@ const event = await requireBySlug(slug, contentRepository.getEventBySlug, 'Event
 
 <BaseLayout title={`${event.title} | ${SITE_NAME}`}>
   <main id="contenuto" class="container detail">
-    <a class="text-link" href="/eventi/">← Tutti gli eventi</a>
+    <a class="text-link" href={sitePath('/eventi/')}>← Tutti gli eventi</a>
     <article>
       <header class="detail__header">
         <p class="eyebrow">Evento</p>

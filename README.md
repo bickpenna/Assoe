@@ -87,4 +87,27 @@ npm run check:build
 
 `check:build` controlla i file statici prodotti dall'ultima build. `npm run build` genera invece il sito con i contenuti reali e richiede un progetto Sanity raggiungibile. Per verificare la build dello Studio: `cd studio && npm run build`.
 
-Il workflow in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) esegue i controlli di sito e Studio, **ma non pubblica il sito**. GitHub Pages non è ancora configurato; l'URL in `astro.config.mjs` indica il dominio previsto, non una distribuzione già attiva.
+Il workflow in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) esegue i controlli di sito e Studio. [`.github/workflows/pages.yml`](.github/workflows/pages.yml) pubblica invece **il sito con i contenuti reali di Sanity** su GitHub Pages solo con avvio manuale da **Actions → Publish Astro to GitHub Pages → Run workflow**. Il deploy automatico è intenzionalmente disattivato finché i contenuti di prova non sono stati ripuliti. Ogni modifica successiva in Sanity richiede una nuova esecuzione manuale del workflow.
+
+Una volta avviato il primo deploy, l'indirizzo della demo sarà `https://bickpenna.github.io/Assoe/`. In **Settings → Pages**, la sorgente deve essere **GitHub Actions**. In **Settings → Secrets and variables → Actions → Variables** serve `PUBLIC_SANITY_PROJECT_ID`; `PUBLIC_SANITY_DATASET` è facoltativa e, se assente, vale `production`. Il Project ID non è una credenziale; non aggiungere token Sanity al sito statico. La build fallisce se manca il Project ID, invece di pubblicare dati dimostrativi per errore. Il sito demo aggiunge `noindex` ai motori di ricerca, ma **resta pubblico a chiunque abbia il link**.
+
+Il workflow imposta `SITE_URL` e `SITE_BASE` per il percorso `/Assoe/`. Per provare in locale esattamente quel percorso:
+
+```bash
+SITE_URL=https://bickpenna.github.io SITE_BASE=/Assoe/ npm run build
+SITE_BASE=/Assoe/ npm run check:build
+```
+
+Quando il repository passerà all'account dell'associazione, l'indirizzo GitHub Pages cambierà con il proprietario della repo; il workflow usa automaticamente il nuovo account. Per usare invece `volontariato.assoe.it` serviranno una configurazione DNS e un aggiornamento di `SITE_URL`/`SITE_BASE` nel workflow, senza cambiare i link nei componenti. **Non puntare il dominio prima di decidere quando sostituire il vecchio sito.**
+
+### Aggiornare lo Studio Sanity
+
+La build dello Studio nella CI verifica il codice, ma non aggiorna lo Studio ospitato da Sanity. Il progetto Sanity contiene i dati; lo Studio è l'interfaccia che va distribuita separatamente. Prima controllare **Sanity Manage → Studios**: se esiste già uno Studio, annotarne l'URL. Sul proprio computer autenticarsi e distribuirlo:
+
+```bash
+cd studio
+npx sanity login
+npm run deploy
+```
+
+Al primo deploy Sanity chiede un hostname `nome.sanity.studio`; se ne esiste già uno, scegliere quello **esatto** o usare `npm run deploy -- --url nome.sanity.studio`. Se viene proposto un hostname nuovo inatteso, fermarsi: si rischia di creare un secondo Studio. Il deploy aggiorna interfaccia e schemi, non migra né cancella i documenti. La sessione di login è locale e non va copiata in GitHub. Le modifiche ai contenuti nel CMS richiedono ancora una nuova esecuzione del workflow Pages: non è configurato un webhook di ricostruzione automatica.

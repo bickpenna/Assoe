@@ -3,6 +3,7 @@ import EventCard from './EventCard.astro';
 import type { EventSummary } from '@/content/types';
 import { formatDateTime } from '@/utils/date';
 import { eventStatusLabel } from '@/utils/labels';
+import { sitePath } from '@/utils/sitePath';
 
 interface Props {
   events: EventSummary[];
@@ -13,6 +14,6 @@ const { events } = Astro.props;
 
 <div class="content-grid">
   {events.map((event) => (
-    <EventCard href={`/eventi/${event.slug}/`} title={event.title} imageUrl={event.imageUrl} meta={`${formatDateTime(event.date)} · ${eventStatusLabel(event.status)}${event.place ? ` · ${event.place}` : ''}`} />
+    <EventCard href={sitePath(`/eventi/${event.slug}/`)} title={event.title} imageUrl={event.imageUrl} meta={`${formatDateTime(event.date)} · ${eventStatusLabel(event.status)}${event.place ? ` · ${event.place}` : ''}`} />
   ))}
 </div>

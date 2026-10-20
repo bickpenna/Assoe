@@ -2,10 +2,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const outputDirectory = path.resolve('dist');
+const siteBase = process.env.SITE_BASE || '/';
+const redirectBase = siteBase === '/' ? '' : `/${siteBase.replace(/^\/+|\/+$/g, '')}`;
 const allowedRedirects = new Map([
-  [path.join('dist', '5x1000', 'index.html'), '/sostienici/#cinque-per-mille'],
-  [path.join('dist', 'contatti', 'index.html'), '/chi-siamo/#contatti'],
-  [path.join('dist', 'progetti', 'index.html'), '/iniziative/'],
+  [path.join('dist', '5x1000', 'index.html'), `${redirectBase}/sostienici/#cinque-per-mille`],
+  [path.join('dist', 'contatti', 'index.html'), `${redirectBase}/chi-siamo/#contatti`],
+  [path.join('dist', 'progetti', 'index.html'), `${redirectBase}/iniziative/`],
 ]);
 
 function expectedRedirect(relativePath) {
@@ -13,7 +15,7 @@ function expectedRedirect(relativePath) {
   if (staticRedirect) return staticRedirect;
 
   const legacyPath = relativePath.split(path.sep).join('/').match(/^dist\/progetti\/(.+)\/index\.html$/);
-  return legacyPath ? `/iniziative/${legacyPath[1]}` : undefined;
+  return legacyPath ? `${redirectBase}/iniziative/${legacyPath[1]}/` : undefined;
 }
 
 function htmlFiles(directory) {
@@ -43,7 +45,8 @@ for (const filePath of pages) {
       throw new Error(`${relativePath}: redirect non previsto.`);
     }
     if (relativePath.includes(`${path.sep}progetti${path.sep}`)) {
-      const targetFile = path.join('dist', ...destination.slice(1).split('/'), 'index.html');
+      const targetPath = destination.slice(redirectBase.length + 1).replace(/\/$/, '');
+      const targetFile = path.join('dist', ...targetPath.split('/'), 'index.html');
       if (!fs.existsSync(targetFile)) throw new Error(`${relativePath}: destinazione mancante.`);
     }
     if (!/<meta name="robots" content="noindex"/i.test(html)) {
@@ -60,8 +63,20 @@ for (const filePath of pages) {
   if (!/<meta name="description" content="[^"]+"/i.test(html)) {
     throw new Error(`${relativePath}: meta description mancante.`);
   }
+  if (process.env.PUBLIC_SITE_PREVIEW === 'true' && !/<meta name="robots" content="noindex,nofollow"/i.test(html)) {
+    throw new Error(`${relativePath}: la demo pubblica deve restare non indicizzabile.`);
+  }
   if (h1Count !== 1) throw new Error(`${relativePath}: attesi 1 H1, trovati ${h1Count}.`);
-  if (/href="\/progetti(?:\/|")/i.test(html)) throw new Error(`${relativePath}: link al vecchio percorso.`);
+  if (redirectBase) {
+    const rootAssetsAndLinks = [...html.matchAll(/\b(?:href|src|srcset)="(\/[^"]*)"/g)].map((match) => match[1]);
+    if (rootAssetsAndLinks.some((url) => !url.startsWith(`${redirectBase}/`))) {
+      throw new Error(`${relativePath}: link o risorsa interna senza base GitHub Pages.`);
+    }
+  }
+  const legacyHref = `${redirectBase}/progetti`;
+  if (html.includes(`href="${legacyHref}/`) || html.includes(`href="${legacyHref}"`)) {
+    throw new Error(`${relativePath}: link al vecchio percorso.`);
+  }
   if (/href="(?:javascript:|data:)/i.test(html)) throw new Error(`${relativePath}: URL non sicuro.`);
   if (/target="_blank"(?![^>]*rel="[^"]*(?:noopener|noreferrer))/i.test(html)) {
     throw new Error(`${relativePath}: link _blank senza protezione rel.`);

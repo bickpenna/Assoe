@@ -2,6 +2,7 @@
 import EventGrid from './EventGrid.astro';
 import type { EventSummary } from '@/content/types';
 import { ARCHIVE_PAGE_SIZE } from '@/config/pagination';
+import { sitePath } from '@/utils/sitePath';
 
 interface Props {
   events: EventSummary[];
@@ -15,14 +16,14 @@ const futureOnPage = Math.max(0, Math.min(events.length, futureCount - startInde
 const future = events.slice(0, futureOnPage);
 const past = events.slice(futureOnPage);
 const firstPastPage = Math.floor(futureCount / ARCHIVE_PAGE_SIZE) + 1;
-const pastHref = firstPastPage === 1
+const pastHref = sitePath(firstPastPage === 1
   ? '/eventi/#eventi-passati'
-  : `/eventi/pagina/${firstPastPage}/#eventi-passati`;
+  : `/eventi/pagina/${firstPastPage}/#eventi-passati`);
 ---
 
 {futureCount > 0 && pastCount > 0 && (
   <nav class="event-archive__nav" aria-label="Vai agli eventi futuri o passati">
-    <a href="/eventi/#eventi-futuri">Eventi futuri</a>
+    <a href={sitePath('/eventi/#eventi-futuri')}>Eventi futuri</a>
     <a href={pastHref}>Eventi passati</a>
   </nav>
 )}
