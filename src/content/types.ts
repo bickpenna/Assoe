@@ -1,12 +1,12 @@
 /** Dati che il sito usa, indipendenti dalla forma scelta dal CMS. */
-export interface ProjectSummary {
+export interface InitiativeSummary {
   id: string;
   name: string;
   slug: string;
   imageUrl?: string;
 }
 
-export interface ProjectDetail extends ProjectSummary {
+export interface InitiativeDetail extends InitiativeSummary {
   /** HTML prodotto dal provider, senza formati specifici del CMS. */
   descriptionHtml?: string;
   relatedArticles: ArticleSummary[];
@@ -27,7 +27,7 @@ export interface ArticleDetail extends ArticleSummary {
   galleryImageUrls: string[];
   /** Link esterno facoltativo per continuare la conversazione. */
   discussionUrl?: string;
-  relatedProjects: ProjectSummary[];
+  relatedInitiatives: InitiativeSummary[];
   relatedEvent?: EventSummary;
 }
 
@@ -47,7 +47,7 @@ export interface EventDetail extends EventSummary {
   descriptionHtml?: string;
   galleryImageUrls: string[];
   discussionUrl?: string;
-  relatedProjects: ProjectSummary[];
+  relatedInitiatives: InitiativeSummary[];
 }
 
 export type PersonRole =
@@ -100,8 +100,8 @@ export interface AssociationInfo {
 
 /** Le pagine dipendono da questo contratto, non da un client CMS. */
 export interface ContentRepository {
-  listProjects(): Promise<ProjectSummary[]>;
-  getProjectBySlug(slug: string): Promise<ProjectDetail | null>;
+  listInitiatives(): Promise<InitiativeSummary[]>;
+  getInitiativeBySlug(slug: string): Promise<InitiativeDetail | null>;
   listArticles(): Promise<ArticleSummary[]>;
   getArticleBySlug(slug: string): Promise<ArticleDetail | null>;
   listEvents(): Promise<EventSummary[]>;

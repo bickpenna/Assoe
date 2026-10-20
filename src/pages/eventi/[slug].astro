@@ -4,7 +4,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import DetailGallery from '@/components/DetailGallery.astro';
 import RichTextContent from '@/components/RichTextContent.astro';
-import ProjectList from '@/components/ProjectList.astro';
+import InitiativeList from '@/components/InitiativeList.astro';
 import RelatedContentSection from '@/components/RelatedContentSection.astro';
 import FacebookDiscussion from '@/components/FacebookDiscussion.astro';
 import { contentRepository } from '@/content';
@@ -44,9 +44,9 @@ const event = await requireBySlug(slug, contentRepository.getEventBySlug, 'Event
       {event.discussionUrl && <FacebookDiscussion url={event.discussionUrl} />}
 
       {
-        event.relatedProjects.length > 0 && (
-          <RelatedContentSection id="progetti-evento" title="Oltre questo evento" description="Esplora i progetti che accompagnano questa iniziativa.">
-            <ProjectList projects={event.relatedProjects} />
+        event.relatedInitiatives.length > 0 && (
+          <RelatedContentSection id="iniziative-evento" title="Oltre questo evento" description="Esplora le iniziative a cui è legato questo incontro.">
+            <InitiativeList initiatives={event.relatedInitiatives} />
           </RelatedContentSection>
         )
       }

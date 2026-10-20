@@ -18,7 +18,7 @@ export default defineConfig({
             S.divider(),
             ...S.documentTypeListItems().map((item) =>
               item.getId() === 'project'
-                ? orderableDocumentListDeskItem({ type: 'project', title: 'Progetti', S, context })
+                ? orderableDocumentListDeskItem({ type: 'project', title: 'Iniziative', S, context })
                 : item,
             ),
           ]),

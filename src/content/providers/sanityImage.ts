@@ -6,7 +6,7 @@ export interface SanityImage {
 }
 
 /** Apply only a crop chosen in Studio; Astro still handles responsive sizing and encoding. */
-export function projectImageUrl(image: SanityImage | null): string | undefined {
+export function initiativeImageUrl(image: SanityImage | null): string | undefined {
   if (!image?.url) return undefined;
   const { crop, width, height } = image;
   if (!crop || typeof width !== 'number' || !Number.isInteger(width) || width <= 0 || typeof height !== 'number' || !Number.isInteger(height) || height <= 0) return image.url;

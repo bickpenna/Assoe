@@ -1,9 +1,10 @@
 import { defineField, defineType } from 'sanity';
 import { orderRankField } from '@sanity/orderable-document-list';
 
+// Keep the stored type name: existing documents and references use "project".
 export const project = defineType({
   name: 'project',
-  title: 'Progetto',
+  title: 'Iniziativa',
   type: 'document',
   fields: [
     defineField({

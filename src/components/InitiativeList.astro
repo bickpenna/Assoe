@@ -1,0 +1,33 @@
+---
+import ContentImage from './ContentImage.astro';
+import type { InitiativeSummary } from '@/content/types';
+
+interface Props {
+  initiatives: InitiativeSummary[];
+  headingLevel?: 2 | 3;
+  columns?: 2 | 3;
+}
+
+const { initiatives, headingLevel = 3, columns = 3 } = Astro.props;
+const hasImages = initiatives.some(({ imageUrl }) => Boolean(imageUrl));
+---
+
+<ul class:list={['initiative-list', { 'initiative-list--two-columns': columns === 2 || hasImages || initiatives.length === 2, 'initiative-list--single': initiatives.length === 1 }]}>
+  {initiatives.map((initiative) => (
+    <li class="initiative-list__item">
+      <a class:list={['initiative-list__link', { 'initiative-list__link--text-only': !initiative.imageUrl }]} href={`/iniziative/${initiative.slug}/`}>
+        <div class="initiative-list__content">
+          <p class="eyebrow">Asso è…</p>
+          {headingLevel === 2 ? <h2>{initiative.name}</h2> : <h3>{initiative.name}</h3>}
+          <span class="initiative-list__bottom">
+            <span class="initiative-list__more">Scopri l’iniziativa</span>
+            <span class="initiative-list__arrow" aria-hidden="true">↗</span>
+          </span>
+        </div>
+        {initiative.imageUrl && (
+          <span class="initiative-list__media"><ContentImage src={initiative.imageUrl} alt="" variant="card" /></span>
+        )}
+      </a>
+    </li>
+  ))}
+</ul>

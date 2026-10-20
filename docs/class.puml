@@ -43,7 +43,7 @@ class DatiBancari {
 ' Contenuti editoriali
 ' ============================================================
 
-class Progetto {
+class Iniziativa {
     -nome: String
     -slug: Slug
     -descrizione: RichText
@@ -113,8 +113,8 @@ InformazioniAssociazione "1" *-- "1" Contatti
 InformazioniAssociazione "1" *-- "0..*" ProfiloSocial
 InformazioniAssociazione "1" *-- "0..1" DatiBancari
 
-Articolo "0..*" --> "0..*" Progetto : riguarda
-Evento "0..*" --> "0..*" Progetto : riguarda
+Articolo "0..*" --> "0..*" Iniziativa : riguarda
+Evento "0..*" --> "0..*" Iniziativa : riguarda
 Articolo "0..*" --> "0..1" Evento : racconta
 
 note right of InformazioniAssociazione
@@ -134,9 +134,12 @@ note right of ProfiloSocial
     "platform" e "url".
 end note
 
-note right of Progetto
+note right of Iniziativa
     I volontari possono creare
-    nuovi progetti dal CMS.
+    nuove iniziative dal CMS.
+    Il tipo salvato resta "project"
+    e i riferimenti restano "projects"
+    per conservare i dati esistenti.
 end note
 
 note right of Articolo

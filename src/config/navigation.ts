@@ -7,7 +7,7 @@ interface NavigationItem {
 
 const navigation = {
   home: { href: '/', label: 'Home' },
-  projects: { href: '/progetti/', label: 'Progetti' },
+  initiatives: { href: '/iniziative/', label: 'Iniziative' },
   events: { href: '/eventi/', label: 'Eventi' },
   articles: { href: '/articoli/', label: 'Articoli' },
   about: { href: '/chi-siamo/', label: 'Chi siamo' },
@@ -17,7 +17,7 @@ const navigation = {
 
 export const siteNavigation: readonly NavigationItem[] = [
   navigation.home,
-  navigation.projects,
+  navigation.initiatives,
   navigation.events,
   navigation.articles,
   navigation.about,
@@ -27,7 +27,7 @@ export const siteNavigation: readonly NavigationItem[] = [
 export const footerNavigation = [
   { ...navigation.events, label: 'Eventi e archivio' },
   navigation.articles,
-  navigation.projects,
+  navigation.initiatives,
   { ...navigation.about, label: 'L’associazione' },
   navigation.people,
 ];

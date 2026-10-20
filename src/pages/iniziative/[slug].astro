@@ -1,0 +1,53 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ArticleList from '@/components/ArticleList.astro';
+import EventCard from '@/components/EventCard.astro';
+import ContentImage from '@/components/ContentImage.astro';
+import RelatedContentSection from '@/components/RelatedContentSection.astro';
+import { contentRepository } from '@/content';
+import { formatDateTime } from '@/utils/date';
+import { requireBySlug, staticPathsFromSlugs } from '@/utils/content';
+import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
+
+export const getStaticPaths = (async () => {
+  const initiatives = await contentRepository.listInitiatives();
+
+  return staticPathsFromSlugs(initiatives);
+}) satisfies GetStaticPaths;
+
+const slug = Astro.params.slug;
+const initiative = await requireBySlug(slug, contentRepository.getInitiativeBySlug, 'Iniziativa');
+---
+
+<BaseLayout title={`${initiative.name} | ${SITE_NAME}`}>
+  <main id="contenuto" class="container detail">
+    <div class="detail__header">
+      <a class="text-link" href="/iniziative/">← Tutte le iniziative</a>
+      <p class="eyebrow">{BRAND_WORDMARK}</p>
+      <h1>{initiative.name}</h1>
+    </div>
+    {initiative.imageUrl && <div class="detail__image"><ContentImage src={initiative.imageUrl} alt={`Immagine dell’iniziativa ${initiative.name}`} variant="hero" eager /></div>}
+    {initiative.descriptionHtml && <div class="detail__body" set:html={initiative.descriptionHtml} />}
+
+    {
+      initiative.relatedArticles.length > 0 && (
+        <RelatedContentSection id="articoli-iniziativa" title="Le storie di questa iniziativa" description="Articoli e aggiornamenti per conoscerla più da vicino.">
+          <ArticleList articles={initiative.relatedArticles} />
+        </RelatedContentSection>
+      )
+    }
+
+    {
+      initiative.relatedEvents.length > 0 && (
+        <RelatedContentSection id="eventi-iniziativa" title="L’iniziativa prende vita" description="Gli incontri che fanno parte del suo percorso.">
+          <div class="content-grid">
+            {initiative.relatedEvents.map((event) => (
+              <EventCard href={`/eventi/${event.slug}/`} title={event.title} imageUrl={event.imageUrl} meta={formatDateTime(event.date)} />
+            ))}
+          </div>
+        </RelatedContentSection>
+      )
+    }
+  </main>
+</BaseLayout>

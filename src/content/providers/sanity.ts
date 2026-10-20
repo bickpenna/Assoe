@@ -4,7 +4,7 @@ import { facebookPostUrlOrUndefined } from '../../utils/facebook';
 import { sanitizeRichTextHtml } from '../../utils/sanitizeHtml';
 import { httpsUrlOrUndefined } from '../../../shared/url';
 import { validIbanOrUndefined } from '../../../shared/iban';
-import { projectImageUrl, type SanityImage } from './sanityImage';
+import { initiativeImageUrl, type SanityImage } from './sanityImage';
 import type {
   ArticleDetail,
   ArticleSummary,
@@ -14,8 +14,8 @@ import type {
   EventSummary,
   EventStatus,
   PersonRole,
-  ProjectDetail,
-  ProjectSummary,
+  InitiativeDetail,
+  InitiativeSummary,
 } from '../types';
 
 interface SanityProject {
@@ -108,15 +108,16 @@ interface SanityConfig {
   dataset: string;
 }
 
-const projectImageProjection = `"image": image {
+const initiativeImageProjection = `"image": image {
   "url": asset->url,
   "width": asset->metadata.dimensions.width,
   "height": asset->metadata.dimensions.height,
   crop
 }`;
 
-// Keep the legacy numeric order until existing projects receive a drag-and-drop rank.
-const projectsQuery = `*[
+// The stored Sanity type and reference field names stay "project"/"projects"
+// so existing documents, ranks, and relationships remain readable.
+const initiativesQuery = `*[
   _type == "project" &&
   active == true &&
   defined(name) &&
@@ -125,10 +126,10 @@ const projectsQuery = `*[
   _id,
   name,
   "slug": slug.current,
-  ${projectImageProjection}
+  ${initiativeImageProjection}
 }`;
 
-const projectBySlugQuery = `*[
+const initiativeBySlugQuery = `*[
   _type == "project" &&
   active == true &&
   defined(name) &&
@@ -138,12 +139,12 @@ const projectBySlugQuery = `*[
   name,
   "slug": slug.current,
   description,
-  ${projectImageProjection}
+  ${initiativeImageProjection}
 }`;
 
-const articlesByProjectQuery = `*[
+const articlesByInitiativeQuery = `*[
   _type == "article" &&
-  references($projectId) &&
+  references($initiativeId) &&
   defined(title) &&
   defined(slug.current) &&
   defined(publishedAt)
@@ -152,9 +153,9 @@ const articlesByProjectQuery = `*[
   "imageUrl": mainImage.asset->url
 }`;
 
-const eventsByProjectQuery = `*[
+const eventsByInitiativeQuery = `*[
   _type == "event" &&
-  references($projectId) &&
+  references($initiativeId) &&
   defined(title) &&
   defined(slug.current) &&
   defined(date) &&
@@ -194,7 +195,7 @@ const articleBySlugQuery = `*[
   facebookPostUrl,
   "galleryImageUrls": gallery[].asset->url,
   "projects": projects[]-> {
-    _id, name, "slug": slug.current, active, ${projectImageProjection}
+    _id, name, "slug": slug.current, active, ${initiativeImageProjection}
   },
   "event": event-> {
     _id, title, "slug": slug.current, date, place, status,
@@ -231,7 +232,7 @@ const eventBySlugQuery = `*[
   facebookPostUrl,
   "galleryImageUrls": gallery[].asset->url,
   "projects": projects[]-> {
-    _id, name, "slug": slug.current, active, ${projectImageProjection}
+    _id, name, "slug": slug.current, active, ${initiativeImageProjection}
   }
 }`;
 
@@ -288,21 +289,21 @@ function toArticleSummary(article: SanityArticle): ArticleSummary {
   };
 }
 
-function toProjectSummary(project: SanityProject): ProjectSummary {
+function toInitiativeSummary(project: SanityProject): InitiativeSummary {
   return {
     id: project._id,
     name: project.name,
     slug: project.slug,
-    imageUrl: projectImageUrl(project.image),
+    imageUrl: initiativeImageUrl(project.image),
   };
 }
 
-function toRelatedProjects(projects: Array<SanityRelatedProject | null> | null): ProjectSummary[] {
+function toRelatedInitiatives(projects: Array<SanityRelatedProject | null> | null): InitiativeSummary[] {
   return (projects ?? [])
     .filter((project): project is SanityRelatedProject =>
       Boolean(project?.active && project.name && project.slug),
     )
-    .map(toProjectSummary);
+    .map(toInitiativeSummary);
 }
 
 function toEventSummary(event: SanityEvent): EventSummary {
@@ -333,9 +334,9 @@ export function createSanityRepository({
     useCdn: false,
   });
 
-  const listProjects = cachePromise(async () => {
-    const projects = await client.fetch<SanityProject[]>(projectsQuery);
-    return projects.map(toProjectSummary);
+  const listInitiatives = cachePromise(async () => {
+    const projects = await client.fetch<SanityProject[]>(initiativesQuery);
+    return projects.map(toInitiativeSummary);
   });
 
   const listArticles = cachePromise(async () => {
@@ -402,20 +403,20 @@ export function createSanityRepository({
   });
 
   return {
-    listProjects,
+    listInitiatives,
 
-    async getProjectBySlug(slug: string): Promise<ProjectDetail | null> {
-      const project = await client.fetch<SanityProjectDetail | null>(projectBySlugQuery, { slug });
+    async getInitiativeBySlug(slug: string): Promise<InitiativeDetail | null> {
+      const project = await client.fetch<SanityProjectDetail | null>(initiativeBySlugQuery, { slug });
 
       if (!project) return null;
 
       const [articles, events] = await Promise.all([
-        client.fetch<SanityArticle[]>(articlesByProjectQuery, { projectId: project._id }),
-        client.fetch<SanityEvent[]>(eventsByProjectQuery, { projectId: project._id }),
+        client.fetch<SanityArticle[]>(articlesByInitiativeQuery, { initiativeId: project._id }),
+        client.fetch<SanityEvent[]>(eventsByInitiativeQuery, { initiativeId: project._id }),
       ]);
 
       return {
-        ...toProjectSummary(project),
+        ...toInitiativeSummary(project),
         descriptionHtml: renderRichText(project.description),
         relatedArticles: articles.map(toArticleSummary),
         relatedEvents: events.map(toEventSummary),
@@ -436,7 +437,7 @@ export function createSanityRepository({
         galleryImageUrls: (article.galleryImageUrls ?? []).filter(
           (url): url is string => typeof url === 'string',
         ),
-        relatedProjects: toRelatedProjects(article.projects),
+        relatedInitiatives: toRelatedInitiatives(article.projects),
         relatedEvent: hasPublicEventFields(article.event)
           ? toEventSummary(article.event)
           : undefined,
@@ -457,7 +458,7 @@ export function createSanityRepository({
         galleryImageUrls: (event.galleryImageUrls ?? []).filter(
           (url): url is string => typeof url === 'string',
         ),
-        relatedProjects: toRelatedProjects(event.projects),
+        relatedInitiatives: toRelatedInitiatives(event.projects),
       };
     },
 

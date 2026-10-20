@@ -5,7 +5,7 @@ import EventCard from '@/components/EventCard.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import DetailGallery from '@/components/DetailGallery.astro';
 import RichTextContent from '@/components/RichTextContent.astro';
-import ProjectList from '@/components/ProjectList.astro';
+import InitiativeList from '@/components/InitiativeList.astro';
 import RelatedContentSection from '@/components/RelatedContentSection.astro';
 import FacebookDiscussion from '@/components/FacebookDiscussion.astro';
 import { contentRepository } from '@/content';
@@ -49,9 +49,9 @@ const article = await requireBySlug(slug, contentRepository.getArticleBySlug, 'A
       }
 
       {
-        article.relatedProjects.length > 0 && (
-          <RelatedContentSection id="progetti-articolo" title="Dietro questa storia" description="Scopri i progetti che si intrecciano con questo racconto.">
-            <ProjectList projects={article.relatedProjects} />
+        article.relatedInitiatives.length > 0 && (
+          <RelatedContentSection id="iniziative-articolo" title="Dietro questa storia" description="Scopri le iniziative che si intrecciano con questo racconto.">
+            <InitiativeList initiatives={article.relatedInitiatives} />
           </RelatedContentSection>
         )
       }

@@ -42,13 +42,15 @@ Impostare `SANITY_STUDIO_PROJECT_ID` e `SANITY_STUDIO_DATASET` in `studio/.env` 
 
 ## Contenuti e pubblicazione
 
-Sanity gestisce **Informazioni associazione**, progetti, articoli, eventi e persone. Struttura delle pagine, navigazione e grafica restano nel codice Astro.
+Sanity gestisce **Informazioni associazione**, iniziative, articoli, eventi e persone. Struttura delle pagine, navigazione e grafica restano nel codice Astro.
 
 - **Informazioni associazione** è una scheda unica: contiene logo, racconto di Chi siamo, contatti, social, dati per 5×1000 e donazioni, oltre ai PDF disponibili. Verificare dati bancari e documenti prima di pubblicarli.
-- **Progetti**: i primi quattro nell'ordine dello Studio compaiono in home. Per riordinarli si trascinano nella lista; per i progetti già esistenti senza posizione, usare **Reset Order** una sola volta prima di iniziare a riordinare.
+- **Iniziative**: le prime quattro nell'ordine dello Studio compaiono in home. Per riordinarle si trascinano nella lista; per le iniziative già esistenti senza posizione, usare **Reset Order** una sola volta prima di iniziare a riordinare.
 - **Eventi**: in home compare solo un prossimo evento non annullato. L'archivio separa futuri e passati in ordine cronologico.
 - **Articoli ed eventi** possono rimandare a un post Facebook pubblico per la conversazione, senza incorporare Facebook nel sito.
 - **Persone**: i profili visibili sono raggruppati per ruolo nella pagina Associati; il direttivo compare anche in Chi siamo. Pubblicare foto di persone solo con il consenso necessario.
+
+Gli URL pubblici delle iniziative sono `/iniziative/` e `/iniziative/<slug>/`; i precedenti URL `/progetti/` rimandano alle nuove pagine, incluse quelle di dettaglio e le pagine dell’archivio. In Sanity il tipo di documento resta internamente `project` e i riferimenti di articoli/eventi restano `projects`: sono chiavi già salvate, mantenute per non perdere contenuti, ordinamento e collegamenti. Non rinominarle senza una migrazione dei dati.
 
 Il sito pubblico usa solo contenuti pubblicati. **Una modifica in Sanity non aggiorna automaticamente il sito:** occorre una nuova build e la distribuzione dei file generati. Questo vale anche per il passaggio di un evento da futuro a passato. La pubblicazione automatica dopo le modifiche nel CMS non è ancora configurata.
 
@@ -69,7 +71,7 @@ I valori di riferimento sono i token in [`src/styles/global.css`](src/styles/glo
 | Testo secondario | `#4B5B50` |
 | Bordi | `#D6E4D7` |
 
-Le immagini caricate su Sanity vengono elaborate da Astro durante la build in formati e dimensioni adatti al layout. Foto delle schede e ritratti possono essere ritagliati; logo, locandine e immagini di galleria mantengono le proporzioni. Se una foto di progetto ha bordi indesiderati, ritagliarla nello Studio prima di pubblicarla.
+Le immagini caricate su Sanity vengono elaborate da Astro durante la build in formati e dimensioni adatti al layout. Foto delle schede e ritratti possono essere ritagliati; logo, locandine e immagini di galleria mantengono le proporzioni. Se una foto di iniziativa ha bordi indesiderati, ritagliarla nello Studio prima di pubblicarla.
 
 ## Verifiche e distribuzione
 

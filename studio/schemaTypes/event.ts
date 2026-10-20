@@ -53,7 +53,7 @@ export const event = defineType({
     }),
     defineField({
       name: 'projects',
-      title: 'Progetti collegati',
+      title: 'Iniziative collegate',
       type: 'array',
       of: [{ type: 'reference', to: [{ type: 'project' }] }],
     }),
