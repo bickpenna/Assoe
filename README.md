@@ -102,7 +102,7 @@ Quando il repository passerà all'account dell'associazione, l'indirizzo GitHub 
 
 ### Aggiornare lo Studio Sanity
 
-La build dello Studio nella CI verifica il codice, ma non aggiorna lo Studio ospitato da Sanity. Il progetto Sanity contiene i dati; lo Studio è l'interfaccia che va distribuita separatamente. Prima controllare **Sanity Manage → Studios**: se esiste già uno Studio, annotarne l'URL. Sul proprio computer autenticarsi e distribuirlo:
+La build dello Studio nella CI verifica il codice, ma non aggiorna lo Studio ospitato da Sanity. Lo Studio esistente è su **https://assoe.sanity.studio/**; il suo `appId` è fissato in `studio/sanity.cli.ts`, così i prossimi deploy aggiornano proprio questa installazione. Sul proprio computer autenticarsi e distribuirlo:
 
 ```bash
 cd studio
@@ -110,4 +110,4 @@ npx sanity login
 npm run deploy
 ```
 
-Al primo deploy Sanity chiede un hostname `nome.sanity.studio`; se ne esiste già uno, scegliere quello **esatto** o usare `npm run deploy -- --url nome.sanity.studio`. Se viene proposto un hostname nuovo inatteso, fermarsi: si rischia di creare un secondo Studio. Il deploy aggiorna interfaccia e schemi, non migra né cancella i documenti. La sessione di login è locale e non va copiata in GitHub. Le modifiche ai contenuti nel CMS richiedono ancora una nuova esecuzione del workflow Pages: non è configurato un webhook di ricostruzione automatica.
+Se viene proposto un hostname nuovo inatteso, fermarsi: si rischia di creare un secondo Studio. Il deploy aggiorna interfaccia e schemi, non migra né cancella i documenti. La sessione di login è locale e non va copiata in GitHub. Le modifiche ai contenuti nel CMS richiedono ancora una nuova esecuzione del workflow Pages: non è configurato un webhook di ricostruzione automatica.
