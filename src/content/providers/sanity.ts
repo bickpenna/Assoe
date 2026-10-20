@@ -242,7 +242,7 @@ const peopleQuery = `*[
   defined(firstName) &&
   defined(lastName) &&
   defined(role)
-] | order(order asc, lastName asc) {
+] | order(defined(orderRank) desc, orderRank asc, order asc, lastName asc, firstName asc) {
   _id,
   firstName,
   lastName,

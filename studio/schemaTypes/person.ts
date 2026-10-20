@@ -1,4 +1,6 @@
 import { defineField, defineType } from 'sanity';
+import { orderRankField } from '@sanity/orderable-document-list';
+import { PERSON_ROLE_GROUPS, personRoleLabel, type PersonRole } from '../../shared/personRoles';
 
 export const person = defineType({
   name: 'person',
@@ -23,18 +25,13 @@ export const person = defineType({
       title: 'Ruolo',
       type: 'string',
       options: {
-        list: [
-          { title: 'Presidente', value: 'president' },
-          { title: 'Vicepresidente', value: 'vicePresident' },
-          { title: 'Segretario', value: 'secretary' },
-          { title: 'Consigliere', value: 'boardMember' },
-          { title: 'Volontario', value: 'volunteer' },
-          { title: 'Volontario servizio civile', value: 'civilServiceVolunteer' },
-        ],
+        list: PERSON_ROLE_GROUPS.map(({ label, role }) => ({ title: label, value: role })),
       },
       validation: (rule) => rule.required(),
     }),
-    defineField({ name: 'order', title: 'Ordine', type: 'number', initialValue: 0 }),
+    orderRankField({ type: 'person' }),
+    // Keep existing values for unranked documents; editors now drag within each role.
+    defineField({ name: 'order', title: 'Ordine precedente', type: 'number', hidden: true }),
     defineField({ name: 'visible', title: 'Visibile sul sito', type: 'boolean', initialValue: true }),
   ],
   preview: {
@@ -47,7 +44,7 @@ export const person = defineType({
     prepare({ firstName, lastName, role, media }) {
       return {
         title: `${firstName ?? ''} ${lastName ?? ''}`.trim(),
-        subtitle: role,
+        subtitle: role ? personRoleLabel(role as PersonRole) : undefined,
         media,
       };
     },

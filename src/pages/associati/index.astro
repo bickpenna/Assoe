@@ -3,7 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import JoinUsCta from '@/components/JoinUsCta.astro';
 import PersonCard from '@/components/PersonCard.astro';
 import { contentRepository } from '@/content';
-import { personRoleGroups } from '@/utils/labels';
+import { groupPeopleByRole } from '@/utils/people';
 import { SITE_NAME } from '@/config/site';
 
 const [association, people] = await Promise.all([
@@ -11,11 +11,7 @@ const [association, people] = await Promise.all([
   contentRepository.listPeople(),
 ]);
 
-const groups = personRoleGroups.map(({ role, title }) => ({
-  role,
-  title,
-  people: people.filter((person) => person.role === role),
-})).filter((group) => group.people.length > 0);
+const groups = groupPeopleByRole(people);
 ---
 
 <BaseLayout title={`Associati | ${SITE_NAME}`} association={association}>

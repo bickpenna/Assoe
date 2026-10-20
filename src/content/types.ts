@@ -50,13 +50,7 @@ export interface EventDetail extends EventSummary {
   relatedInitiatives: InitiativeSummary[];
 }
 
-export type PersonRole =
-  | 'president'
-  | 'vicePresident'
-  | 'secretary'
-  | 'boardMember'
-  | 'volunteer'
-  | 'civilServiceVolunteer';
+export type PersonRole = import('../../shared/personRoles').PersonRole;
 
 export interface PersonSummary {
   id: string;
