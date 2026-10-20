@@ -10,6 +10,8 @@ Il repository contiene due applicazioni indipendenti:
 - `studio/`: Sanity Studio per la gestione dei contenuti;
 - `docs/class.puml`: diagramma del modello dei contenuti;
 
+Le funzioni condivise in `shared/` hanno un `tsconfig.json` autonomo: lo Studio le può compilare senza installare Astro, anche nel job GitHub che installa solo le dipendenze di `studio/`.
+
 Astro gestisce pagine, componenti e layout. Sanity gestisce esclusivamente i contenuti modificabili dai volontari: informazioni dell'associazione, progetti, articoli, eventi e persone.
 
 Nel frontend le pagine leggono i contenuti tramite `src/content/index.ts` e il contratto in `src/content/types.ts`. Le query GROQ e la conversione dei dati Sanity sono isolate in `src/content/providers/sanity.ts`. Per passare a un altro CMS si implementa lo stesso contratto in un nuovo provider e si cambia la scelta in `src/content/index.ts`; pagine e componenti non devono conoscere il CMS.
