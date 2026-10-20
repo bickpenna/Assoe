@@ -10,7 +10,7 @@ Il repository contiene due applicazioni indipendenti:
 - `studio/`: Sanity Studio per la gestione dei contenuti;
 - `docs/class.puml`: diagramma del modello dei contenuti;
 
-Le funzioni condivise in `shared/` hanno un `tsconfig.json` autonomo: lo Studio le può compilare senza installare Astro, anche nel job GitHub che installa solo le dipendenze di `studio/`.
+Le funzioni condivise in `shared/` hanno un `tsconfig.json` autonomo. Anche quello della radice dichiara esplicitamente le opzioni TypeScript richieste da Astro, senza estendere il pacchetto Astro: la build dello Studio può così leggere entrambi i file anche nel job GitHub che installa solo le dipendenze di `studio/`.
 
 Astro gestisce pagine, componenti e layout. Sanity gestisce esclusivamente i contenuti modificabili dai volontari: informazioni dell'associazione, progetti, articoli, eventi e persone.
 
