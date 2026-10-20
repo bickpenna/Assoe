@@ -239,11 +239,19 @@ p { line-height: 1.65; }
 .people-role:first-of-type { padding-top: 1rem; }
 .people-role h2 { margin: 0 0 1.5rem; font-size: clamp(1.5rem, 3vw, 2rem); }
 .people-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; list-style: none; margin: 0; padding: 0; }
+.about-team__panel { padding: clamp(1.5rem, 3vw, 2.75rem); border: 1px solid var(--line); border-radius: 1.5rem; background: var(--card); }
+.about-team__panel--single { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: center; gap: clamp(1.5rem, 4vw, 4rem); }
+.about-team__intro h2 { margin-bottom: .6rem; }
+.about-team__intro > p:not(.eyebrow) { max-width: 30rem; margin: 0 0 1.25rem; color: var(--muted); }
+.about-team__intro .text-link { display: inline-block; }
 .about-board { display: flex; flex-wrap: wrap; margin-top: 1.5rem; }
-.about-board .person-card { flex: 0 1 20rem; grid-template-columns: minmax(5.5rem, 36%) minmax(0, 1fr); gap: .75rem; padding: .75rem; }
+.about-team__panel--single .about-board { justify-content: flex-end; margin-top: 0; }
+.about-board .person-card { flex: 0 1 20rem; grid-template-columns: minmax(5.5rem, 36%) minmax(0, 1fr); gap: .75rem; padding: .75rem; background: var(--surface); }
+.about-team__panel--single .person-card { flex-basis: min(100%, 27rem); }
 .about-board .person-card__image { border-width: 3px; }
 .about-board .person-card__name { font-size: 1.25rem; gap: .2rem; }
 .about-board .person-card__role { margin-top: .6rem; }
+.about-team .notice { margin: 1.5rem 0 0; background: var(--surface); }
 .person-card { display: grid; grid-template-columns: minmax(8.5rem, 35%) minmax(0, 1fr); align-items: center; gap: clamp(1rem, 2.5vw, 1.75rem); min-width: 0; padding: 1rem; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
 .person-card__image { display: grid; place-items: center; aspect-ratio: 5 / 6; border: 5px solid var(--green); background: var(--surface-muted); overflow: hidden; }
 .person-card__image .content-image { width: 100%; height: 100%; object-fit: cover; }
@@ -289,6 +297,8 @@ p { line-height: 1.65; }
   .project-list:not(.project-list--single) { grid-template-columns: 1fr; }
   .about-contact__panel--split { grid-template-columns: 1fr; gap: 1.75rem; }
   .about-contact__channels { padding: 1.5rem 0 0; border-top: 1px solid var(--green); border-left: 0; }
+  .about-team__panel--single { grid-template-columns: 1fr; }
+  .about-team__panel--single .about-board { justify-content: flex-start; margin-top: 0; }
 }
 
 @media (max-width: 620px) {

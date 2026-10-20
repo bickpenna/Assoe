@@ -82,17 +82,22 @@ const hasContactMethods = Boolean(contacts?.email || contacts?.phone || associat
       </div>
     </section>
 
-    <section class="section" aria-labelledby="direttivo-associazione">
-      <div class="section__header"><div><p class="eyebrow">Le persone</p><h2 id="direttivo-associazione">Il direttivo</h2></div></div>
-      <p class="section__intro">Le persone che guidano l’associazione e ne seguono le attività.</p>
-      {boardMembers.length > 0 ? (
-        <ul class="people-grid about-board">
-          {boardMembers.map((person) => <PersonCard person={person} />)}
-        </ul>
-      ) : (
-        <p class="notice">Le persone del direttivo saranno pubblicate presto.</p>
-      )}
-      <p><a class="text-link" href="/associati/">Conosci tutti gli associati ↗</a></p>
+    <section class="about-team section" aria-labelledby="direttivo-associazione">
+      <div class:list={['about-team__panel', { 'about-team__panel--single': boardMembers.length === 1 }]}>
+        <div class="about-team__intro">
+          <p class="eyebrow">Le persone</p>
+          <h2 id="direttivo-associazione">Il direttivo</h2>
+          <p>Le persone che guidano l’associazione e ne seguono le attività.</p>
+          <a class="text-link" href="/associati/">Conosci tutti gli associati ↗</a>
+        </div>
+        {boardMembers.length > 0 ? (
+          <ul class="people-grid about-board">
+            {boardMembers.map((person) => <PersonCard person={person} />)}
+          </ul>
+        ) : (
+          <p class="notice">Le persone del direttivo saranno pubblicate presto.</p>
+        )}
+      </div>
     </section>
 
     <JoinUsCta association={association} href="#contatti" />
