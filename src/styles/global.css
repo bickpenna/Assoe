@@ -38,14 +38,14 @@ p { line-height: 1.65; }
 .site-header { background: var(--green-dark); color: var(--surface); border-bottom: 1px solid var(--green); }
 .site-header__inner { display: flex; align-items: center; justify-content: space-between; min-height: 5.2rem; gap: 2rem; }
 .brand { display: inline-flex; align-items: center; text-decoration: none; line-height: 1.05; white-space: nowrap; flex: 0 0 auto; }
-.brand--header { gap: .75rem; }
+.brand--header { gap: 1rem; }
 .brand__wordmark { display: inline-flex; flex-direction: column; }
 .brand__main { color: var(--green-dark); font-family: 'Epilogue Variable', sans-serif; font-weight: 800; font-size: 1.45rem; letter-spacing: -.05em; }
 .brand__sub { color: var(--muted); font-size: .68rem; font-weight: 700; letter-spacing: .035em; margin-top: .25rem; }
 .brand .content-image--logo { width: auto; }
 .brand--header .content-image--logo { width: auto; max-width: 11rem; max-height: 3.5rem; }
-.brand--header .brand__main { font-size: 1.2rem; }
-.brand--header .brand__sub { font-size: .67rem; letter-spacing: .01em; }
+.brand--header .brand__main { font-family: 'Plus Jakarta Sans Variable', sans-serif; font-size: 1.18rem; font-weight: 650; letter-spacing: -.025em; line-height: 1.2; }
+.brand--header .brand__sub { margin-top: .2rem; font-size: .7rem; font-weight: 500; letter-spacing: 0; line-height: 1.3; }
 .brand--footer .content-image--logo { max-width: 7rem; max-height: 7rem; }
 .site-header .brand__main, .site-footer .brand__main { color: var(--surface); }
 .site-header .brand__sub, .site-footer .brand__sub { color: var(--green-soft); }
@@ -309,9 +309,9 @@ p { line-height: 1.65; }
   .brand__main { font-size: 1.2rem; }
   .brand__sub { font-size: .57rem; }
   .brand--header .content-image--logo { max-width: 8rem; max-height: 3rem; }
-  .brand--header { gap: .5rem; }
+  .brand--header { gap: .65rem; }
   .brand--header .brand__main { font-size: 1.05rem; }
-  .brand--header .brand__sub { font-size: .57rem; }
+  .brand--header .brand__sub { font-size: .63rem; }
   .hero { padding-top: 1.5rem; }
   .hero__panel { padding: 2rem 1.4rem; border-radius: 1.2rem; min-height: 0; }
   .hero__text h1 { font-size: clamp(2.3rem, 11vw, 3.2rem); }
