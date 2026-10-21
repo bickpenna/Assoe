@@ -13,7 +13,6 @@ const navigation = {
   events: { href: sitePath('/eventi/'), label: 'Eventi' },
   articles: { href: sitePath('/articoli/'), label: 'Articoli' },
   about: { href: sitePath('/chi-siamo/'), label: 'Chi siamo' },
-  people: { href: sitePath('/associati/'), label: 'Associati' },
   support: { href: sitePath('/sostienici/'), label: 'Sostienici', featured: true },
 } as const;
 
@@ -24,12 +23,4 @@ export const siteNavigation: readonly NavigationItem[] = [
   navigation.articles,
   navigation.about,
   navigation.support,
-];
-
-export const footerNavigation = [
-  { ...navigation.events, label: 'Eventi e archivio' },
-  navigation.articles,
-  navigation.initiatives,
-  { ...navigation.about, label: 'L’associazione' },
-  navigation.people,
 ];

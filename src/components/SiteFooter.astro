@@ -1,6 +1,5 @@
 ---
 import SiteBrand from './SiteBrand.astro';
-import { footerNavigation } from '@/config/navigation';
 import { SITE_NAME } from '@/config/site';
 import type { AssociationInfo } from '@/content/types';
 import { sitePath } from '@/utils/sitePath';
@@ -24,20 +23,14 @@ const copyrightLabel = copyright
 <footer class="site-footer">
   <div class="container">
     <div class="site-footer__grid">
-      <div class="site-footer__intro">
+      <div class:list={['site-footer__intro', { 'site-footer__intro--wordmark': !association?.logoUrl }]}>
         <SiteBrand logoUrl={association?.logoUrl} name={name} placement="footer" />
       </div>
-
-      <nav class="site-footer__column" aria-label="Esplora">
-        <h2>Esplora</h2>
-        {footerNavigation.map((item) => <a href={item.href}>{item.label}</a>)}
-      </nav>
 
       <nav class="site-footer__column" aria-label="Partecipa">
         <h2>Partecipa</h2>
         <a href={sitePath('/sostienici/#cinque-per-mille')}>5×1000</a>
         <a href={sitePath('/sostienici/#donazione')}>Donazioni</a>
-        <a href={sitePath('/chi-siamo/#sede')}>La nostra sede</a>
       </nav>
 
       <div class="site-footer__column site-footer__legal">
