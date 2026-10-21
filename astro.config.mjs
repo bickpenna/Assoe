@@ -7,7 +7,7 @@ export default defineConfig({
   site: process.env.SITE_URL || 'https://volontariato.assoe.it',
   base,
   redirects: {
-    '/5x1000': `${redirectBase}/sostienici/#cinque-per-mille`,
+    '/5x1000': `${redirectBase}/sostienici/`,
     '/contatti': `${redirectBase}/chi-siamo/#contatti`,
     '/progetti': `${redirectBase}/iniziative/`,
   },

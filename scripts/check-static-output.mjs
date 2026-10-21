@@ -5,7 +5,7 @@ const outputDirectory = path.resolve('dist');
 const siteBase = process.env.SITE_BASE || '/';
 const redirectBase = siteBase === '/' ? '' : `/${siteBase.replace(/^\/+|\/+$/g, '')}`;
 const allowedRedirects = new Map([
-  [path.join('dist', '5x1000', 'index.html'), `${redirectBase}/sostienici/#cinque-per-mille`],
+  [path.join('dist', '5x1000', 'index.html'), `${redirectBase}/sostienici/`],
   [path.join('dist', 'contatti', 'index.html'), `${redirectBase}/chi-siamo/#contatti`],
   [path.join('dist', 'progetti', 'index.html'), `${redirectBase}/iniziative/`],
 ]);
@@ -76,6 +76,10 @@ for (const filePath of pages) {
   const legacyHref = `${redirectBase}/progetti`;
   if (html.includes(`href="${legacyHref}/`) || html.includes(`href="${legacyHref}"`)) {
     throw new Error(`${relativePath}: link al vecchio percorso.`);
+  }
+  const oldSupportHref = `${redirectBase}/5x1000`;
+  if (html.includes(`href="${oldSupportHref}/"`) || html.includes(`href="${oldSupportHref}"`)) {
+    throw new Error(`${relativePath}: link al vecchio percorso 5x1000.`);
   }
   if (/href="(?:javascript:|data:)/i.test(html)) throw new Error(`${relativePath}: URL non sicuro.`);
   if (/target="_blank"(?![^>]*rel="[^"]*(?:noopener|noreferrer))/i.test(html)) {

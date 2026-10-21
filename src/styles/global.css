@@ -65,7 +65,6 @@ p { line-height: 1.65; }
 .site-footer__details address span + span::before { content: ', '; }
 .site-footer__links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .25rem 1.2rem; font-size: .87rem; font-weight: 700; }
 .site-footer__links a { display: inline-flex; align-items: center; min-height: 2rem; color: var(--surface); text-decoration: none; white-space: nowrap; }
-.site-footer__links a:first-child { color: var(--yellow); }
 .site-footer a:hover { color: var(--green-soft); text-decoration: underline; text-underline-offset: .25em; }
 .site-footer__bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem 1.5rem; border-top: 1px solid var(--green); margin-top: 1rem; padding-top: .75rem; color: var(--green-soft); font-size: .75rem; }
 .site-footer__bottom nav { display: flex; flex-wrap: wrap; gap: .8rem 1.5rem; }
