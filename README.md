@@ -20,12 +20,24 @@ Le pagine usano il contratto in `src/content/types.ts`, non le strutture di Sani
 Serve Node.js 24 e npm. Per il sito con i contenuti reali:
 
 ```bash
-cp .env.example .env
 npm ci
 npm run dev
 ```
 
-Prima di avviare il server, inserire in `.env` il `PUBLIC_SANITY_PROJECT_ID` del progetto Sanity. `PUBLIC_SANITY_DATASET` vale `production` se non specificato. Il file `.env` non va pubblicato nel repository.
+Prima di avviare il server, se `.env` non esiste crearne uno a partire da `.env.example` e inserire il `PUBLIC_SANITY_PROJECT_ID` del progetto Sanity. `PUBLIC_SANITY_DATASET` vale `production` se non specificato. Se `.env` esiste già, mantenerlo: non occorre ricrearlo cambiando branch. Il file `.env` non va pubblicato nel repository.
+
+### Lavorare senza modificare il sito online
+
+La branch `main` è la versione destinata a GitHub Pages. Per sviluppare e vedere le modifiche in locale:
+
+```bash
+git switch develop
+npm run dev
+```
+
+Aprire l'indirizzo mostrato da Astro nel terminale (di solito `http://localhost:4321/`). Il server locale usa i contenuti **reali e pubblicati** del dataset Sanity configurato nel proprio `.env`; `npm run dev:demo` usa invece i dati fittizi. Le modifiche al codice su `develop` non cambiano il sito online. I push su `develop` eseguono i controlli CI, ma il workflow Pages è limitato a `main`. Quando una modifica è pronta, aprire una pull request verso `main`, verificarla e unirla; poi avviare il workflow Pages su `main` per pubblicare il nuovo codice.
+
+Attenzione: `develop` e il sito online leggono lo **stesso dataset Sanity**. Pubblicare o modificare contenuti nello Studio può quindi aggiornare anche il sito online tramite il webhook di ricostruzione già configurato. La branch isola il codice, non i contenuti; per provare contenuti senza renderli pubblici servirebbe un dataset separato.
 
 Per lavorare senza collegarsi a Sanity, usare `npm run dev:demo`. I dati dimostrativi sono fittizi e vengono segnalati sulle pagine: **non pubblicare la build demo come sito ufficiale**.
 
@@ -52,7 +64,7 @@ Sanity gestisce **Informazioni associazione**, iniziative, articoli, eventi e pe
 
 Gli URL pubblici delle iniziative sono `/iniziative/` e `/iniziative/<slug>/`; i precedenti URL `/progetti/` rimandano alle nuove pagine, incluse quelle di dettaglio e le pagine dell’archivio. In Sanity il tipo di documento resta internamente `project` e i riferimenti di articoli/eventi restano `projects`: sono chiavi già salvate, mantenute per non perdere contenuti, ordinamento e collegamenti. Non rinominarle senza una migrazione dei dati.
 
-Il sito pubblico usa solo contenuti pubblicati. **Una modifica in Sanity non aggiorna automaticamente il sito:** occorre una nuova build e la distribuzione dei file generati. Questo vale anche per il passaggio di un evento da futuro a passato. La pubblicazione automatica dopo le modifiche nel CMS non è ancora configurata.
+Il sito pubblico usa solo contenuti pubblicati. Il webhook Sanity configurato nel progetto avvia una nuova build Pages su `main` dopo le modifiche ai contenuti. Il passaggio di un evento da futuro a passato, invece, non è di per sé una modifica nel CMS: per aggiornare le pagine a quella data serve una nuova build manuale o una pianificazione periodica.
 
 ## Palette e immagini
 
@@ -87,9 +99,9 @@ npm run check:build
 
 `check:build` controlla i file statici prodotti dall'ultima build. `npm run build` genera invece il sito con i contenuti reali e richiede un progetto Sanity raggiungibile. Per verificare la build dello Studio: `cd studio && npm run build`.
 
-Il workflow in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) esegue i controlli di sito e Studio. [`.github/workflows/pages.yml`](.github/workflows/pages.yml) pubblica invece **il sito con i contenuti reali di Sanity** su GitHub Pages solo con avvio manuale da **Actions → Publish Astro to GitHub Pages → Run workflow**. Il deploy automatico è intenzionalmente disattivato finché i contenuti di prova non sono stati ripuliti. Ogni modifica successiva in Sanity richiede una nuova esecuzione manuale del workflow.
+Il workflow in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) esegue i controlli di sito e Studio anche su `develop`. [`.github/workflows/pages.yml`](.github/workflows/pages.yml) pubblica **il sito con i contenuti reali di Sanity** su GitHub Pages solo quando è eseguito su `main`: si può avviare manualmente da **Actions → Publish Astro to GitHub Pages → Run workflow**, selezionando `main`, oppure tramite il webhook Sanity già configurato. Un push del solo codice su `main` non avvia automaticamente il deploy: dopo il merge va lanciato manualmente il workflow.
 
-Una volta avviato il primo deploy, l'indirizzo della demo sarà `https://bickpenna.github.io/Assoe/`. In **Settings → Pages**, la sorgente deve essere **GitHub Actions**. In **Settings → Secrets and variables → Actions → Variables** serve `PUBLIC_SANITY_PROJECT_ID`; `PUBLIC_SANITY_DATASET` è facoltativa e, se assente, vale `production`. Il Project ID non è una credenziale; non aggiungere token Sanity al sito statico. La build fallisce se manca il Project ID, invece di pubblicare dati dimostrativi per errore. Il sito demo aggiunge `noindex` ai motori di ricerca, ma **resta pubblico a chiunque abbia il link**.
+L'indirizzo della demo è `https://bickpenna.github.io/Assoe/`. In **Settings → Pages**, la sorgente deve essere **GitHub Actions**. In **Settings → Secrets and variables → Actions → Variables** serve `PUBLIC_SANITY_PROJECT_ID`; `PUBLIC_SANITY_DATASET` è facoltativa e, se assente, vale `production`. Il Project ID non è una credenziale; non aggiungere token Sanity al sito statico. La build fallisce se manca il Project ID, invece di pubblicare dati dimostrativi per errore. Il sito demo aggiunge `noindex` ai motori di ricerca, ma **resta pubblico a chiunque abbia il link**.
 
 Il workflow imposta `SITE_URL` e `SITE_BASE` per il percorso `/Assoe/`. Per provare in locale esattamente quel percorso:
 
@@ -110,4 +122,4 @@ npx sanity login
 npm run deploy
 ```
 
-Se viene proposto un hostname nuovo inatteso, fermarsi: si rischia di creare un secondo Studio. Il deploy aggiorna interfaccia e schemi, non migra né cancella i documenti. La sessione di login è locale e non va copiata in GitHub. Le modifiche ai contenuti nel CMS richiedono ancora una nuova esecuzione del workflow Pages: non è configurato un webhook di ricostruzione automatica.
+Se viene proposto un hostname nuovo inatteso, fermarsi: si rischia di creare un secondo Studio. Il deploy aggiorna interfaccia e schemi, non migra né cancella i documenti. La sessione di login è locale e non va copiata in GitHub. Il webhook per ricostruire Pages dopo le modifiche ai contenuti è gestito nelle impostazioni di Sanity, non in questo repository.
