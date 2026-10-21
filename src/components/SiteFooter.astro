@@ -14,9 +14,8 @@ const hasAddress = Boolean(contacts?.address || contacts?.postalCode || contacts
 const documents = association?.documents;
 const hasDocuments = Boolean(documents?.statuteUrl || documents?.regulationUrl || documents?.privacyPolicyUrl || documents?.cookiePolicyUrl);
 const copyright = association?.copyright?.trim();
-const copyrightLabel = copyright
-  ? copyright.startsWith('©') ? copyright : `© ${copyright}${/^\d{4}$/.test(copyright) ? ` ${name}` : ''}`
-  : `© ${new Date().getFullYear()} ${name}`;
+const copyrightText = copyright?.replace(name, '').trim() || String(new Date().getFullYear());
+const copyrightLabel = copyrightText.startsWith('©') ? copyrightText : `© ${copyrightText}`;
 ---
 
 <footer class="site-footer">
