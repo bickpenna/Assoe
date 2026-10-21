@@ -1,4 +1,5 @@
 ---
+import { getImage } from 'astro:assets';
 import '@/styles/global.css';
 import SiteBrand from '@/components/SiteBrand.astro';
 import SiteFooter from '@/components/SiteFooter.astro';
@@ -23,6 +24,9 @@ const {
 const association = providedAssociation === undefined
   ? await contentRepository.getAssociationInfo()
   : providedAssociation;
+const favicon = association?.logoUrl
+  ? await getImage({ src: association.logoUrl, width: 64, height: 64, fit: 'contain', format: 'png' })
+  : null;
 
 const currentPath = Astro.url.pathname;
 const homePath = sitePath('/');
@@ -35,6 +39,7 @@ const isCurrent = (href: string) => href === homePath ? currentPath === homePath
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    {favicon && <link rel="icon" type="image/png" href={favicon.src} />}
     {import.meta.env.PUBLIC_SITE_PREVIEW === 'true' && <meta name="robots" content="noindex,nofollow" />}
     <title>{title}</title>
   </head>
