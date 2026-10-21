@@ -57,7 +57,6 @@ p { line-height: 1.65; }
 .desktop-nav a.nav-cta:hover, .mobile-nav a.nav-cta:hover { color: var(--surface); }
 .mobile-nav { display: none; }
 .site-header :focus-visible, .site-footer :focus-visible { outline-color: var(--surface); }
-.demo-notice { padding: .7rem 0; background: var(--yellow); color: var(--green-dark); font-size: .85rem; font-weight: 800; line-height: 1.4; text-align: center; }
 .site-footer { margin-top: 5rem; padding: 3.5rem 0 1.5rem; background: var(--green-dark); color: var(--surface); }
 .site-footer__grid { display: grid; grid-template-columns: minmax(7rem, .65fr) minmax(0, 1fr) minmax(0, .9fr) minmax(0, 1.6fr); gap: clamp(1.5rem, 3vw, 3.5rem); }
 .site-footer h2 { margin: .15rem 0 1.25rem; color: var(--green-soft); font-size: .83rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }

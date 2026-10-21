@@ -5,9 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "NODE_ENV=development astro dev",
-    "dev:demo": "CONTENT_SOURCE=demo NODE_ENV=development astro dev",
     "build": "astro build",
-    "build:demo": "CONTENT_SOURCE=demo astro build",
     "preview": "astro preview",
     "check": "astro check",
     "check:build": "node scripts/check-static-output.mjs",

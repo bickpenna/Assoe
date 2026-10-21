@@ -2,7 +2,7 @@
 import '@/styles/global.css';
 import SiteBrand from '@/components/SiteBrand.astro';
 import SiteFooter from '@/components/SiteFooter.astro';
-import { contentRepository, isDemoContent } from '@/content';
+import { contentRepository } from '@/content';
 import type { AssociationInfo } from '@/content/types';
 import { siteNavigation } from '@/config/navigation';
 import { SITE_NAME } from '@/config/site';
@@ -35,7 +35,7 @@ const isCurrent = (href: string) => href === homePath ? currentPath === homePath
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    {(isDemoContent || import.meta.env.PUBLIC_SITE_PREVIEW === 'true') && <meta name="robots" content="noindex,nofollow" />}
+    {import.meta.env.PUBLIC_SITE_PREVIEW === 'true' && <meta name="robots" content="noindex,nofollow" />}
     <title>{title}</title>
   </head>
   <body>
@@ -57,11 +57,6 @@ const isCurrent = (href: string) => href === homePath ? currentPath === homePath
         </details>
       </div>
     </header>
-    {isDemoContent && (
-      <div class="demo-notice" role="status">
-        <div class="container">Anteprima con contenuti di esempio: attività, date, persone e contatti sono fittizi e non sono pubblicati su Sanity.</div>
-      </div>
-    )}
     <slot />
     <SiteFooter association={association} />
   </body>

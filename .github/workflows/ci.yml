@@ -10,6 +10,9 @@ permissions:
 jobs:
   frontend:
     runs-on: ubuntu-latest
+    env:
+      PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
+      PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET || 'production' }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -20,7 +23,7 @@ jobs:
       - run: npm run check
       - run: npm test
       - run: npm run test:coverage
-      - run: npm run build:demo
+      - run: npm run build
       - run: npm run check:build
       - run: npm audit --omit=dev --audit-level=high
 

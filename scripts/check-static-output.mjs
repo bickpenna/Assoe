@@ -27,7 +27,7 @@ function htmlFiles(directory) {
 }
 
 if (!fs.existsSync(outputDirectory)) {
-  throw new Error('Output statico assente: esegui prima npm run build:demo o npm run build.');
+  throw new Error('Output statico assente: esegui prima npm run build.');
 }
 
 const pages = htmlFiles(outputDirectory);
@@ -64,7 +64,7 @@ for (const filePath of pages) {
     throw new Error(`${relativePath}: meta description mancante.`);
   }
   if (process.env.PUBLIC_SITE_PREVIEW === 'true' && !/<meta name="robots" content="noindex,nofollow"/i.test(html)) {
-    throw new Error(`${relativePath}: la demo pubblica deve restare non indicizzabile.`);
+    throw new Error(`${relativePath}: il sito di anteprima deve restare non indicizzabile.`);
   }
   if (h1Count !== 1) throw new Error(`${relativePath}: attesi 1 H1, trovati ${h1Count}.`);
   if (redirectBase) {
