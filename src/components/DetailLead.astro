@@ -1,0 +1,18 @@
+---
+import ContentImage from './ContentImage.astro';
+
+interface Props {
+  imageUrl?: string;
+  imageAlt: string;
+  hasText: boolean;
+}
+
+const { imageUrl, imageAlt, hasText } = Astro.props;
+---
+
+{(imageUrl || hasText) && (
+  <div class:list={['detail__lead', { 'detail__lead--with-image': imageUrl && hasText }]}>
+    {imageUrl && <div class="detail__lead-image"><ContentImage src={imageUrl} alt={imageAlt} variant="detail" eager /></div>}
+    {hasText && <div class="detail__lead-text"><slot /></div>}
+  </div>
+)}

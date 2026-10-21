@@ -12,12 +12,47 @@ const { id, title, imageAlt, imageUrls } = Astro.props;
 ---
 
 {imageUrls.length > 0 && (
-  <section class="section" aria-labelledby={id}>
-    <h2 id={id}>{title}</h2>
+  <section class="section detail-gallery" aria-labelledby={id}>
+    <div class="detail-gallery__heading">
+      <h2 id={id}>{title}</h2>
+    </div>
     <ul class="gallery-grid">
       {imageUrls.map((url, index) => (
-        <li><ContentImage src={url} alt={`${imageAlt}, foto ${index + 1}`} variant="gallery" /></li>
+        <li>
+          <button type="button" class="gallery-grid__button" data-gallery-open={`${id}-foto-${index + 1}`} aria-haspopup="dialog" aria-label={`Ingrandisci la foto ${index + 1} di ${imageUrls.length}`}>
+            <ContentImage src={url} alt={`${imageAlt}, foto ${index + 1}`} variant="galleryThumb" />
+          </button>
+        </li>
       ))}
     </ul>
+    {imageUrls.map((url, index) => (
+      <dialog id={`${id}-foto-${index + 1}`} class="gallery-lightbox" aria-label={`Foto ${index + 1} di ${imageUrls.length}: ${imageAlt}`} tabindex="-1">
+        <form method="dialog">
+          <button type="submit" class="gallery-lightbox__close" aria-label="Chiudi foto">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" /></svg>
+          </button>
+        </form>
+        <ContentImage src={url} alt={`${imageAlt}, foto ${index + 1}`} variant="gallery" />
+      </dialog>
+    ))}
   </section>
 )}
+
+<script>
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const opener = target.closest<HTMLButtonElement>('[data-gallery-open]');
+    const dialogId = opener?.dataset.galleryOpen;
+    const dialog = dialogId && document.getElementById(dialogId);
+    if (dialog instanceof HTMLDialogElement) {
+      dialog.showModal();
+      dialog.focus({ preventScroll: true });
+    }
+
+    if (target instanceof HTMLDialogElement && target.classList.contains('gallery-lightbox')) {
+      target.close();
+    }
+  });
+</script>

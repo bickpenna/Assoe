@@ -2,7 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import EventCard from '@/components/EventCard.astro';
-import ContentImage from '@/components/ContentImage.astro';
+import DetailLead from '@/components/DetailLead.astro';
 import DetailGallery from '@/components/DetailGallery.astro';
 import RichTextContent from '@/components/RichTextContent.astro';
 import InitiativeList from '@/components/InitiativeList.astro';
@@ -32,12 +32,13 @@ const article = await requireBySlug(slug, contentRepository.getArticleBySlug, 'A
         <p class="eyebrow">Articolo</p>
         <h1>{article.title}</h1>
         <p class="detail__meta"><time datetime={article.publishedAt}>{formatDate(article.publishedAt)}</time></p>
-        {article.summary && <p>{article.summary}</p>}
       </header>
 
-      {article.imageUrl && <div class="detail__image"><ContentImage src={article.imageUrl} alt={`Immagine dell’articolo ${article.title}`} variant="hero" eager /></div>}
-      <RichTextContent html={article.bodyHtml} />
-      <DetailGallery id="galleria" title="Galleria" imageAlt={article.title} imageUrls={article.galleryImageUrls} />
+      <DetailLead imageUrl={article.imageUrl} imageAlt={`Immagine dell’articolo ${article.title}`} hasText={Boolean(article.summary || article.bodyHtml)}>
+        {article.summary && <p class="detail__summary">{article.summary}</p>}
+        <RichTextContent html={article.bodyHtml} />
+      </DetailLead>
+      <DetailGallery id="galleria" title="Le foto" imageAlt={article.title} imageUrls={article.galleryImageUrls} />
 
       {article.discussionUrl && <FacebookDiscussion url={article.discussionUrl} />}
 

@@ -40,7 +40,7 @@ const event = await requireBySlug(slug, contentRepository.getEventBySlug, 'Event
 
       {event.imageUrl && <div class="detail__image detail__image--poster"><ContentImage src={event.imageUrl} alt={`Locandina: ${event.title}`} variant="poster" eager /></div>}
       <RichTextContent html={event.descriptionHtml} />
-      <DetailGallery id="galleria-evento" title="Galleria" imageAlt={event.title} imageUrls={event.galleryImageUrls} />
+      <DetailGallery id="galleria-evento" title="Le foto" imageAlt={event.title} imageUrls={event.galleryImageUrls} />
 
       {event.discussionUrl && <FacebookDiscussion url={event.discussionUrl} />}
 

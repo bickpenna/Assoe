@@ -3,7 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ArticleList from '@/components/ArticleList.astro';
 import EventCard from '@/components/EventCard.astro';
-import ContentImage from '@/components/ContentImage.astro';
+import DetailLead from '@/components/DetailLead.astro';
 import RichTextContent from '@/components/RichTextContent.astro';
 import RelatedContentSection from '@/components/RelatedContentSection.astro';
 import { contentRepository } from '@/content';
@@ -29,8 +29,9 @@ const initiative = await requireBySlug(slug, contentRepository.getInitiativeBySl
       <p class="eyebrow">{BRAND_WORDMARK}</p>
       <h1>{initiative.name}</h1>
     </div>
-    {initiative.imageUrl && <div class="detail__image"><ContentImage src={initiative.imageUrl} alt={`Immagine dell’iniziativa ${initiative.name}`} variant="hero" eager /></div>}
-    <RichTextContent html={initiative.descriptionHtml} />
+    <DetailLead imageUrl={initiative.imageUrl} imageAlt={`Immagine dell’iniziativa ${initiative.name}`} hasText={Boolean(initiative.descriptionHtml)}>
+      <RichTextContent html={initiative.descriptionHtml} />
+    </DetailLead>
 
     {
       initiative.relatedArticles.length > 0 && (
