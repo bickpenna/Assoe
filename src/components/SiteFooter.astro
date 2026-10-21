@@ -1,5 +1,4 @@
 ---
-import SiteBrand from './SiteBrand.astro';
 import { SITE_NAME } from '@/config/site';
 import type { AssociationInfo } from '@/content/types';
 import { sitePath } from '@/utils/sitePath';
@@ -22,33 +21,28 @@ const copyrightLabel = copyright
 
 <footer class="site-footer">
   <div class="container">
-    <div class="site-footer__grid">
-      <div class:list={['site-footer__intro', { 'site-footer__intro--wordmark': !association?.logoUrl }]}>
-        <SiteBrand logoUrl={association?.logoUrl} name={name} placement="footer" />
+    <div class="site-footer__main">
+      <div class="site-footer__identity">
+        <strong>{name}</strong>
+        <div class="site-footer__details">
+          {hasAddress && (
+            <address>
+              {contacts?.address && <span>{contacts.address}</span>}
+              {(contacts?.postalCode || contacts?.city || contacts?.province) && (
+                <span>{[contacts?.postalCode, contacts?.city, contacts?.province].filter(Boolean).join(' ')}</span>
+              )}
+            </address>
+          )}
+          {association?.taxCode && <span>Codice fiscale {association.taxCode}</span>}
+          {association?.registryInfo && <span>{association.registryInfo}</span>}
+        </div>
       </div>
 
-      <nav class="site-footer__column" aria-label="Partecipa">
-        <h2>Partecipa</h2>
+      <nav class="site-footer__links" aria-label="Collegamenti utili">
         <a href={sitePath('/sostienici/#cinque-per-mille')}>5×1000</a>
         <a href={sitePath('/sostienici/#donazione')}>Donazioni</a>
+        <a href={sitePath('/chi-siamo/#contatti')}>Contattaci</a>
       </nav>
-
-      <div class="site-footer__column site-footer__legal">
-        <h2>Dati legali</h2>
-        <strong>{name}</strong>
-        {hasAddress && (
-          <address>
-            <span>Sede dell’associazione</span>
-            {contacts?.address && <span>{contacts.address}</span>}
-            {(contacts?.postalCode || contacts?.city || contacts?.province) && (
-              <span>{[contacts?.postalCode, contacts?.city, contacts?.province].filter(Boolean).join(' ')}</span>
-            )}
-          </address>
-        )}
-        {association?.taxCode && <p>Codice fiscale {association.taxCode}</p>}
-        {association?.registryInfo && <p>{association.registryInfo}</p>}
-        <a class="site-footer__contact" href={sitePath('/chi-siamo/#contatti')}>Contattaci <span aria-hidden="true">↗</span></a>
-      </div>
     </div>
 
     <div class="site-footer__bottom">
