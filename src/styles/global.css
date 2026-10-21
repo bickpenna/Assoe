@@ -278,9 +278,8 @@ p { line-height: 1.65; }
 @media (max-width: 850px) {
   .desktop-nav { display: none; }
   .mobile-nav { display: block; position: relative; }
-  .mobile-nav summary { display: grid; place-items: center; width: 2.8rem; height: 2.8rem; cursor: pointer; list-style: none; border: 1px solid var(--green); border-radius: .6rem; }
+  .mobile-nav summary { display: grid; place-items: center; width: 2.8rem; height: 2.8rem; cursor: pointer; list-style: none; }
   .mobile-nav summary::-webkit-details-marker { display: none; }
-  .mobile-nav summary:hover, .mobile-nav[open] summary { background: var(--green); }
   .mobile-nav__icon { display: grid; align-content: center; gap: 4px; width: 1.4rem; height: 1.4rem; }
   .mobile-nav__icon span { display: block; height: 2px; border-radius: 2px; background: currentColor; transition: transform .2s ease, opacity .2s ease; }
   .mobile-nav[open] .mobile-nav__icon span:first-child { transform: translateY(6px) rotate(45deg); }
