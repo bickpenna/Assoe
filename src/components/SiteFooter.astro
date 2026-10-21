@@ -47,12 +47,14 @@ const copyrightLabel = copyright
 
     <div class="site-footer__bottom">
       <span>{copyrightLabel}</span>
-      {hasDocuments && (
-        <nav aria-label="Informazioni legali">
-          {documents?.privacyPolicyUrl && <a href={documents.privacyPolicyUrl}>Privacy</a>}
-          <a href={sitePath('/chi-siamo/#documenti-associazione')}>Documenti</a>
-        </nav>
-      )}
+      <nav
+        class:list={['site-footer__bottom-links', !hasDocuments && 'site-footer__bottom-links--contact-only']}
+        aria-label="Contatti e documenti"
+      >
+        {documents?.privacyPolicyUrl && <a href={documents.privacyPolicyUrl}>Privacy</a>}
+        <a class="site-footer__contact-mobile" href={sitePath('/chi-siamo/#contatti')}>Contattaci</a>
+        {hasDocuments && <a href={sitePath('/chi-siamo/#documenti-associazione')}>Documenti</a>}
+      </nav>
     </div>
   </div>
 </footer>
