@@ -126,9 +126,11 @@ p { line-height: 1.65; }
 .article-list__media { grid-area: media; display: block; width: 9rem; aspect-ratio: 4 / 3; overflow: hidden; border-radius: .55rem; background: var(--surface-muted); }
 .article-list__media .content-image { width: 100%; height: 100%; object-fit: cover; }
 .content-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.3rem; }
-.content-card { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); display: flex; flex-direction: column; min-width: 0; box-shadow: 0 5px 20px rgba(24,35,28,.035); }
+.content-card { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); display: flex; flex-direction: column; min-width: 0; box-shadow: 0 4px 16px rgba(24, 35, 28, 0.035); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.content-card:hover { transform: translateY(-3px); border-color: var(--green); box-shadow: 0 10px 24px rgba(21, 106, 40, 0.09); }
 .content-card__link { color: inherit; display: flex; flex-direction: column; flex: 1; text-decoration: none; }
-.content-card__link:hover h2, .content-card__link:hover h3 { color: var(--green-dark); }
+.content-card:hover h2, .content-card:hover h3 { color: var(--green-dark); }
+.content-card:hover .text-link { color: var(--green); text-decoration: underline; text-underline-offset: .25em; }
 .content-card__media { display: block; aspect-ratio: 10 / 7; background: var(--surface-muted); overflow: hidden; }
 .content-card__media:hover .content-image { transform: scale(1.03); }
 .content-card__placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--green); font: 800 2rem 'Epilogue Variable', sans-serif; background: radial-gradient(circle at 75% 30%, #d8ebd2, transparent 35%), linear-gradient(135deg, #e7f2e4, #d7eada); }
