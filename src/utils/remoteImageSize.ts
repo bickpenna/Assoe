@@ -6,7 +6,10 @@ const sizes = new Map<string, ReturnType<typeof inferRemoteSize>>();
 export function getRemoteImageSize(url: string): ReturnType<typeof inferRemoteSize> {
   let size = sizes.get(url);
   if (!size) {
-    size = inferRemoteSize(url);
+    size = inferRemoteSize(url).catch((error: unknown) => {
+      sizes.delete(url);
+      throw error;
+    });
     sizes.set(url, size);
   }
   return size;

@@ -29,4 +29,5 @@ test('i link social accettano solo HTTPS assoluti', () => {
   assert.equal(httpsUrlOrUndefined('https://www.example.org/profilo'), 'https://www.example.org/profilo');
   assert.equal(httpsUrlOrUndefined('http://www.example.org/profilo'), undefined);
   assert.equal(httpsUrlOrUndefined('javascript:alert(1)'), undefined);
+  assert.equal(httpsUrlOrUndefined('not a URL'), undefined);
 });

@@ -24,9 +24,14 @@ const {
 const association = providedAssociation === undefined
   ? await contentRepository.getAssociationInfo()
   : providedAssociation;
-const favicon = association?.logoUrl
-  ? await getImage({ src: association.logoUrl, width: 64, height: 64, fit: 'contain', format: 'png' })
-  : null;
+let favicon = null;
+if (association?.logoUrl) {
+  try {
+    favicon = await getImage({ src: association.logoUrl, width: 64, height: 64, fit: 'contain', format: 'png' });
+  } catch {
+    // Il logo remoto non deve impedire il rendering della pagina o del favicon fallback.
+  }
+}
 
 const currentPath = Astro.url.pathname;
 const homePath = sitePath('/');

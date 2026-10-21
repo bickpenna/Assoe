@@ -19,6 +19,7 @@ test('non mostra link assenti, insicuri o di altri domini', () => {
     'https://facebook.com.evil.example/post/123',
     'https://example.com/post/123',
     'https://user:password@facebook.com/post/123',
+    'not a URL',
   ]) {
     assert.equal(facebookPostUrlOrUndefined(url), undefined);
   }

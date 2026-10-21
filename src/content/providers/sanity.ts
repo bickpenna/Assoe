@@ -4,7 +4,23 @@ import { facebookPostUrlOrUndefined } from '../../utils/facebook';
 import { sanitizeRichTextHtml } from '../../utils/sanitizeHtml';
 import { httpsUrlOrUndefined } from '../../../shared/url';
 import { validIbanOrUndefined } from '../../../shared/iban';
-import { initiativeImageUrl, type SanityImage } from './sanityImage';
+import { initiativeImageUrl } from './sanityImage';
+import {
+  isSanityArticle,
+  isSanityArticleDetail,
+  isSanityAssociation,
+  isSanityEvent,
+  isSanityEventDetail,
+  isSanityPerson,
+  isSanityProject,
+  isSanityProjectDetail,
+  isSanityRelatedProject,
+  toPortableTextBlocks,
+  type SanityArticle,
+  type SanityEvent,
+  type SanityProject,
+  type SanityRelatedProject,
+} from './sanityValidation';
 import type {
   ArticleDetail,
   ArticleSummary,
@@ -12,96 +28,9 @@ import type {
   ContentRepository,
   EventDetail,
   EventSummary,
-  EventStatus,
-  PersonRole,
   InitiativeDetail,
   InitiativeSummary,
 } from '../types';
-
-interface SanityProject {
-  _id: string;
-  name: string;
-  slug: string;
-  image: SanityImage | null;
-}
-
-interface SanityProjectDetail extends SanityProject {
-  description: Array<{ _type: string; _key?: string }> | null;
-}
-
-interface SanityRelatedProject extends SanityProject {
-  active: boolean | null;
-}
-
-interface SanityArticle {
-  _id: string;
-  title: string;
-  slug: string;
-  summary: string | null;
-  publishedAt: string;
-  imageUrl: string | null;
-}
-
-interface SanityArticleDetail extends SanityArticle {
-  body: Array<{ _type: string; _key?: string }> | null;
-  galleryImageUrls: Array<string | null> | null;
-  facebookPostUrl: string | null;
-  projects: Array<SanityRelatedProject | null> | null;
-  event: SanityEvent | null;
-}
-
-interface SanityEvent {
-  _id: string;
-  title: string;
-  slug: string;
-  date: string;
-  place: string | null;
-  status: EventStatus;
-  imageUrl: string | null;
-}
-
-interface SanityEventDetail extends SanityEvent {
-  description: Array<{ _type: string; _key?: string }> | null;
-  galleryImageUrls: Array<string | null> | null;
-  facebookPostUrl: string | null;
-  projects: Array<SanityRelatedProject | null> | null;
-}
-
-interface SanityPerson {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  role: PersonRole;
-  photoUrl: string | null;
-}
-
-interface SanityAssociation {
-  associationName: string;
-  logoUrl: string | null;
-  aboutText: string | null;
-  aboutImageUrl: string | null;
-  taxCode: string | null;
-  bankDetails: {
-    iban: string | null;
-    accountHolder: string | null;
-    bankName: string | null;
-  } | null;
-  registryInfo: string | null;
-  copyright: string | null;
-  contacts: {
-    email: string | null;
-    phone: string | null;
-    address: string | null;
-    postalCode: string | null;
-    city: string | null;
-    province: string | null;
-  } | null;
-  socialLinks: Array<{ platform: string; url: string }> | null;
-  statuteUrl: string | null;
-  regulationUrl: string | null;
-  privacyPolicyUrl: string | null;
-  cookiePolicyUrl: string | null;
-}
 
 interface SanityConfig {
   projectId: string;
@@ -274,8 +203,9 @@ const associationQuery = `*[_type == "siteSettings" && defined(associationName)]
   "cookiePolicyUrl": cookiePolicy.asset->url
 }`;
 
-function renderRichText(blocks: Array<{ _type: string; _key?: string }> | null): string | undefined {
-  return blocks?.length ? sanitizeRichTextHtml(toHTML(blocks)) : undefined;
+function renderRichText(blocks: unknown): string | undefined {
+  const validBlocks = toPortableTextBlocks(blocks);
+  return validBlocks?.length ? sanitizeRichTextHtml(toHTML(validBlocks)) : undefined;
 }
 
 function toArticleSummary(article: SanityArticle): ArticleSummary {
@@ -300,9 +230,7 @@ function toInitiativeSummary(project: SanityProject): InitiativeSummary {
 
 function toRelatedInitiatives(projects: Array<SanityRelatedProject | null> | null): InitiativeSummary[] {
   return (projects ?? [])
-    .filter((project): project is SanityRelatedProject =>
-      Boolean(project?.active && project.name && project.slug),
-    )
+    .filter((project): project is SanityRelatedProject => Boolean(project?.active && isSanityRelatedProject(project)))
     .map(toInitiativeSummary);
 }
 
@@ -318,10 +246,6 @@ function toEventSummary(event: SanityEvent): EventSummary {
   };
 }
 
-function hasPublicEventFields(event: SanityEvent | null): event is SanityEvent {
-  return Boolean(event?.title && event.slug && event.date && event.status);
-}
-
 export function createSanityRepository({
   projectId,
   dataset,
@@ -335,23 +259,23 @@ export function createSanityRepository({
   });
 
   const listInitiatives = cachePromise(async () => {
-    const projects = await client.fetch<SanityProject[]>(initiativesQuery);
-    return projects.map(toInitiativeSummary);
+    const projects = await client.fetch<unknown>(initiativesQuery);
+    return (Array.isArray(projects) ? projects : []).filter(isSanityProject).map(toInitiativeSummary);
   });
 
   const listArticles = cachePromise(async () => {
-    const articles = await client.fetch<SanityArticle[]>(articlesQuery);
-    return articles.map(toArticleSummary);
+    const articles = await client.fetch<unknown>(articlesQuery);
+    return (Array.isArray(articles) ? articles : []).filter(isSanityArticle).map(toArticleSummary);
   });
 
   const listEvents = cachePromise(async () => {
-    const events = await client.fetch<SanityEvent[]>(eventsQuery);
-    return events.map(toEventSummary);
+    const events = await client.fetch<unknown>(eventsQuery);
+    return (Array.isArray(events) ? events : []).filter(isSanityEvent).map(toEventSummary);
   });
 
   const listPeople = cachePromise(async () => {
-    const people = await client.fetch<SanityPerson[]>(peopleQuery);
-    return people.map(({ _id, firstName, lastName, role, photoUrl }) => ({
+    const people = await client.fetch<unknown>(peopleQuery);
+    return (Array.isArray(people) ? people : []).filter(isSanityPerson).map(({ _id, firstName, lastName, role, photoUrl }) => ({
       id: _id,
       firstName,
       lastName,
@@ -361,9 +285,9 @@ export function createSanityRepository({
   });
 
   const getAssociationInfo = cachePromise(async (): Promise<AssociationInfo | null> => {
-    const info = await client.fetch<SanityAssociation | null>(associationQuery);
+    const info = await client.fetch<unknown>(associationQuery);
 
-    if (!info) return null;
+    if (!isSanityAssociation(info)) return null;
 
     const iban = validIbanOrUndefined(info.bankDetails?.iban);
     const accountHolder = info.bankDetails?.accountHolder?.trim();
@@ -389,9 +313,10 @@ export function createSanityRepository({
         city: info.contacts?.city ?? undefined,
         province: info.contacts?.province ?? undefined,
       },
-      socialLinks: (info.socialLinks ?? []).flatMap(({ platform, url }) => {
-        const safeUrl = httpsUrlOrUndefined(url);
-        return platform && safeUrl ? [{ name: platform, url: safeUrl }] : [];
+      socialLinks: (info.socialLinks ?? []).flatMap((socialLink) => {
+        if (!socialLink) return [];
+        const safeUrl = httpsUrlOrUndefined(socialLink.url);
+        return socialLink.platform && safeUrl ? [{ name: socialLink.platform, url: safeUrl }] : [];
       }),
       documents: {
         statuteUrl: info.statuteUrl ?? undefined,
@@ -406,29 +331,29 @@ export function createSanityRepository({
     listInitiatives,
 
     async getInitiativeBySlug(slug: string): Promise<InitiativeDetail | null> {
-      const project = await client.fetch<SanityProjectDetail | null>(initiativeBySlugQuery, { slug });
+      const project = await client.fetch<unknown>(initiativeBySlugQuery, { slug });
 
-      if (!project) return null;
+      if (!isSanityProjectDetail(project)) return null;
 
       const [articles, events] = await Promise.all([
-        client.fetch<SanityArticle[]>(articlesByInitiativeQuery, { initiativeId: project._id }),
-        client.fetch<SanityEvent[]>(eventsByInitiativeQuery, { initiativeId: project._id }),
+        client.fetch<unknown>(articlesByInitiativeQuery, { initiativeId: project._id }),
+        client.fetch<unknown>(eventsByInitiativeQuery, { initiativeId: project._id }),
       ]);
 
       return {
         ...toInitiativeSummary(project),
         descriptionHtml: renderRichText(project.description),
-        relatedArticles: articles.map(toArticleSummary),
-        relatedEvents: events.map(toEventSummary),
+        relatedArticles: (Array.isArray(articles) ? articles : []).filter(isSanityArticle).map(toArticleSummary),
+        relatedEvents: (Array.isArray(events) ? events : []).filter(isSanityEvent).map(toEventSummary),
       };
     },
 
     listArticles,
 
     async getArticleBySlug(slug: string): Promise<ArticleDetail | null> {
-      const article = await client.fetch<SanityArticleDetail | null>(articleBySlugQuery, { slug });
+      const article = await client.fetch<unknown>(articleBySlugQuery, { slug });
 
-      if (!article) return null;
+      if (!isSanityArticleDetail(article)) return null;
 
       return {
         ...toArticleSummary(article),
@@ -438,7 +363,7 @@ export function createSanityRepository({
           (url): url is string => typeof url === 'string',
         ),
         relatedInitiatives: toRelatedInitiatives(article.projects),
-        relatedEvent: hasPublicEventFields(article.event)
+        relatedEvent: isSanityEvent(article.event)
           ? toEventSummary(article.event)
           : undefined,
       };
@@ -447,9 +372,9 @@ export function createSanityRepository({
     listEvents,
 
     async getEventBySlug(slug: string): Promise<EventDetail | null> {
-      const event = await client.fetch<SanityEventDetail | null>(eventBySlugQuery, { slug });
+      const event = await client.fetch<unknown>(eventBySlugQuery, { slug });
 
-      if (!event) return null;
+      if (!isSanityEventDetail(event)) return null;
 
       return {
         ...toEventSummary(event),
