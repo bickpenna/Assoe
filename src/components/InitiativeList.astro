@@ -22,11 +22,10 @@ const hasImages = initiatives.some(({ imageUrl }) => Boolean(imageUrl));
           {headingLevel === 2 ? <h2>{initiative.name}</h2> : <h3>{initiative.name}</h3>}
           <span class="initiative-list__bottom">
             <span class="initiative-list__more">Scopri l’iniziativa</span>
-            <span class="initiative-list__arrow" aria-hidden="true">↗</span>
           </span>
         </div>
         {initiative.imageUrl && (
-          <span class="initiative-list__media"><ContentImage src={initiative.imageUrl} alt="" variant="card" /></span>
+          <span class="initiative-list__media"><ContentImage src={initiative.imageUrl} alt="" variant="logoLarge" /></span>
         )}
       </a>
     </li>

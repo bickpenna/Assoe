@@ -92,22 +92,22 @@ p { line-height: 1.65; }
 .hero__logo { min-height: 16rem; display: grid; place-items: center; }
 .hero__logo .content-image--logoLarge { width: auto; max-width: 100%; max-height: 18rem; object-fit: contain; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.8rem; }
-.initiative-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.15rem; list-style: none; margin: 0; padding: 0; }
+.initiative-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; list-style: none; margin: 0; padding: 0; }
 .initiative-list--two-columns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.initiative-list--single { grid-template-columns: minmax(0, 1fr); max-width: 34rem; }
+.initiative-list--single { grid-template-columns: minmax(0, 1fr); max-width: 36rem; }
 .initiative-list__item { min-width: 0; }
-.initiative-list__link { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 9rem); align-items: stretch; gap: 1rem; min-height: 12rem; height: 100%; padding: clamp(1.2rem, 2vw, 1.5rem); border: 1px solid var(--line); border-radius: 1.2rem; background: var(--card); color: var(--ink); text-decoration: none; transition: transform .2s ease, border-color .2s ease; }
+.initiative-list__link { display: grid; grid-template-columns: minmax(0, 1fr) clamp(7rem, 15vw, 9rem); align-items: stretch; gap: 1.25rem; min-height: 12rem; height: 100%; padding: clamp(1.4rem, 2.5vw, 1.85rem); border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); color: var(--ink); text-decoration: none; box-shadow: 0 4px 16px rgba(24, 35, 28, 0.035); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
 .initiative-list__link--text-only { grid-template-columns: minmax(0, 1fr); }
-.initiative-list__link:hover { color: var(--ink); transform: translateY(-3px); border-color: var(--green); }
-.initiative-list__content { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
-.initiative-list__content .eyebrow { margin-bottom: .55rem; }
-.initiative-list__content h2, .initiative-list__content h3 { max-width: 16ch; margin: 0; font-size: clamp(1.6rem, 2.5vw, 2.35rem); line-height: 1.2; overflow-wrap: anywhere; }
-.initiative-list__bottom { display: flex; align-items: center; justify-content: space-between; gap: .5rem; width: 100%; margin-top: auto; padding-top: 1.5rem; }
-.initiative-list__more { color: var(--green-dark); font-size: .85rem; font-weight: 800; }
-.initiative-list__media { position: relative; display: block; align-self: center; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; border-radius: .8rem; background: var(--surface-muted); }
-.initiative-list__media .content-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.initiative-list__arrow { display: grid; flex: 0 0 auto; place-items: center; width: 2.75rem; height: 2.75rem; border: 1px solid var(--green); border-radius: 50%; background: var(--card); color: var(--green-dark); font-size: 1.3rem; transition: transform .2s ease, background .2s ease, color .2s ease; }
-.initiative-list__link:hover .initiative-list__arrow { transform: translate(2px, -2px); background: var(--green-dark); color: var(--surface); }
+.initiative-list__link:hover { color: var(--ink); transform: translateY(-3px); border-color: var(--green); box-shadow: 0 10px 24px rgba(21, 106, 40, 0.09); }
+.initiative-list__link:hover h2, .initiative-list__link:hover h3 { color: var(--green-dark); }
+.initiative-list__content { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; height: 100%; }
+.initiative-list__content .eyebrow { margin-bottom: .45rem; }
+.initiative-list__content h2, .initiative-list__content h3 { margin: 0; font-size: clamp(1.5rem, 2.2vw, 2.15rem); line-height: 1.2; overflow-wrap: break-word; transition: color .2s ease; }
+.initiative-list__bottom { display: flex; align-items: center; width: 100%; margin-top: auto; padding-top: 1.5rem; }
+.initiative-list__more { color: var(--green-dark); font-size: .88rem; font-weight: 800; letter-spacing: -.01em; transition: color .2s ease; }
+.initiative-list__link:hover .initiative-list__more { color: var(--green); text-decoration: underline; text-underline-offset: .2em; }
+.initiative-list__media { display: flex; align-items: center; justify-content: center; align-self: center; width: 100%; height: 100%; max-height: 7.5rem; background: transparent; }
+.initiative-list__media .content-image { width: auto; height: auto; max-width: 100%; max-height: 7rem; object-fit: contain; background: transparent; }
 .section.home-initiatives { margin-top: 4.5rem; padding: clamp(1.5rem, 3vw, 2.5rem); border-radius: 1.5rem; background: linear-gradient(135deg, var(--surface-muted), #e2f0e3); }
 .home-initiatives .section__header { margin-bottom: 1.25rem; }
 .home-initiatives .section__header h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
@@ -319,9 +319,11 @@ p { line-height: 1.65; }
   .hero__logo .content-image--logoLarge { max-height: 12rem; }
   .hero__actions .button { width: 100%; }
   .section.home-initiatives { margin-top: 3.5rem; padding: 1.25rem; }
-  .initiative-list__link { grid-template-columns: minmax(0, 1fr) minmax(0, 6.5rem); gap: .75rem; min-height: 11rem; padding: 1.15rem; }
+  .initiative-list__link { grid-template-columns: minmax(0, 1fr) minmax(0, 5.5rem); gap: .85rem; min-height: 9.5rem; padding: 1.2rem; }
   .initiative-list__link--text-only { grid-template-columns: minmax(0, 1fr); }
-  .initiative-list__content h2, .initiative-list__content h3 { font-size: clamp(1.4rem, 6vw, 2rem); }
+  .initiative-list__content h2, .initiative-list__content h3 { font-size: clamp(1.35rem, 5.5vw, 1.85rem); }
+  .initiative-list__media { max-height: 5rem; }
+  .initiative-list__media .content-image { max-height: 4.8rem; }
   .article-list { padding-left: 1rem; }
   .article-list__item::before { left: calc(-1rem - 6px); }
   .article-list__link, .article-list__link--text-only { grid-template-areas: 'date' 'content' 'media'; grid-template-columns: minmax(0, 1fr); gap: .6rem; padding: 1.35rem 0; }
