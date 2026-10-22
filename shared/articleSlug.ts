@@ -1,4 +1,5 @@
 import { slugError } from './slug.ts';
+import { isValidSanityDateTime } from './sanityDateTime.ts';
 
 export const ARTICLE_SLUG_MAX_LENGTH = 48;
 
@@ -16,6 +17,10 @@ const urlDateFormatter = new Intl.DateTimeFormat('en-GB', {
 
 /** Compone l’URL pubblico dell’articolo con la data italiana di pubblicazione. */
 export function articlePublicSlug(slug: string, publishedAt: string): string {
+  if (!isValidSanityDateTime(publishedAt)) {
+    throw new RangeError(`Data pubblicazione non valida: ${publishedAt}`);
+  }
+
   const parts = Object.fromEntries(
     urlDateFormatter.formatToParts(new Date(publishedAt)).map(({ type, value }) => [type, value]),
   );
