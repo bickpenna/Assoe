@@ -1,6 +1,7 @@
 import { createClient } from '@sanity/client';
 import { toHTML } from '@portabletext/to-html';
 import { facebookPostUrlOrUndefined } from '../../utils/facebook';
+import { articlePublicSlug } from '../../utils/articleSlug';
 import { sanitizeRichTextHtml } from '../../utils/sanitizeHtml';
 import { httpsUrlOrUndefined } from '../../../shared/url';
 import { validIbanOrUndefined } from '../../../shared/iban';
@@ -108,11 +109,11 @@ const articlesQuery = `*[
   "imageUrl": mainImage.asset->url
 }`;
 
-const articleBySlugQuery = `*[
+const articleByIdQuery = `*[
   _type == "article" &&
   defined(title) &&
   defined(publishedAt) &&
-  slug.current == $slug
+  _id == $id
 ][0] {
   _id,
   title,
@@ -212,7 +213,7 @@ function toArticleSummary(article: SanityArticle): ArticleSummary {
   return {
     id: article._id,
     title: article.title,
-    slug: article.slug,
+    slug: articlePublicSlug(article.slug, article.publishedAt),
     summary: article.summary ?? undefined,
     publishedAt: article.publishedAt,
     imageUrl: article.imageUrl ?? undefined,
@@ -265,7 +266,12 @@ export function createSanityRepository({
 
   const listArticles = cachePromise(async () => {
     const articles = await client.fetch<unknown>(articlesQuery);
-    return (Array.isArray(articles) ? articles : []).filter(isSanityArticle).map(toArticleSummary);
+    const summaries = (Array.isArray(articles) ? articles : []).filter(isSanityArticle).map(toArticleSummary);
+    const slugs = new Set(summaries.map(({ slug }) => slug));
+    if (slugs.size !== summaries.length) {
+      throw new Error('Due articoli hanno lo stesso URL pubblico. Correggi la parte breve dell’URL in Sanity.');
+    }
+    return summaries;
   });
 
   const listEvents = cachePromise(async () => {
@@ -351,9 +357,13 @@ export function createSanityRepository({
     listArticles,
 
     async getArticleBySlug(slug: string): Promise<ArticleDetail | null> {
-      const article = await client.fetch<unknown>(articleBySlugQuery, { slug });
+      const summary = (await listArticles()).find((article) => article.slug === slug);
+      if (!summary) return null;
+
+      const article = await client.fetch<unknown>(articleByIdQuery, { id: summary.id });
 
       if (!isSanityArticleDetail(article)) return null;
+      if (articlePublicSlug(article.slug, article.publishedAt) !== slug) return null;
 
       return {
         ...toArticleSummary(article),

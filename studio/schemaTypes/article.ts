@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity';
+import { ARTICLE_SLUG_MAX_LENGTH, articleSlugError } from '../../shared/articleSlug';
 import { facebookPostField } from './facebookPostField';
 
 export const article = defineType({
@@ -14,10 +15,11 @@ export const article = defineType({
     }),
     defineField({
       name: 'slug',
-      title: 'Slug',
+      title: 'Parte breve dell’URL',
       type: 'slug',
-      options: { source: 'title', maxLength: 96 },
-      validation: (rule) => rule.required(),
+      description: 'Scrivi poche parole, per esempio “benedizione-nuova-sede”. La data di pubblicazione viene aggiunta automaticamente all’indirizzo del sito: non inserirla qui.',
+      options: { source: 'title', maxLength: ARTICLE_SLUG_MAX_LENGTH },
+      validation: (rule) => rule.required().custom((value) => articleSlugError(value?.current) ?? true),
     }),
     defineField({ name: 'summary', title: 'Sommario', type: 'text', rows: 3 }),
     defineField({ name: 'body', title: 'Testo', type: 'richText' }),
@@ -39,6 +41,7 @@ export const article = defineType({
       name: 'publishedAt',
       title: 'Data pubblicazione',
       type: 'datetime',
+      description: 'Questa data compare anche nell’URL pubblico. Dopo la pubblicazione, cambiarla modifica il link.',
       validation: (rule) => rule.required(),
     }),
     defineField({
