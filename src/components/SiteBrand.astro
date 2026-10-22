@@ -16,10 +16,8 @@ const {
 
 <a class="brand brand--header" href={sitePath('/')} aria-label={`${name}, pagina iniziale`}>
   {logoUrl && <ContentImage src={logoUrl} alt="" variant="logo" eager />}
-  {!logoUrl && (
-    <span class="brand__wordmark">
-      <strong class="brand__main">{BRAND_WORDMARK}</strong>
-      <span class="brand__sub">{BRAND_SUBTITLE}</span>
-    </span>
-  )}
+  <span class="brand__wordmark">
+    <strong class="brand__main">{BRAND_WORDMARK}</strong>
+    <span class="brand__sub">{BRAND_SUBTITLE}</span>
+  </span>
 </a>

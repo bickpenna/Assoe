@@ -87,6 +87,10 @@ function assertInternalLinks(html, filePath) {
 
 function assertCriticalMarkup(html, filePath) {
   const relativePath = path.relative(process.cwd(), filePath);
+  const header = html.match(/<header\b[^>]*class="site-header"[^>]*>[\s\S]*?<\/header>/)?.[0];
+  if (!header?.includes('class="brand__wordmark"')) {
+    throw new Error(`${relativePath}: nome dell'associazione mancante nell'header.`);
+  }
   if (!/<footer\b[^>]*class="site-footer"/.test(html)) {
     throw new Error(`${relativePath}: footer mancante.`);
   }
