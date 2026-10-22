@@ -84,6 +84,8 @@ I valori di riferimento sono i token in [`src/styles/global.css`](src/styles/glo
 
 Le immagini caricate su Sanity vengono elaborate da Astro durante la build in formati e dimensioni adatti al layout. Foto delle schede e ritratti possono essere ritagliati; logo, locandine e immagini di galleria mantengono le proporzioni. Se una foto di iniziativa ha bordi indesiderati, ritagliarla nello Studio prima di pubblicarla.
 
+Per foto e locandine, preparare il file **prima** del caricamento: circa 2000 px sul lato lungo, JPG o WebP, massimo 5 MB. Lo Studio rimanda a [Squoosh](https://squoosh.app/), che elabora le immagini nel browser senza inviarle al suo server. Nelle gallerie di articoli ed eventi il pulsante **Seleziona più foto** permette di scegliere più JPG, PNG o WebP in un solo passaggio, fino a 6 foto in totale. Questo caricamento controlla numero e dimensione **prima** di inviare i file a Sanity; gli elementi vuoti (“Untitled”) già presenti contano nel limite e vanno eliminati dal menu dell’elemento. Gli altri campi immagine mantengono la validazione dopo l’upload: lo Studio impedisce di pubblicare un contenuto che usa un’immagine sopra 5 MB (logo escluso), ma il file già caricato occupa spazio su Sanity. La trasformazione di Astro riduce le immagini del sito generato, non gli originali conservati nel CMS.
+
 ## Verifiche e distribuzione
 
 Dalla radice del repository:

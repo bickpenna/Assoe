@@ -1,6 +1,8 @@
 import { defineField, defineType } from 'sanity';
 import { orderRankField } from '@sanity/orderable-document-list';
 import { PERSON_ROLE_GROUPS, personRoleLabel, type PersonRole } from '../../shared/personRoles';
+import { validateEditorialImageSize } from './editorialImage';
+import { imageDescription } from './imageDescriptions';
 
 export const person = defineType({
   name: 'person',
@@ -19,7 +21,14 @@ export const person = defineType({
       type: 'string',
       validation: (rule) => rule.required(),
     }),
-    defineField({ name: 'photo', title: 'Foto', type: 'image', options: { hotspot: true } }),
+    defineField({
+      name: 'photo',
+      title: 'Foto',
+      type: 'image',
+      description: imageDescription(),
+      options: { hotspot: true },
+      validation: (rule) => rule.custom(validateEditorialImageSize),
+    }),
     defineField({
       name: 'role',
       title: 'Ruolo',

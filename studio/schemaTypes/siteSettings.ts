@@ -1,5 +1,7 @@
 import { defineField, defineType } from 'sanity';
 import { validIbanOrUndefined } from '../../shared/iban';
+import { validateEditorialImageSize } from './editorialImage';
+import { imageDescription } from './imageDescriptions';
 
 export const siteSettings = defineType({
   name: 'siteSettings',
@@ -12,7 +14,7 @@ export const siteSettings = defineType({
       type: 'string',
       validation: (rule) => rule.required(),
     }),
-    defineField({ name: 'logo', title: 'Logo', type: 'image' }),
+    defineField({ name: 'logo', title: 'Logo', type: 'image', description: 'Il logo non ha il limite di 5 MB previsto per le altre immagini.' }),
     defineField({
       name: 'aboutText',
       title: 'Chi siamo · testo',
@@ -24,8 +26,9 @@ export const siteSettings = defineType({
     defineField({
       name: 'aboutImage',
       title: 'Chi siamo · foto',
-      description: 'Facoltativa. Usa una foto rappresentativa dell’associazione e verifica il consenso delle persone riconoscibili.',
+      description: imageDescription('Facoltativa. Usa una foto rappresentativa dell’associazione e verifica il consenso delle persone riconoscibili.'),
       type: 'image',
+      validation: (rule) => rule.custom(validateEditorialImageSize),
     }),
     defineField({ name: 'taxCode', title: 'Codice fiscale', type: 'string' }),
     defineField({

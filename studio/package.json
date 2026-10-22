@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@sanity/orderable-document-list": "^2.0.28",
+    "@sanity/ui": "^4.4.9",
+    "react": "^19.3.1",
     "sanity": "^6.20.0",
     "styled-components": "^6.6.0"
   },
@@ -24,6 +26,7 @@
     }
   },
   "devDependencies": {
-    "@types/node": "^26.6.5"
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0"
   }
 }

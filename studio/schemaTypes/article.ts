@@ -1,5 +1,9 @@
-import { defineField, defineType } from 'sanity';
+import { defineArrayMember, defineField, defineType } from 'sanity';
 import { ARTICLE_SLUG_MAX_LENGTH, articleSlugError } from '../../shared/articleSlug';
+import { MAX_GALLERY_IMAGES } from '../../shared/imageSize';
+import { validateEditorialImageSize } from './editorialImage';
+import { galleryDescription, imageDescription } from './imageDescriptions';
+import { GalleryInput } from './GalleryInput';
 import { facebookPostField } from './facebookPostField';
 
 export const article = defineType({
@@ -28,14 +32,18 @@ export const article = defineType({
       name: 'mainImage',
       title: 'Immagine principale',
       type: 'image',
+      description: imageDescription(),
       options: { hotspot: true },
+      validation: (rule) => rule.custom(validateEditorialImageSize),
     }),
     defineField({
       name: 'gallery',
       title: 'Galleria',
       type: 'array',
-      of: [{ type: 'image', options: { hotspot: true } }],
-      validation: (rule) => rule.max(6),
+      description: galleryDescription(),
+      components: { input: GalleryInput },
+      of: [defineArrayMember({ type: 'image', options: { hotspot: true }, validation: (rule) => rule.custom(validateEditorialImageSize) })],
+      validation: (rule) => rule.max(MAX_GALLERY_IMAGES),
     }),
     defineField({
       name: 'publishedAt',

@@ -1,5 +1,7 @@
 import { defineField, defineType } from 'sanity';
 import { orderRankField } from '@sanity/orderable-document-list';
+import { validateEditorialImageSize } from './editorialImage';
+import { imageDescription } from './imageDescriptions';
 
 // Keep the stored type name: existing documents and references use "project".
 export const project = defineType({
@@ -25,8 +27,9 @@ export const project = defineType({
       name: 'image',
       title: 'Immagine',
       type: 'image',
-      description: 'Se il file ha bordi bianchi, ritagliali nell’editor dell’immagine prima di pubblicare.',
+      description: imageDescription('Se il file ha bordi bianchi, ritagliali nell’editor dell’immagine prima di pubblicare.'),
       options: { hotspot: true },
+      validation: (rule) => rule.custom(validateEditorialImageSize),
     }),
     orderRankField({ type: 'project' }),
     defineField({ name: 'active', title: 'Attivo', type: 'boolean', initialValue: true }),
