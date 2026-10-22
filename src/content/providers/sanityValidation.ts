@@ -1,4 +1,6 @@
 import { PERSON_ROLE_GROUPS, type PersonRole } from '../../../shared/personRoles.ts';
+import { articleSlugError } from '../../../shared/articleSlug.ts';
+import { isValidSlug } from '../../../shared/slug.ts';
 import type { EventStatus } from '../types';
 import type { SanityImage } from './sanityImage';
 
@@ -110,6 +112,10 @@ function isOptionalString(value: unknown): value is string | null | undefined {
   return value === undefined || isNullableString(value);
 }
 
+function isValidArticleSlug(value: unknown): value is string {
+  return typeof value === 'string' && value.length > 0 && articleSlugError(value) === undefined;
+}
+
 function field(value: unknown, key: string): unknown {
   return isRecord(value) ? value[key] : undefined;
 }
@@ -135,7 +141,7 @@ export function isSanityProject(value: unknown): value is SanityProject {
   return isRecord(value)
     && isNonEmptyString(value._id)
     && isNonEmptyString(value.name)
-    && isNonEmptyString(value.slug)
+    && isValidSlug(value.slug)
     && isSanityImage(value.image);
 }
 
@@ -152,7 +158,7 @@ export function isSanityArticle(value: unknown): value is SanityArticle {
   return isRecord(value)
     && isNonEmptyString(value._id)
     && isNonEmptyString(value.title)
-    && isNonEmptyString(value.slug)
+    && isValidArticleSlug(value.slug)
     && isValidDateString(value.publishedAt)
     && isNullableString(value.summary)
     && isNullableString(value.imageUrl);
@@ -175,7 +181,7 @@ export function isSanityEvent(value: unknown): value is SanityEvent {
   return isRecord(value)
     && isNonEmptyString(value._id)
     && isNonEmptyString(value.title)
-    && isNonEmptyString(value.slug)
+    && isValidSlug(value.slug)
     && isValidDateString(value.date)
     && isNullableString(value.place)
     && typeof value.status === 'string'

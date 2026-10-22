@@ -1,3 +1,20 @@
+export function assertUniqueSlugs(
+  items: ReadonlyArray<{ slug: string }>,
+  contentType: string,
+): void {
+  const seen = new Set<string>();
+  const duplicates = new Set<string>();
+
+  for (const { slug } of items) {
+    if (seen.has(slug)) duplicates.add(slug);
+    seen.add(slug);
+  }
+
+  if (duplicates.size > 0) {
+    throw new Error(`${contentType} hanno slug duplicati: ${[...duplicates].join(', ')}`);
+  }
+}
+
 export function staticPathsFromSlugs(items: ReadonlyArray<{ slug: string }>) {
   return items.map(({ slug }) => ({ params: { slug } }));
 }

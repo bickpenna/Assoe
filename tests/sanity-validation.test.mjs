@@ -36,6 +36,9 @@ const event = {
 test('valida i record Sanity principali e rifiuta dati incompleti', () => {
   assert.equal(isSanityProject(project), true);
   assert.equal(isSanityProject({ ...project, image: { ...image, width: 0.5 } }), false);
+  assert.equal(isSanityProject({ ...project, slug: 'Progetto' }), false);
+  assert.equal(isSanityProject({ ...project, slug: 'progetto non valido' }), false);
+  assert.equal(isSanityProject({ ...project, slug: 'a'.repeat(97) }), false);
   assert.equal(isSanityProjectDetail({ ...project, description: [{ _type: 'block' }] }), true);
   assert.equal(isSanityProjectDetail({ ...project, description: [{ _type: '' }] }), false);
   assert.equal(isSanityRelatedProject({ ...project, active: true }), true);
@@ -44,8 +47,13 @@ test('valida i record Sanity principali e rifiuta dati incompleti', () => {
 
 test('valida articoli ed eventi con date e stati ammessi', () => {
   assert.equal(isSanityArticle(article), true);
+  assert.equal(isSanityArticle({ ...article, slug: '2026-10-20-articolo' }), false);
+  assert.equal(isSanityArticle({ ...article, slug: 'Articolo' }), false);
   assert.equal(isSanityArticle({ ...article, publishedAt: 'non-una-data' }), false);
   assert.equal(isSanityEvent(event), true);
+  assert.equal(isSanityEvent({ ...event, slug: 'Evento' }), false);
+  assert.equal(isSanityEvent({ ...event, slug: 'evento non valido' }), false);
+  assert.equal(isSanityEvent({ ...event, slug: 'a'.repeat(97) }), false);
   assert.equal(isSanityEvent({ ...event, status: 'unknown' }), false);
   assert.equal(isSanityEvent({ ...event, date: 'non-una-data' }), false);
 

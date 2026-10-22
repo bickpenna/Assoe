@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { ARTICLE_SLUG_MAX_LENGTH, articleSlugError } from '../shared/articleSlug.ts';
+import { CONTENT_SLUG_MAX_LENGTH, isValidSlug, slugError } from '../shared/slug.ts';
 import { articlePublicSlug } from '../src/utils/articleSlug.ts';
 
 test('aggiunge automaticamente la data italiana alla parte breve di ogni articolo', () => {
@@ -26,4 +27,14 @@ test('lo Studio guida la scrittura della parte breve e non permette date duplica
   assert.match(articleSlugError('a'.repeat(ARTICLE_SLUG_MAX_LENGTH + 1)), /massimo/);
   assert.match(articleSlugError('2026-10-22-nuova-sede'), /Non inserire la data/);
   assert.match(articleSlugError('Nuova sede!'), /lettere minuscole/);
+});
+
+test('condivide formato e lunghezza degli slug tra contenuti', () => {
+  assert.equal(isValidSlug('nuova-iniziativa'), true);
+  assert.equal(isValidSlug(`a-${'b'.repeat(CONTENT_SLUG_MAX_LENGTH)}`), false);
+  assert.equal(isValidSlug('Nuova iniziativa'), false);
+  assert.equal(isValidSlug(''), false);
+  assert.equal(isValidSlug(null), false);
+  assert.match(slugError('a'.repeat(CONTENT_SLUG_MAX_LENGTH + 1)), /massimo/);
+  assert.equal(slugError(undefined), undefined);
 });

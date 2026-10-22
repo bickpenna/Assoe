@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { requireBySlug, staticPathsFromSlugs } from '../src/utils/content.ts';
+import { assertUniqueSlugs, requireBySlug, staticPathsFromSlugs } from '../src/utils/content.ts';
 import {
   emailAddressOrUndefined,
   httpsUrlOrUndefined,
@@ -28,6 +28,14 @@ test('requireBySlug restituisce il contenuto o fallisce con un errore esplicito'
   await assert.rejects(
     requireBySlug('mancante', async () => null, 'Articolo'),
     /Articolo non trovato durante la build: mancante/,
+  );
+});
+
+test('rifiuta slug duplicati durante la build', () => {
+  assertUniqueSlugs([{ slug: 'uno' }, { slug: 'due' }], 'Le iniziative');
+  assert.throws(
+    () => assertUniqueSlugs([{ slug: 'uno' }, { slug: 'uno' }, { slug: 'due' }, { slug: 'due' }], 'Gli eventi'),
+    /Gli eventi hanno slug duplicati: uno, due/,
   );
 });
 

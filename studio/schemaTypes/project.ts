@@ -1,7 +1,9 @@
 import { defineField, defineType } from 'sanity';
 import { orderRankField } from '@sanity/orderable-document-list';
+import { CONTENT_SLUG_MAX_LENGTH, slugError } from '../../shared/slug';
 import { validateEditorialImageSize } from './editorialImage';
 import { imageDescription } from './imageDescriptions';
+import { validateUniqueSlug } from './slugValidation';
 
 // Keep the stored type name: existing documents and references use "project".
 export const project = defineType({
@@ -19,8 +21,10 @@ export const project = defineType({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      options: { source: 'name', maxLength: 96 },
-      validation: (rule) => rule.required(),
+      options: { source: 'name', maxLength: CONTENT_SLUG_MAX_LENGTH },
+      validation: (rule) => rule.required()
+        .custom((value) => slugError(value?.current) ?? true)
+        .custom(validateUniqueSlug),
     }),
     defineField({ name: 'description', title: 'Descrizione', type: 'richText' }),
     defineField({

@@ -2,6 +2,7 @@ import { createClient } from '@sanity/client';
 import { toHTML } from '@portabletext/to-html';
 import { facebookPostUrlOrUndefined } from '../../utils/facebook';
 import { articlePublicSlug } from '../../utils/articleSlug';
+import { assertUniqueSlugs } from '../../utils/content';
 import { sanitizeRichTextHtml } from '../../utils/sanitizeHtml';
 import {
   emailAddressOrUndefined,
@@ -273,22 +274,23 @@ export function createSanityRepository({
 
   const listInitiatives = cachePromise(async () => {
     const projects = await client.fetch<unknown>(initiativesQuery);
-    return (Array.isArray(projects) ? projects : []).filter(isSanityProject).map(toInitiativeSummary);
+    const summaries = (Array.isArray(projects) ? projects : []).filter(isSanityProject).map(toInitiativeSummary);
+    assertUniqueSlugs(summaries, 'Le iniziative');
+    return summaries;
   });
 
   const listArticles = cachePromise(async () => {
     const articles = await client.fetch<unknown>(articlesQuery);
     const summaries = (Array.isArray(articles) ? articles : []).filter(isSanityArticle).map(toArticleSummary);
-    const slugs = new Set(summaries.map(({ slug }) => slug));
-    if (slugs.size !== summaries.length) {
-      throw new Error('Due articoli hanno lo stesso URL pubblico. Correggi la parte breve dell’URL in Sanity.');
-    }
+    assertUniqueSlugs(summaries, 'Gli articoli');
     return summaries;
   });
 
   const listEvents = cachePromise(async () => {
     const events = await client.fetch<unknown>(eventsQuery);
-    return (Array.isArray(events) ? events : []).filter(isSanityEvent).map(toEventSummary);
+    const summaries = (Array.isArray(events) ? events : []).filter(isSanityEvent).map(toEventSummary);
+    assertUniqueSlugs(summaries, 'Gli eventi');
+    return summaries;
   });
 
   const listPeople = cachePromise(async () => {

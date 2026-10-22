@@ -2,6 +2,7 @@ import { defineArrayMember, defineField, defineType } from 'sanity';
 import { ARTICLE_SLUG_MAX_LENGTH, articleSlugError } from '../../shared/articleSlug';
 import { MAX_GALLERY_IMAGES } from '../../shared/imageSize';
 import { validateEditorialImageSize } from './editorialImage';
+import { isArticleSlugUnique, validateUniqueSlug } from './slugValidation';
 import { galleryDescription, imageDescription } from './imageDescriptions';
 import { GalleryInput } from './GalleryInput';
 import { facebookPostField } from './facebookPostField';
@@ -22,8 +23,10 @@ export const article = defineType({
       title: 'Parte breve dell’URL',
       type: 'slug',
       description: 'Scrivi poche parole, per esempio “benedizione-nuova-sede”. La data di pubblicazione viene aggiunta automaticamente all’indirizzo del sito: non inserirla qui.',
-      options: { source: 'title', maxLength: ARTICLE_SLUG_MAX_LENGTH },
-      validation: (rule) => rule.required().custom((value) => articleSlugError(value?.current) ?? true),
+      options: { source: 'title', maxLength: ARTICLE_SLUG_MAX_LENGTH, isUnique: isArticleSlugUnique },
+      validation: (rule) => rule.required()
+        .custom((value) => articleSlugError(value?.current) ?? true)
+        .custom(validateUniqueSlug),
     }),
     defineField({ name: 'summary', title: 'Sommario', type: 'text', rows: 3 }),
     defineField({ name: 'body', title: 'Testo', type: 'richText' }),

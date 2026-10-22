@@ -1,6 +1,8 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
+import { CONTENT_SLUG_MAX_LENGTH, slugError } from '../../shared/slug';
 import { MAX_GALLERY_IMAGES } from '../../shared/imageSize';
 import { validateEditorialImageSize } from './editorialImage';
+import { validateUniqueSlug } from './slugValidation';
 import { galleryDescription, imageDescription } from './imageDescriptions';
 import { GalleryInput } from './GalleryInput';
 import { facebookPostField } from './facebookPostField';
@@ -20,8 +22,10 @@ export const event = defineType({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      options: { source: 'title', maxLength: 96 },
-      validation: (rule) => rule.required(),
+      options: { source: 'title', maxLength: CONTENT_SLUG_MAX_LENGTH },
+      validation: (rule) => rule.required()
+        .custom((value) => slugError(value?.current) ?? true)
+        .custom(validateUniqueSlug),
     }),
     defineField({ name: 'description', title: 'Descrizione', type: 'richText' }),
     facebookPostField,
