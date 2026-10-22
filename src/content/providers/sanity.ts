@@ -13,6 +13,18 @@ import {
 import { validIbanOrUndefined } from '../../../shared/iban';
 import { initiativeImageUrl } from './sanityImage';
 import {
+  articleByIdQuery,
+  articlesByInitiativeQuery,
+  articlesQuery,
+  associationQuery,
+  eventBySlugQuery,
+  eventsByInitiativeQuery,
+  eventsQuery,
+  initiativeBySlugQuery,
+  initiativesQuery,
+  peopleQuery,
+} from './sanityQueries';
+import {
   isSanityArticle,
   isSanityArticleDetail,
   isSanityAssociation,
@@ -43,172 +55,6 @@ interface SanityConfig {
   projectId: string;
   dataset: string;
 }
-
-const initiativeImageProjection = `"image": image {
-  "url": asset->url,
-  "width": asset->metadata.dimensions.width,
-  "height": asset->metadata.dimensions.height,
-  crop
-}`;
-
-// The stored Sanity type and reference field names stay "project"/"projects"
-// so existing documents, ranks, and relationships remain readable.
-const initiativesQuery = `*[
-  _type == "project" &&
-  active == true &&
-  defined(name) &&
-  defined(slug.current)
-] | order(defined(orderRank) desc, orderRank asc, order asc, name asc) {
-  _id,
-  name,
-  "slug": slug.current,
-  ${initiativeImageProjection}
-}`;
-
-const initiativeBySlugQuery = `*[
-  _type == "project" &&
-  active == true &&
-  defined(name) &&
-  slug.current == $slug
-][0] {
-  _id,
-  name,
-  "slug": slug.current,
-  description,
-  ${initiativeImageProjection}
-}`;
-
-const articlesByInitiativeQuery = `*[
-  _type == "article" &&
-  references($initiativeId) &&
-  defined(title) &&
-  defined(slug.current) &&
-  defined(publishedAt)
-] | order(publishedAt desc) {
-  _id, title, "slug": slug.current, summary, publishedAt,
-  "imageUrl": mainImage.asset->url
-}`;
-
-const eventsByInitiativeQuery = `*[
-  _type == "event" &&
-  references($initiativeId) &&
-  defined(title) &&
-  defined(slug.current) &&
-  defined(date) &&
-  defined(status)
-] | order(date desc) {
-  _id, title, "slug": slug.current, date, place, status,
-  "imageUrl": poster.asset->url
-}`;
-
-const articlesQuery = `*[
-  _type == "article" &&
-  defined(title) &&
-  defined(slug.current) &&
-  defined(publishedAt)
-] | order(publishedAt desc) {
-  _id,
-  title,
-  "slug": slug.current,
-  summary,
-  publishedAt,
-  "imageUrl": mainImage.asset->url
-}`;
-
-const articleByIdQuery = `*[
-  _type == "article" &&
-  defined(title) &&
-  defined(publishedAt) &&
-  _id == $id
-][0] {
-  _id,
-  title,
-  "slug": slug.current,
-  summary,
-  publishedAt,
-  "imageUrl": mainImage.asset->url,
-  body,
-  facebookPostUrl,
-  "galleryImageUrls": gallery[].asset->url,
-  "projects": projects[]-> {
-    _id, name, "slug": slug.current, active, ${initiativeImageProjection}
-  },
-  "event": event-> {
-    _id, title, "slug": slug.current, date, place, status,
-    "imageUrl": poster.asset->url
-  }
-}`;
-
-const eventsQuery = `*[
-  _type == "event" &&
-  defined(title) &&
-  defined(slug.current) &&
-  defined(date) &&
-  defined(status)
-] | order(date desc) {
-  _id,
-  title,
-  "slug": slug.current,
-  date,
-  place,
-  status,
-  "imageUrl": poster.asset->url
-}`;
-
-const eventBySlugQuery = `*[
-  _type == "event" &&
-  defined(title) &&
-  defined(date) &&
-  defined(status) &&
-  slug.current == $slug
-][0] {
-  _id, title, "slug": slug.current, date, place, status,
-  "imageUrl": poster.asset->url,
-  description,
-  facebookPostUrl,
-  "galleryImageUrls": gallery[].asset->url,
-  "projects": projects[]-> {
-    _id, name, "slug": slug.current, active, ${initiativeImageProjection}
-  }
-}`;
-
-const peopleQuery = `*[
-  _type == "person" &&
-  visible == true &&
-  defined(firstName) &&
-  defined(lastName) &&
-  defined(role)
-] | order(defined(orderRank) desc, orderRank asc, order asc, lastName asc, firstName asc) {
-  _id,
-  firstName,
-  lastName,
-  role,
-  "photoUrl": photo.asset->url
-}`;
-
-const associationQuery = `*[_type == "siteSettings" && defined(associationName)][0] {
-  associationName,
-  "logoUrl": logo.asset->url,
-  aboutText,
-  "aboutImageUrl": aboutImage.asset->url,
-  taxCode,
-  bankDetails { iban, accountHolder, bankName },
-  registryInfo,
-  copyright,
-  contacts {
-    email,
-    phone,
-    address,
-    postalCode,
-    city,
-    province
-  },
-  socialLinks[] { platform, url },
-  "statuteUrl": statute.asset->url,
-  "regulationUrl": regulation.asset->url,
-  "privacyPolicyUrl": privacyPolicy.asset->url,
-  "cookiePolicyUrl": cookiePolicy.asset->url
-}`;
 
 function renderRichText(blocks: unknown): string | undefined {
   const validBlocks = toPortableTextBlocks(blocks);
