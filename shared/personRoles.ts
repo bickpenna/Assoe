@@ -4,8 +4,8 @@ export const PERSON_ROLE_GROUPS = [
   { role: 'vicePresident', label: 'Vicepresidente', groupTitle: 'Vicepresidenza', board: true },
   { role: 'secretary', label: 'Segretario', groupTitle: 'Segreteria', board: true },
   { role: 'boardMember', label: 'Consigliere', groupTitle: 'Consiglio direttivo', board: true },
-  { role: 'volunteer', label: 'Volontario', groupTitle: 'Volontari', board: false },
   { role: 'civilServiceVolunteer', label: 'Volontario del servizio civile', groupTitle: 'Servizio civile', board: false },
+  { role: 'volunteer', label: 'Volontario', groupTitle: 'Volontari', board: false },
 ] as const;
 
 export type PersonRole = (typeof PERSON_ROLE_GROUPS)[number]['role'];

@@ -8,15 +8,18 @@ const person = (id, role) => ({ id, firstName: id, lastName: 'Test', role });
 test('raggruppa i ruoli nella gerarchia fissa mantenendo l’ordine dentro ogni ruolo', () => {
   const groups = groupPeopleByRole([
     person('volontario-2', 'volunteer'),
+    person('servizio-civile-2', 'civilServiceVolunteer'),
     person('consigliere-2', 'boardMember'),
     person('presidente', 'president'),
     person('volontario-1', 'volunteer'),
+    person('servizio-civile-1', 'civilServiceVolunteer'),
     person('consigliere-1', 'boardMember'),
   ]);
 
-  assert.deepEqual(groups.map(({ role }) => role), ['president', 'boardMember', 'volunteer']);
+  assert.deepEqual(groups.map(({ role }) => role), ['president', 'boardMember', 'civilServiceVolunteer', 'volunteer']);
   assert.deepEqual(groups[1].people.map(({ id }) => id), ['consigliere-2', 'consigliere-1']);
-  assert.deepEqual(groups[2].people.map(({ id }) => id), ['volontario-2', 'volontario-1']);
+  assert.deepEqual(groups[2].people.map(({ id }) => id), ['servizio-civile-2', 'servizio-civile-1']);
+  assert.deepEqual(groups[3].people.map(({ id }) => id), ['volontario-2', 'volontario-1']);
   assert.equal(personRoleLabel('civilServiceVolunteer'), 'Volontario del servizio civile');
   assert.equal(personRoleLabel('unknown'), 'unknown');
   assert.equal(new Set(PERSON_ROLE_GROUPS.map(({ role }) => role)).size, PERSON_ROLE_GROUPS.length);
