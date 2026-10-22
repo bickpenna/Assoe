@@ -3,7 +3,12 @@ import { toHTML } from '@portabletext/to-html';
 import { facebookPostUrlOrUndefined } from '../../utils/facebook';
 import { articlePublicSlug } from '../../utils/articleSlug';
 import { sanitizeRichTextHtml } from '../../utils/sanitizeHtml';
-import { httpsUrlOrUndefined } from '../../../shared/url';
+import {
+  emailAddressOrUndefined,
+  httpsUrlOrUndefined,
+  phoneNumberOrUndefined,
+  sanityAssetUrlOrUndefined,
+} from '../../../shared/url';
 import { validIbanOrUndefined } from '../../../shared/iban';
 import { initiativeImageUrl } from './sanityImage';
 import {
@@ -216,7 +221,7 @@ function toArticleSummary(article: SanityArticle): ArticleSummary {
     slug: articlePublicSlug(article.slug, article.publishedAt),
     summary: article.summary ?? undefined,
     publishedAt: article.publishedAt,
-    imageUrl: article.imageUrl ?? undefined,
+    imageUrl: sanityAssetUrlOrUndefined(article.imageUrl),
   };
 }
 
@@ -243,8 +248,15 @@ function toEventSummary(event: SanityEvent): EventSummary {
     date: event.date,
     place: event.place ?? undefined,
     status: event.status,
-    imageUrl: event.imageUrl ?? undefined,
+    imageUrl: sanityAssetUrlOrUndefined(event.imageUrl),
   };
+}
+
+function safeSanityAssetUrls(urls: Array<string | null> | null): string[] {
+  return (urls ?? []).flatMap((url) => {
+    const safeUrl = sanityAssetUrlOrUndefined(url);
+    return safeUrl ? [safeUrl] : [];
+  });
 }
 
 export function createSanityRepository({
@@ -286,7 +298,7 @@ export function createSanityRepository({
       firstName,
       lastName,
       role,
-      photoUrl: photoUrl ?? undefined,
+      photoUrl: sanityAssetUrlOrUndefined(photoUrl),
     }));
   });
 
@@ -300,9 +312,9 @@ export function createSanityRepository({
 
     return {
       name: info.associationName,
-      logoUrl: info.logoUrl ?? undefined,
+      logoUrl: sanityAssetUrlOrUndefined(info.logoUrl),
       aboutText: info.aboutText?.trim() || undefined,
-      aboutImageUrl: info.aboutImageUrl ?? undefined,
+      aboutImageUrl: sanityAssetUrlOrUndefined(info.aboutImageUrl),
       taxCode: info.taxCode ?? undefined,
       bankDetails: iban && accountHolder ? {
         iban,
@@ -312,8 +324,8 @@ export function createSanityRepository({
       registryInfo: info.registryInfo ?? undefined,
       copyright: info.copyright ?? undefined,
       contacts: {
-        email: info.contacts?.email ?? undefined,
-        phone: info.contacts?.phone ?? undefined,
+        email: emailAddressOrUndefined(info.contacts?.email),
+        phone: phoneNumberOrUndefined(info.contacts?.phone),
         address: info.contacts?.address ?? undefined,
         postalCode: info.contacts?.postalCode ?? undefined,
         city: info.contacts?.city ?? undefined,
@@ -325,10 +337,10 @@ export function createSanityRepository({
         return socialLink.platform && safeUrl ? [{ name: socialLink.platform, url: safeUrl }] : [];
       }),
       documents: {
-        statuteUrl: info.statuteUrl ?? undefined,
-        regulationUrl: info.regulationUrl ?? undefined,
-        privacyPolicyUrl: info.privacyPolicyUrl ?? undefined,
-        cookiePolicyUrl: info.cookiePolicyUrl ?? undefined,
+        statuteUrl: sanityAssetUrlOrUndefined(info.statuteUrl),
+        regulationUrl: sanityAssetUrlOrUndefined(info.regulationUrl),
+        privacyPolicyUrl: sanityAssetUrlOrUndefined(info.privacyPolicyUrl),
+        cookiePolicyUrl: sanityAssetUrlOrUndefined(info.cookiePolicyUrl),
       },
     };
   });
@@ -369,9 +381,7 @@ export function createSanityRepository({
         ...toArticleSummary(article),
         bodyHtml: renderRichText(article.body),
         discussionUrl: facebookPostUrlOrUndefined(article.facebookPostUrl),
-        galleryImageUrls: (article.galleryImageUrls ?? []).filter(
-          (url): url is string => typeof url === 'string',
-        ),
+        galleryImageUrls: safeSanityAssetUrls(article.galleryImageUrls),
         relatedInitiatives: toRelatedInitiatives(article.projects),
         relatedEvent: isSanityEvent(article.event)
           ? toEventSummary(article.event)
@@ -390,9 +400,7 @@ export function createSanityRepository({
         ...toEventSummary(event),
         descriptionHtml: renderRichText(event.description),
         discussionUrl: facebookPostUrlOrUndefined(event.facebookPostUrl),
-        galleryImageUrls: (event.galleryImageUrls ?? []).filter(
-          (url): url is string => typeof url === 'string',
-        ),
+        galleryImageUrls: safeSanityAssetUrls(event.galleryImageUrls),
         relatedInitiatives: toRelatedInitiatives(event.projects),
       };
     },

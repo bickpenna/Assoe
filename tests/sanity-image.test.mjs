@@ -14,6 +14,11 @@ test('mantiene l’immagine originale se non è ritagliata in Sanity', () => {
   assert.equal(initiativeImageUrl(null), undefined);
 });
 
+test('scarta URL immagine esterni al CDN Sanity', () => {
+  assert.equal(initiativeImageUrl({ ...image, url: 'https://example.com/photo.jpg' }), undefined);
+  assert.equal(initiativeImageUrl({ ...image, url: 'javascript:alert(1)' }), undefined);
+});
+
 test('rispetta il ritaglio scelto in Sanity', () => {
   const cropped = initiativeImageUrl({
     ...image,

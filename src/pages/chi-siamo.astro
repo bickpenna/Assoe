@@ -8,6 +8,7 @@ import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
 import { getBoardMembers } from '@/utils/people';
 import { toParagraphs } from '@/utils/paragraphs';
 import { sitePath } from '@/utils/sitePath';
+import { telephoneHrefOrUndefined } from '../../shared/url';
 
 const [association, people] = await Promise.all([
   contentRepository.getAssociationInfo(),
@@ -25,6 +26,7 @@ const documents = association ? [
 const contacts = association?.contacts;
 const hasAddress = Boolean(contacts?.address || contacts?.postalCode || contacts?.city || contacts?.province);
 const hasContactMethods = Boolean(contacts?.email || contacts?.phone || association?.socialLinks.length);
+const phoneHref = telephoneHrefOrUndefined(contacts?.phone);
 ---
 
 <BaseLayout title={`Chi siamo | ${SITE_NAME}`} association={association}>
@@ -70,7 +72,7 @@ const hasContactMethods = Boolean(contacts?.email || contacts?.phone || associat
             <h3>Restiamo in contatto</h3>
             <dl>
               {contacts?.email && <div><dt>Email</dt><dd><a href={`mailto:${contacts.email}`}>{contacts.email}</a></dd></div>}
-              {contacts?.phone && <div><dt>Telefono</dt><dd><a href={`tel:${contacts.phone.replace(/[^+\d]/g, '')}`}>{contacts.phone}</a></dd></div>}
+              {contacts?.phone && phoneHref && <div><dt>Telefono</dt><dd><a href={phoneHref}>{contacts.phone}</a></dd></div>}
               {association && association.socialLinks.length > 0 && (
                 <div>
                   <dt>Seguici</dt>

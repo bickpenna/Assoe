@@ -81,7 +81,7 @@ for (const filePath of pages) {
   if (html.includes(`href="${oldSupportHref}/"`) || html.includes(`href="${oldSupportHref}"`)) {
     throw new Error(`${relativePath}: link al vecchio percorso 5x1000.`);
   }
-  if (/href="(?:javascript:|data:)/i.test(html)) throw new Error(`${relativePath}: URL non sicuro.`);
+  if (/(?:href|src)="(?:javascript:|data:)/i.test(html)) throw new Error(`${relativePath}: URL non sicuro.`);
   if (/target="_blank"(?![^>]*rel="[^"]*(?:noopener|noreferrer))/i.test(html)) {
     throw new Error(`${relativePath}: link _blank senza protezione rel.`);
   }
