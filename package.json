@@ -10,7 +10,7 @@
     "check": "astro check",
     "check:build": "node scripts/check-static-output.mjs",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
-    "test:coverage": "node --experimental-strip-types --experimental-test-coverage --test-coverage-include='src/utils/*.ts' --test-coverage-include='shared/*.ts' --test-coverage-include='src/content/providers/sanityImage.ts' --test-coverage-include='src/content/providers/sanityValidation.ts' --test-coverage-lines=95 --test-coverage-branches=90 --test-coverage-functions=100 --test tests/*.test.mjs"
+    "test:coverage": "node --experimental-strip-types --experimental-test-coverage --test-coverage-include='src/utils/*.ts' --test-coverage-include='shared/*.ts' --test-coverage-include='src/content/providers/sanityImage.ts' --test-coverage-include='src/content/providers/sanityValidation.ts' --test-coverage-include='src/content/providers/sanityMappers.ts' --test-coverage-lines=95 --test-coverage-branches=90 --test-coverage-functions=100 --test tests/*.test.mjs"
   },
   "dependencies": {
     "@fontsource-variable/epilogue": "^5.3.0",
