@@ -1,45 +1,46 @@
 # Asso è… La Strada ci Insegna ODV
 
-Sito web dell'associazione, sviluppato con Astro e alimentato dai contenuti pubblicati su Sanity. Il sito è statico: Astro genera le pagine durante la build, mentre i volontari aggiornano testi, immagini e dati dell'associazione nello Studio Sanity.
+Sito web statico dell’associazione, sviluppato con [Astro](https://astro.build/) e alimentato dai contenuti pubblicati su [Sanity](https://www.sanity.io/).
 
-## Struttura del progetto
+Astro genera tutte le pagine durante la build. Sanity conserva e gestisce i contenuti; non viene interrogato dal browser del visitatore. Il sito pubblico mostra quindi solo i documenti pubblicati al momento dell’ultima build.
 
-| Percorso | Responsabilità |
-| --- | --- |
-| `src/pages/`, `src/components/`, `src/styles/` | Pagine, componenti e stile del sito Astro |
-| `src/content/types.ts` | Contratto dei contenuti, indipendente dal CMS |
-| `src/content/providers/` | Adattatore Sanity e trasformazione dei dati |
-| `studio/` | Studio Sanity e schemi dei contenuti, con dipendenze proprie |
-| `shared/` | Validazioni riutilizzate da sito e Studio |
-| `docs/class.puml` | Diagramma del modello dei contenuti |
+## Requisiti
 
-Le pagine usano il contratto in `src/content/types.ts`, non le strutture di Sanity. Per cambiare CMS occorre creare un nuovo adattatore e migrare i contenuti, ma non riscrivere le pagine.
+- Node.js 24
+- npm
+- accesso al progetto Sanity per lavorare sui contenuti o sullo Studio
 
-## Avvio locale
+Il progetto frontend e lo Studio Sanity hanno dipendenze e installazioni separate.
 
-Serve Node.js 24 e npm. Per il sito con i contenuti reali:
+## Avvio del sito in locale
+
+Dalla radice del repository:
 
 ```bash
+cp .env.example .env
 npm ci
 npm run dev
 ```
 
-Prima di avviare il server, se `.env` non esiste crearne uno a partire da `.env.example` e inserire il `PUBLIC_SANITY_PROJECT_ID` del progetto Sanity. `PUBLIC_SANITY_DATASET` vale `production` se non specificato. Se `.env` esiste già, mantenerlo: non occorre ricrearlo cambiando branch. Il file `.env` non va pubblicato nel repository.
+Nel file `.env` impostare almeno:
 
-### Lavorare senza modificare il sito online
-
-La branch `main` è la versione destinata a GitHub Pages. Per sviluppare e vedere le modifiche in locale:
-
-```bash
-git switch develop
-npm run dev
+```dotenv
+PUBLIC_SANITY_PROJECT_ID=...
+PUBLIC_SANITY_DATASET=production
 ```
 
-Aprire l'indirizzo mostrato da Astro nel terminale (di solito `http://localhost:4321/`). Il server locale usa i contenuti **reali e pubblicati** del dataset Sanity configurato nel proprio `.env`. Le modifiche al codice su `develop` non cambiano il sito online. I push su `develop` eseguono i controlli CI, ma il workflow Pages è limitato a `main`. Quando una modifica è pronta, aprire una pull request verso `main`, verificarla e unirla: il push su `main` pubblica automaticamente il nuovo codice.
+Il server locale usa i contenuti pubblicati del dataset configurato. Le modifiche al codice fatte su `develop` non modificano il sito online; le modifiche pubblicate in Sanity, invece, appartengono allo stesso dataset usato dalla build pubblica.
 
-Attenzione: `develop` e il sito online leggono lo **stesso dataset Sanity**. Pubblicare o modificare contenuti nello Studio può quindi aggiornare anche il sito online tramite il webhook di ricostruzione già configurato. La branch isola il codice, non i contenuti; per provare contenuti senza renderli pubblici servirebbe un dataset separato.
+Per verificare localmente il percorso usato da GitHub Pages:
 
-Lo Studio ha un'installazione separata:
+```bash
+SITE_URL=https://bickpenna.github.io SITE_BASE=/Assoe/ npm run build
+SITE_BASE=/Assoe/ npm run check:build
+```
+
+## Avvio dello Studio Sanity
+
+In un terminale separato:
 
 ```bash
 cd studio
@@ -48,45 +49,71 @@ npm ci
 npm run dev
 ```
 
-Impostare `SANITY_STUDIO_PROJECT_ID` e `SANITY_STUDIO_DATASET` in `studio/.env` con gli stessi valori del frontend. Lo Studio locale è indipendente dalla distribuzione dello Studio online: le modifiche agli schemi vanno distribuite anche lì.
+Configurare `studio/.env` con gli stessi valori del frontend:
 
-## Contenuti e pubblicazione
+```dotenv
+SANITY_STUDIO_PROJECT_ID=...
+SANITY_STUDIO_DATASET=production
+```
 
-Sanity gestisce **Informazioni associazione**, iniziative, articoli, eventi e persone. Struttura delle pagine, navigazione e grafica restano nel codice Astro.
+Lo Studio locale non aggiorna automaticamente lo Studio online. Dopo una modifica a schemi o interfaccia, eseguire un deploy esplicito:
 
-- **Informazioni associazione** è una scheda unica: contiene logo, racconto di Chi siamo, contatti, social, dati per 5×1000 e donazioni, oltre ai PDF disponibili. Verificare dati bancari e documenti prima di pubblicarli.
-- **Iniziative**: le prime quattro nell'ordine dello Studio compaiono in home. Per riordinarle si trascinano nella lista; per le iniziative già esistenti senza posizione, usare **Reset Order** una sola volta prima di iniziare a riordinare.
-- **Eventi**: in home compare solo un prossimo evento non annullato. L'archivio separa futuri e passati in ordine cronologico.
-- **Articoli ed eventi** possono rimandare a un post Facebook pubblico per la conversazione, senza incorporare Facebook nel sito.
-- **URL degli articoli**: nello Studio si inserisce solo la parte breve dell’indirizzo (per esempio `benedizione-nuova-sede`); il sito aggiunge automaticamente la data di pubblicazione e crea `/articoli/2026-10-22-benedizione-nuova-sede/`. Non scrivere la data nel campo slug. Questa regola vale anche per gli articoli già presenti; dopo la pubblicazione, cambiare data o parte breve modifica l’indirizzo pubblico.
-- **Persone**: i profili visibili sono raggruppati per ruolo nella pagina Associati; il direttivo compare anche in Chi siamo. Pubblicare foto di persone solo con il consenso necessario.
+```bash
+cd studio
+npx sanity login
+npm run deploy
+```
 
-Gli URL pubblici delle iniziative sono `/iniziative/` e `/iniziative/<slug>/`. Nel modello Sanity il tipo di documento è `initiative` e i riferimenti di articoli/eventi sono `initiatives`, coerenti con il linguaggio del sito.
+Lo Studio online è [assoe.sanity.studio](https://assoe.sanity.studio/). Il deploy aggiorna gli schemi e l’interfaccia, ma non converte, elimina o pubblica i documenti esistenti.
 
-Il sito pubblico usa solo contenuti pubblicati. Il webhook Sanity configurato nel progetto avvia una nuova build Pages su `main` dopo le modifiche ai contenuti. Il passaggio di un evento da futuro a passato, invece, non è di per sé una modifica nel CMS: per aggiornare le pagine a quella data serve una nuova build manuale o una pianificazione periodica.
+## Struttura del progetto
 
-## Palette e immagini
-
-I valori di riferimento sono i token in [`src/styles/global.css`](src/styles/global.css):
-
-| Uso | Colore |
+| Percorso | Responsabilità |
 | --- | --- |
-| Verde principale | `#156A28` |
-| Verde scuro (header e footer) | `#0C4D1D` |
-| Verde chiaro | `#D7EDDA` |
-| Giallo lime (5×1000 e richiami) | `#D7ED62` |
-| Sfondo | `#F4F9F3` |
-| Sfondo secondario | `#E9F3E9` |
-| Schede | `#FFFFFF` |
-| Testo | `#18231C` |
-| Testo secondario | `#4B5B50` |
-| Bordi | `#D6E4D7` |
+| `src/pages/` | Pagine e routing Astro |
+| `src/components/` | Componenti visuali riutilizzabili |
+| `src/styles/` | Stili globali e responsive |
+| `src/content/types.ts` | Modello dei contenuti usato dal frontend |
+| `src/content/providers/` | Client Sanity, query, validazione e mapping |
+| `studio/` | Studio Sanity e schemi dei documenti |
+| `shared/` | Validazioni condivise tra frontend e Studio |
+| `scripts/` | Controlli sull’output statico |
+| `docs/class.puml` | Diagramma del modello dei contenuti |
 
-Le immagini caricate su Sanity vengono elaborate da Astro durante la build in formati e dimensioni adatti al layout. Foto delle schede e ritratti possono essere ritagliati; logo, locandine e immagini di galleria mantengono le proporzioni. Se una foto di iniziativa ha bordi indesiderati, ritagliarla nello Studio prima di pubblicarla.
+Le pagine dipendono dal contratto applicativo in `src/content/types.ts`, non direttamente dalle strutture Sanity. L’adattamento del CMS resta concentrato nel provider.
 
-Per foto e locandine, preparare il file **prima** del caricamento: circa 2000 px sul lato lungo, JPG o WebP, massimo 5 MB. Lo Studio rimanda a [Squoosh](https://squoosh.app/), che elabora le immagini nel browser senza inviarle al suo server. Nelle gallerie di articoli ed eventi il pulsante **Seleziona più foto** permette di scegliere più JPG, PNG o WebP in un solo passaggio, fino a 6 foto in totale. Questo caricamento controlla numero e dimensione **prima** di inviare i file a Sanity; gli elementi vuoti (“Untitled”) già presenti contano nel limite e vanno eliminati dal menu dell’elemento. Gli altri campi immagine mantengono la validazione dopo l’upload: lo Studio impedisce di pubblicare un contenuto che usa un’immagine sopra 5 MB (logo escluso), ma il file già caricato occupa spazio su Sanity. La trasformazione di Astro riduce le immagini del sito generato, non gli originali conservati nel CMS.
+## Contenuti Sanity
 
-## Verifiche e distribuzione
+Il sito legge questi documenti:
+
+- **Informazioni associazione**: documento singleton con logo, descrizione, contatti, social, donazioni, 5×1000 e documenti.
+- **Iniziative**: documenti ordinabili; le prime quattro compaiono nella home.
+- **Articoli**: contenuti editoriali con data, immagini, galleria e collegamenti opzionali alle iniziative.
+- **Eventi**: eventi futuri e passati, con collegamenti opzionali alle iniziative.
+- **Persone**: profili mostrati nella pagina Associati e, quando previsto, in Chi siamo.
+
+Nel modello attuale il tipo tecnico delle iniziative è **`initiative`** e il campo di relazione negli articoli e negli eventi è **`initiatives`**. Il frontend non legge più documenti di tipo `project`: i vecchi documenti devono essere ricreati o migrati nel nuovo modello prima di poter comparire sul sito.
+
+Gli URL pubblici sono:
+
+- `/iniziative/`
+- `/iniziative/<slug>/`
+- `/articoli/`
+- `/articoli/<data>-<slug>/`
+- `/eventi/`
+- `/eventi/<slug>/`
+
+Per gli articoli, nello Studio si inserisce solo la parte breve dello slug, senza la data. La data viene aggiunta automaticamente dal sito. Cambiare data o slug dopo la pubblicazione cambia l’indirizzo pubblico.
+
+Il sito usa solo contenuti pubblicati. Una bozza Sanity non viene inclusa nella build.
+
+## Immagini e documenti
+
+Prima di caricare immagini diverse dal logo, preferire JPG o WebP, circa 2000 px sul lato lungo e massimo 5 MB. Le immagini vengono ottimizzate da Astro durante la build, ma gli originali restano archiviati su Sanity.
+
+Le immagini del logo sono soggette a una regola separata nello Studio. Prima di pubblicare documenti o dati bancari verificare sempre che siano corretti e destinati alla pubblicazione. Per le foto delle persone occorre avere il consenso necessario.
+
+## Controlli locali
 
 Dalla radice del repository:
 
@@ -98,29 +125,59 @@ npm run build
 npm run check:build
 ```
 
-`check:build` controlla i file statici prodotti dall'ultima build. `npm run build` genera il sito con i contenuti reali e richiede un progetto Sanity raggiungibile. Anche la CI usa Sanity per la build; per verificarla deve essere configurata la variabile GitHub `PUBLIC_SANITY_PROJECT_ID`. Per verificare la build dello Studio: `cd studio && npm run build`.
-
-Il workflow in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) esegue i controlli di sito e Studio anche su `develop`. [`.github/workflows/pages.yml`](.github/workflows/pages.yml) pubblica **il sito con i contenuti reali di Sanity** su GitHub Pages a ogni push su `main`. Si può anche avviare manualmente da **Actions → Publish Astro to GitHub Pages → Run workflow**, selezionando `main`, oppure tramite il webhook Sanity già configurato.
-
-L'indirizzo dell'anteprima pubblica è `https://bickpenna.github.io/Assoe/`. In **Settings → Pages**, la sorgente deve essere **GitHub Actions**. In **Settings → Secrets and variables → Actions → Variables** serve `PUBLIC_SANITY_PROJECT_ID`; `PUBLIC_SANITY_DATASET` è facoltativa e, se assente, vale `production`. Il Project ID non è una credenziale; non aggiungere token Sanity al sito statico. La build fallisce se manca il Project ID. L'anteprima pubblica aggiunge `noindex` ai motori di ricerca, ma **resta accessibile a chiunque abbia il link**.
-
-Il workflow imposta `SITE_URL` e `SITE_BASE` per il percorso `/Assoe/`. Per provare in locale esattamente quel percorso:
-
-```bash
-SITE_URL=https://bickpenna.github.io SITE_BASE=/Assoe/ npm run build
-SITE_BASE=/Assoe/ npm run check:build
-```
-
-Quando il repository passerà all'account dell'associazione, l'indirizzo GitHub Pages cambierà con il proprietario della repo; il workflow usa automaticamente il nuovo account. Per usare invece `volontariato.assoe.it` serviranno una configurazione DNS e un aggiornamento di `SITE_URL`/`SITE_BASE` nel workflow, senza cambiare i link nei componenti. **Non puntare il dominio prima di decidere quando sostituire il vecchio sito.**
-
-### Aggiornare lo Studio Sanity
-
-La build dello Studio nella CI verifica il codice, ma non aggiorna lo Studio ospitato da Sanity. Lo Studio esistente è su **https://assoe.sanity.studio/**; il suo `appId` è fissato in `studio/sanity.cli.ts`, così i prossimi deploy aggiornano proprio questa installazione. Sul proprio computer autenticarsi e distribuirlo:
+Per controllare anche lo Studio:
 
 ```bash
 cd studio
-npx sanity login
-npm run deploy
+npm run build
+npm run audit:high
 ```
 
-Se viene proposto un hostname nuovo inatteso, fermarsi: si rischia di creare un secondo Studio. Il deploy aggiorna interfaccia e schemi, non migra né cancella i documenti. La sessione di login è locale e non va copiata in GitHub. Il webhook per ricostruire Pages dopo le modifiche ai contenuti è gestito nelle impostazioni di Sanity, non in questo repository.
+`npm run build` richiede un `PUBLIC_SANITY_PROJECT_ID` valido e una rete disponibile per leggere Sanity. `npm run check:build` controlla l’output statico dell’ultima build, compresi i link con il prefisso GitHub Pages.
+
+## Branch e pubblicazione
+
+- `develop`: sviluppo e verifiche.
+- `main`: codice destinato alla pubblicazione.
+
+Il workflow [`ci.yml`](.github/workflows/ci.yml) esegue i controlli frontend e Studio sui push e sulle pull request. Il workflow [`pages.yml`](.github/workflows/pages.yml) pubblica su GitHub Pages dopo un push su `main` oppure quando viene avviato manualmente da **Actions → Publish Astro to GitHub Pages → Run workflow**.
+
+L’anteprima pubblica corrente è:
+
+<https://bickpenna.github.io/Assoe/>
+
+In **Settings → Pages** la sorgente deve essere **GitHub Actions**. In **Settings → Secrets and variables → Actions → Variables** deve essere presente:
+
+- `PUBLIC_SANITY_PROJECT_ID` — obbligatoria;
+- `PUBLIC_SANITY_DATASET` — facoltativa, con valore predefinito `production`.
+
+Il Project ID non è un segreto. Non inserire token Sanity nel frontend o nelle variabili usate per una build statica.
+
+## Aggiornamento dei contenuti e build
+
+Pubblicare un documento in Sanity e ricostruire il sito sono due operazioni distinte. Il sito si aggiorna solo dopo una nuova build Pages.
+
+Per verificare che un aggiornamento sia arrivato online:
+
+1. controllare che il documento sia **Published**, non solo Draft;
+2. verificare che il tipo sia quello previsto dal modello attuale;
+3. controllare in **GitHub → Actions** che `Publish Astro to GitHub Pages` sia partito e terminato con successo;
+4. se necessario, avviare manualmente il workflow su `main`;
+5. ricaricare la pagina senza cache dopo il deploy.
+
+Un webhook Sanity può avviare automaticamente la build, ma questa integrazione va verificata nelle impostazioni del progetto Sanity e nei log di GitHub Actions: il solo salvataggio o la pubblicazione in Sanity non garantisce una nuova build.
+
+Il passaggio automatico di un evento da futuro a passato non è una modifica in Sanity. Per rifletterlo sul sito serve una nuova build manuale o un’automazione periodica.
+
+## Routing e GitHub Pages
+
+Il sito usa il prefisso configurato da `SITE_BASE` quando viene pubblicato in una sottocartella. Le pagine inesistenti usano `src/pages/404.astro` per reindirizzare alla home, così il visitatore non resta su una pagina 404 dell’applicazione.
+
+Quando il repository passerà all’account dell’associazione, il workflow calcolerà automaticamente il nuovo proprietario GitHub. Per usare un dominio personalizzato serviranno invece configurazione DNS e aggiornamento di `SITE_URL` e `SITE_BASE` nel workflow.
+
+## Note operative
+
+- Non committare `.env`, token, sessioni Sanity o dati sensibili.
+- Non modificare o cancellare documenti Sanity per risolvere un problema di build senza prima verificare tipo, stato di pubblicazione e dataset.
+- Dopo modifiche agli schemi, distribuire lo Studio online prima di creare nuovi contenuti.
+- Prima di un refactor del modello dati, aggiornare insieme schema Sanity, query, mapper, validazioni e documentazione.
