@@ -29,7 +29,7 @@ if (association?.logoUrl) {
   try {
     favicon = await getImage({ src: association.logoUrl, width: 64, height: 64, fit: 'contain', format: 'png' });
   } catch {
-    // Il logo remoto non deve impedire il rendering della pagina o del favicon fallback.
+    // Il logo remoto non deve impedire il rendering della pagina.
   }
 }
 
@@ -52,7 +52,7 @@ const isCurrent = (href: string) => href === homePath ? currentPath === homePath
     <a class="skip-link" href="#contenuto">Vai al contenuto</a>
     <header class="site-header">
       <div class="container site-header__inner">
-        <SiteBrand logoUrl={association?.logoUrl} name={association?.name} placement="header" />
+        <SiteBrand logoUrl={association?.logoUrl} name={association?.name} />
         <nav class="desktop-nav" aria-label="Navigazione principale">
           {siteNavigation.map((item) => <a href={item.href} class:list={{ 'nav-cta': item.featured }} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
         </nav>
