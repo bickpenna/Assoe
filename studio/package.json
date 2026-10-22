@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "sanity dev",
     "build": "sanity build",
-    "deploy": "sanity deploy"
+    "deploy": "sanity deploy",
+    "audit:high": "node scripts/check-audit.mjs"
   },
   "dependencies": {
     "@sanity/orderable-document-list": "^2.0.28",
