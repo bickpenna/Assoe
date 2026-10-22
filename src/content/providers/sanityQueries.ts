@@ -1,4 +1,3 @@
-// Keep the stored Sanity type/reference names "project"/"projects" unchanged.
 const initiativeImageProjection = `"image": image {
   "url": asset->url,
   "width": asset->metadata.dimensions.width,
@@ -33,7 +32,7 @@ const eventFields = `_id,
   "imageUrl": poster.asset->url`;
 
 export const initiativesQuery = `*[
-  _type == "project" &&
+  _type == "initiative" &&
   active == true &&
   defined(name) &&
   defined(slug.current)
@@ -42,7 +41,7 @@ export const initiativesQuery = `*[
 }`;
 
 export const initiativeBySlugQuery = `*[
-  _type == "project" &&
+  _type == "initiative" &&
   active == true &&
   defined(name) &&
   slug.current == $slug
@@ -91,7 +90,7 @@ export const articleByIdQuery = `*[
   body,
   facebookPostUrl,
   "galleryImageUrls": gallery[].asset->url,
-  "projects": projects[]-> {
+  "initiatives": initiatives[]-> {
     ${relatedInitiativeFields}
   },
   "event": event-> {
@@ -120,7 +119,7 @@ export const eventBySlugQuery = `*[
   description,
   facebookPostUrl,
   "galleryImageUrls": gallery[].asset->url,
-  "projects": projects[]-> {
+  "initiatives": initiatives[]-> {
     ${relatedInitiativeFields}
   }
 }`;

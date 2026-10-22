@@ -5,9 +5,8 @@ import { validateEditorialImageSize } from './editorialImage';
 import { imageDescription } from './imageDescriptions';
 import { validateUniqueSlug } from './slugValidation';
 
-// Keep the stored type name: existing documents and references use "project".
-export const project = defineType({
-  name: 'project',
+export const initiative = defineType({
+  name: 'initiative',
   title: 'Iniziativa',
   type: 'document',
   fields: [
@@ -35,7 +34,7 @@ export const project = defineType({
       options: { hotspot: true },
       validation: (rule) => rule.custom(validateEditorialImageSize),
     }),
-    orderRankField({ type: 'project' }),
+    orderRankField({ type: 'initiative' }),
     defineField({ name: 'active', title: 'Attivo', type: 'boolean', initialValue: true }),
   ],
   preview: {

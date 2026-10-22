@@ -61,7 +61,7 @@ Sanity gestisce **Informazioni associazione**, iniziative, articoli, eventi e pe
 - **URL degli articoli**: nello Studio si inserisce solo la parte breve dell’indirizzo (per esempio `benedizione-nuova-sede`); il sito aggiunge automaticamente la data di pubblicazione e crea `/articoli/2026-10-22-benedizione-nuova-sede/`. Non scrivere la data nel campo slug. Questa regola vale anche per gli articoli già presenti; dopo la pubblicazione, cambiare data o parte breve modifica l’indirizzo pubblico.
 - **Persone**: i profili visibili sono raggruppati per ruolo nella pagina Associati; il direttivo compare anche in Chi siamo. Pubblicare foto di persone solo con il consenso necessario.
 
-Gli URL pubblici delle iniziative sono `/iniziative/` e `/iniziative/<slug>/`; i precedenti URL `/progetti/` rimandano alle nuove pagine, incluse quelle di dettaglio e le pagine dell’archivio. In Sanity il tipo di documento resta internamente `project` e i riferimenti di articoli/eventi restano `projects`: sono chiavi già salvate, mantenute per non perdere contenuti, ordinamento e collegamenti. Non rinominarle senza una migrazione dei dati.
+Gli URL pubblici delle iniziative sono `/iniziative/` e `/iniziative/<slug>/`. Nel modello Sanity il tipo di documento è `initiative` e i riferimenti di articoli/eventi sono `initiatives`, coerenti con il linguaggio del sito.
 
 Il sito pubblico usa solo contenuti pubblicati. Il webhook Sanity configurato nel progetto avvia una nuova build Pages su `main` dopo le modifiche ai contenuti. Il passaggio di un evento da futuro a passato, invece, non è di per sé una modifica nel CMS: per aggiornare le pagine a quella data serve una nuova build manuale o una pianificazione periodica.
 

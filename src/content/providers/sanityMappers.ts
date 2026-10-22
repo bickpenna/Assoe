@@ -10,13 +10,13 @@ import {
 import { validIbanOrUndefined } from '../../../shared/iban.ts';
 import { initiativeImageUrl } from './sanityImage.ts';
 import {
-  isSanityRelatedProject,
+  isSanityRelatedInitiative,
   toPortableTextBlocks,
   type SanityArticle,
   type SanityAssociation,
   type SanityEvent,
-  type SanityProject,
-  type SanityRelatedProject,
+  type SanityInitiative,
+  type SanityRelatedInitiative,
 } from './sanityValidation.ts';
 import type {
   ArticleSummary,
@@ -41,18 +41,18 @@ export function toArticleSummary(article: SanityArticle): ArticleSummary {
   };
 }
 
-export function toInitiativeSummary(project: SanityProject): InitiativeSummary {
+export function toInitiativeSummary(initiative: SanityInitiative): InitiativeSummary {
   return {
-    id: project._id,
-    name: project.name,
-    slug: project.slug,
-    imageUrl: initiativeImageUrl(project.image),
+    id: initiative._id,
+    name: initiative.name,
+    slug: initiative.slug,
+    imageUrl: initiativeImageUrl(initiative.image),
   };
 }
 
-export function toRelatedInitiatives(projects: Array<SanityRelatedProject | null> | null): InitiativeSummary[] {
-  return (projects ?? [])
-    .filter((project): project is SanityRelatedProject => Boolean(project?.active && isSanityRelatedProject(project)))
+export function toRelatedInitiatives(initiatives: Array<SanityRelatedInitiative | null> | null): InitiativeSummary[] {
+  return (initiatives ?? [])
+    .filter((initiative): initiative is SanityRelatedInitiative => Boolean(initiative?.active && isSanityRelatedInitiative(initiative)))
     .map(toInitiativeSummary);
 }
 

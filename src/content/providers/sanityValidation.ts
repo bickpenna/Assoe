@@ -5,18 +5,18 @@ import { isValidSanityDateTime } from '../../../shared/sanityDateTime.ts';
 import type { EventStatus } from '../types';
 import type { SanityImage } from './sanityImage';
 
-export interface SanityProject {
+export interface SanityInitiative {
   _id: string;
   name: string;
   slug: string;
   image: SanityImage | null;
 }
 
-export interface SanityProjectDetail extends SanityProject {
+export interface SanityInitiativeDetail extends SanityInitiative {
   description: Array<{ _type: string; _key?: string }> | null;
 }
 
-export interface SanityRelatedProject extends SanityProject {
+export interface SanityRelatedInitiative extends SanityInitiative {
   active: boolean | null;
 }
 
@@ -33,7 +33,7 @@ export interface SanityArticleDetail extends SanityArticle {
   body: Array<{ _type: string; _key?: string }> | null;
   galleryImageUrls: Array<string | null> | null;
   facebookPostUrl: string | null;
-  projects: Array<SanityRelatedProject | null> | null;
+  initiatives: Array<SanityRelatedInitiative | null> | null;
   event: SanityEvent | null;
 }
 
@@ -51,7 +51,7 @@ export interface SanityEventDetail extends SanityEvent {
   description: Array<{ _type: string; _key?: string }> | null;
   galleryImageUrls: Array<string | null> | null;
   facebookPostUrl: string | null;
-  projects: Array<SanityRelatedProject | null> | null;
+  initiatives: Array<SanityRelatedInitiative | null> | null;
 }
 
 export interface SanityPerson {
@@ -134,7 +134,7 @@ function isPortableTextBlocks(value: unknown): value is Array<{ _type: string; _
   );
 }
 
-export function isSanityProject(value: unknown): value is SanityProject {
+export function isSanityInitiative(value: unknown): value is SanityInitiative {
   return isRecord(value)
     && isNonEmptyString(value._id)
     && isNonEmptyString(value.name)
@@ -142,13 +142,13 @@ export function isSanityProject(value: unknown): value is SanityProject {
     && isSanityImage(value.image);
 }
 
-export function isSanityProjectDetail(value: unknown): value is SanityProjectDetail {
-  return isSanityProject(value) && isPortableTextBlocks(field(value, 'description'));
+export function isSanityInitiativeDetail(value: unknown): value is SanityInitiativeDetail {
+  return isSanityInitiative(value) && isPortableTextBlocks(field(value, 'description'));
 }
 
-export function isSanityRelatedProject(value: unknown): value is SanityRelatedProject {
+export function isSanityRelatedInitiative(value: unknown): value is SanityRelatedInitiative {
   const active = field(value, 'active');
-  return isSanityProject(value) && (active === null || typeof active === 'boolean');
+  return isSanityInitiative(value) && (active === null || typeof active === 'boolean');
 }
 
 export function isSanityArticle(value: unknown): value is SanityArticle {
@@ -165,12 +165,12 @@ export function isSanityArticleDetail(value: unknown): value is SanityArticleDet
   if (!isSanityArticle(value)) return false;
   const body = field(value, 'body');
   const galleryImageUrls = field(value, 'galleryImageUrls');
-  const projects = field(value, 'projects');
+  const initiatives = field(value, 'initiatives');
   const event = field(value, 'event');
   return isPortableTextBlocks(body)
     && (galleryImageUrls === null || (Array.isArray(galleryImageUrls) && galleryImageUrls.every(isNullableString)))
     && isNullableString(field(value, 'facebookPostUrl'))
-    && (projects === null || (Array.isArray(projects) && projects.every((project) => project === null || isSanityRelatedProject(project))))
+    && (initiatives === null || (Array.isArray(initiatives) && initiatives.every((initiative) => initiative === null || isSanityRelatedInitiative(initiative))))
     && (event === null || isSanityEvent(event));
 }
 
@@ -190,11 +190,11 @@ export function isSanityEventDetail(value: unknown): value is SanityEventDetail 
   if (!isSanityEvent(value)) return false;
   const description = field(value, 'description');
   const galleryImageUrls = field(value, 'galleryImageUrls');
-  const projects = field(value, 'projects');
+  const initiatives = field(value, 'initiatives');
   return isPortableTextBlocks(description)
     && (galleryImageUrls === null || (Array.isArray(galleryImageUrls) && galleryImageUrls.every(isNullableString)))
     && isNullableString(field(value, 'facebookPostUrl'))
-    && (projects === null || (Array.isArray(projects) && projects.every((project) => project === null || isSanityRelatedProject(project))));
+    && (initiatives === null || (Array.isArray(initiatives) && initiatives.every((initiative) => initiative === null || isSanityRelatedInitiative(initiative))));
 }
 
 export function isSanityPerson(value: unknown): value is SanityPerson {

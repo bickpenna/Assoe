@@ -7,14 +7,14 @@ import {
   isSanityEvent,
   isSanityEventDetail,
   isSanityPerson,
-  isSanityProject,
-  isSanityProjectDetail,
-  isSanityRelatedProject,
+  isSanityInitiative,
+  isSanityInitiativeDetail,
+  isSanityRelatedInitiative,
   toPortableTextBlocks,
 } from '../src/content/providers/sanityValidation.ts';
 
 const image = { url: 'https://cdn.sanity.io/image.jpg', width: 800, height: 600, crop: null };
-const project = { _id: 'project-1', name: 'Progetto', slug: 'progetto', image };
+const initiative = { _id: 'initiative-1', name: 'Iniziativa', slug: 'iniziativa', image };
 const article = {
   _id: 'article-1',
   title: 'Articolo',
@@ -34,15 +34,15 @@ const event = {
 };
 
 test('valida i record Sanity principali e rifiuta dati incompleti', () => {
-  assert.equal(isSanityProject(project), true);
-  assert.equal(isSanityProject({ ...project, image: { ...image, width: 0.5 } }), false);
-  assert.equal(isSanityProject({ ...project, slug: 'Progetto' }), false);
-  assert.equal(isSanityProject({ ...project, slug: 'progetto non valido' }), false);
-  assert.equal(isSanityProject({ ...project, slug: 'a'.repeat(97) }), false);
-  assert.equal(isSanityProjectDetail({ ...project, description: [{ _type: 'block' }] }), true);
-  assert.equal(isSanityProjectDetail({ ...project, description: [{ _type: '' }] }), false);
-  assert.equal(isSanityRelatedProject({ ...project, active: true }), true);
-  assert.equal(isSanityRelatedProject({ ...project, active: 'yes' }), false);
+  assert.equal(isSanityInitiative(initiative), true);
+  assert.equal(isSanityInitiative({ ...initiative, image: { ...image, width: 0.5 } }), false);
+  assert.equal(isSanityInitiative({ ...initiative, slug: 'Iniziativa' }), false);
+  assert.equal(isSanityInitiative({ ...initiative, slug: 'iniziativa non valida' }), false);
+  assert.equal(isSanityInitiative({ ...initiative, slug: 'a'.repeat(97) }), false);
+  assert.equal(isSanityInitiativeDetail({ ...initiative, description: [{ _type: 'block' }] }), true);
+  assert.equal(isSanityInitiativeDetail({ ...initiative, description: [{ _type: '' }] }), false);
+  assert.equal(isSanityRelatedInitiative({ ...initiative, active: true }), true);
+  assert.equal(isSanityRelatedInitiative({ ...initiative, active: 'yes' }), false);
 });
 
 test('valida articoli ed eventi con date e stati ammessi', () => {
@@ -64,7 +64,7 @@ test('valida articoli ed eventi con date e stati ammessi', () => {
     body: [{ _type: 'block' }],
     galleryImageUrls: [null, 'https://cdn.sanity.io/gallery.jpg'],
     facebookPostUrl: null,
-    projects: [{ ...project, active: true }],
+    initiatives: [{ ...initiative, active: true }],
     event,
   };
   assert.equal(isSanityArticleDetail(detail), true);
@@ -74,7 +74,7 @@ test('valida articoli ed eventi con date e stati ammessi', () => {
     description: null,
     galleryImageUrls: [],
     facebookPostUrl: null,
-    projects: [null, { ...project, active: true }],
+    initiatives: [null, { ...initiative, active: true }],
   }), true);
 });
 

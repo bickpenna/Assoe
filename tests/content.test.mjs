@@ -49,8 +49,8 @@ test('i link social accettano solo HTTPS assoluti', () => {
 
 test('gli asset Sanity accettano solo il CDN HTTPS previsto', () => {
   assert.equal(
-    sanityAssetUrlOrUndefined('https://cdn.sanity.io/files/project/production/document.pdf'),
-    'https://cdn.sanity.io/files/project/production/document.pdf',
+    sanityAssetUrlOrUndefined('https://cdn.sanity.io/files/assoe123/production/document.pdf'),
+    'https://cdn.sanity.io/files/assoe123/production/document.pdf',
   );
   assert.equal(sanityAssetUrlOrUndefined('https://example.org/document.pdf'), undefined);
   assert.equal(sanityAssetUrlOrUndefined('http://cdn.sanity.io/document.pdf'), undefined);

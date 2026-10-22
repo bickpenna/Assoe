@@ -9,10 +9,10 @@ import {
   toRelatedInitiatives,
 } from '../src/content/providers/sanityMappers.ts';
 
-const project = {
-  _id: 'project-1',
-  name: 'Progetto',
-  slug: 'progetto',
+const initiative = {
+  _id: 'initiative-1',
+  name: 'Iniziativa',
+  slug: 'iniziativa',
   image: { url: 'https://cdn.sanity.io/image.jpg', width: 800, height: 600, crop: null },
   active: true,
 };
@@ -53,16 +53,16 @@ test('mappa articoli ed eventi mantenendo solo URL immagine sicuri', () => {
   });
 });
 
-test('scarta progetti correlati inattivi, nulli o corrotti', () => {
+test('scarta iniziative correlate inattive, nulle o corrotte', () => {
   assert.deepEqual(toRelatedInitiatives([
-    project,
-    { ...project, _id: 'inactive', active: false },
-    { ...project, _id: 'invalid', active: true, slug: 'Slug non valido' },
+    initiative,
+    { ...initiative, _id: 'inactive', active: false },
+    { ...initiative, _id: 'invalid', active: true, slug: 'Slug non valido' },
     null,
   ]), [{
-    id: 'project-1',
-    name: 'Progetto',
-    slug: 'progetto',
+    id: 'initiative-1',
+    name: 'Iniziativa',
+    slug: 'iniziativa',
     imageUrl: 'https://cdn.sanity.io/image.jpg',
   }]);
   assert.deepEqual(toRelatedInitiatives(null), []);

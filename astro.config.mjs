@@ -9,7 +9,6 @@ export default defineConfig({
   redirects: {
     '/5x1000': `${redirectBase}/sostienici/`,
     '/contatti': `${redirectBase}/chi-siamo/#contatti`,
-    '/progetti': `${redirectBase}/iniziative/`,
   },
   image: {
     domains: ['cdn.sanity.io'],

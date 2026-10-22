@@ -6,26 +6,26 @@
 
 class InformazioniAssociazione <<singleton>> {
     -nomeAssociazione: String
-    -logo: Image
+    -logo: Image (opzionale)
     -testoChiSiamo: Text (opzionale)
     -fotoChiSiamo: Image (opzionale)
-    -codiceFiscale: String
+    -codiceFiscale: String (opzionale)
     -datiBancari: DatiBancari (opzionale)
-    -datiRegistro: String
-    -copyright: String
-    -statuto: File
-    -regolamento: File
-    -privacyPolicy: File
-    -cookiePolicy: File
+    -datiRegistro: String (opzionale)
+    -copyright: String (opzionale)
+    -statuto: File (opzionale)
+    -regolamento: File (opzionale)
+    -privacyPolicy: File (opzionale)
+    -cookiePolicy: File (opzionale)
 }
 
 class Contatti {
-    -email: Email
-    -telefono: String
-    -indirizzo: String
-    -cap: String
-    -citta: String
-    -provincia: String
+    -email: Email (opzionale)
+    -telefono: String (opzionale)
+    -indirizzo: String (opzionale)
+    -cap: String (opzionale)
+    -citta: String (opzionale)
+    -provincia: String (opzionale)
 }
 
 class ProfiloSocial {
@@ -46,43 +46,44 @@ class DatiBancari {
 class Iniziativa {
     -nome: String
     -slug: Slug
-    -descrizione: RichText
-    -immagine: Image
-    -orderRank: String
-    -ordine: Integer (legacy)
-    -attiva: Boolean
+    -descrizione: RichText (opzionale)
+    -immagine: Image (opzionale)
+    -orderRank: String (gestito da Studio, opzionale per dati legacy)
+    -ordine: Integer (legacy, opzionale)
+    -attiva: Boolean (default true)
 }
 
 class Articolo {
     -titolo: String
     -slug: Slug
-    -sommario: String
-    -testo: RichText
+    -sommario: String (opzionale)
+    -testo: RichText (opzionale)
     -postFacebook: URL (opzionale)
-    -immaginePrincipale: Image
-    -galleria: List<Image> ' massimo 6 '
+    -immaginePrincipale: Image (opzionale)
+    -galleria: List<Image> (opzionale, massimo 6)
     -dataPubblicazione: DateTime
 }
 
 class Evento {
     -titolo: String
     -slug: Slug
-    -descrizione: RichText
+    -descrizione: RichText (opzionale)
     -postFacebook: URL (opzionale)
     -data: DateTime
-    -luogo: String
-    -locandina: Image
-    -galleria: List<Image> ' massimo 6 '
+    -luogo: String (opzionale)
+    -locandina: Image (opzionale)
+    -galleria: List<Image> (opzionale, massimo 6)
     -stato: StatoEvento
 }
 
 class Persona {
     -nome: String
     -cognome: String
-    -foto: Image
+    -foto: Image (opzionale)
     -ruolo: RuoloPersona
-    -ordine: Integer
-    -visibile: Boolean
+    -orderRank: String (gestito da Studio)
+    -ordine: Integer (legacy, opzionale)
+    -visibile: Boolean (default true)
 }
 
 ' ==============================================================
@@ -137,9 +138,9 @@ end note
 note right of Iniziativa
     I volontari possono creare
     nuove iniziative dal CMS.
-    Il tipo salvato resta "project"
-    e i riferimenti restano "projects"
-    per conservare i dati esistenti.
+    Il tipo salvato è "initiative"
+    e i riferimenti sono "initiatives"
+    per mantenere coerenti modello e linguaggio del sito.
 end note
 
 note right of Articolo

@@ -18,8 +18,8 @@ export default defineConfig({
             S.listItem().singleton('siteSettings'),
             S.divider(),
             ...S.documentTypeListItems().map((item) =>
-              item.getId() === 'project'
-                ? orderableDocumentListDeskItem({ type: 'project', title: 'Iniziative', S, context })
+              item.getId() === 'initiative'
+                ? orderableDocumentListDeskItem({ type: 'initiative', title: 'Iniziative', S, context })
                 : item.getId() === 'person'
                   ? S.listItem()
                     .id('people')

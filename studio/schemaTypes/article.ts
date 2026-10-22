@@ -56,10 +56,10 @@ export const article = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'projects',
+      name: 'initiatives',
       title: 'Iniziative collegate',
       type: 'array',
-      of: [{ type: 'reference', to: [{ type: 'project' }] }],
+      of: [{ type: 'reference', to: [{ type: 'initiative' }] }],
     }),
     defineField({
       name: 'event',

@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { initiativeImageUrl } from '../src/content/providers/sanityImage.ts';
 
 const image = {
-  url: 'https://cdn.sanity.io/images/project/production/photo.jpg',
+  url: 'https://cdn.sanity.io/images/assoe123/production/photo.jpg',
   width: 1000,
   height: 800,
   crop: null,

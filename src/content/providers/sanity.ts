@@ -22,8 +22,8 @@ import {
   isSanityEvent,
   isSanityEventDetail,
   isSanityPerson,
-  isSanityProject,
-  isSanityProjectDetail,
+  isSanityInitiative,
+  isSanityInitiativeDetail,
 } from './sanityValidation';
 import {
   renderRichText,
@@ -60,8 +60,8 @@ export function createSanityRepository({
   });
 
   const listInitiatives = cachePromise(async () => {
-    const projects = await client.fetch<unknown>(initiativesQuery);
-    const summaries = (Array.isArray(projects) ? projects : []).filter(isSanityProject).map(toInitiativeSummary);
+    const initiatives = await client.fetch<unknown>(initiativesQuery);
+    const summaries = (Array.isArray(initiatives) ? initiatives : []).filter(isSanityInitiative).map(toInitiativeSummary);
     assertUniqueSlugs(summaries, 'Le iniziative');
     return summaries;
   });
@@ -103,18 +103,18 @@ export function createSanityRepository({
     listInitiatives,
 
     async getInitiativeBySlug(slug: string): Promise<InitiativeDetail | null> {
-      const project = await client.fetch<unknown>(initiativeBySlugQuery, { slug });
+      const initiative = await client.fetch<unknown>(initiativeBySlugQuery, { slug });
 
-      if (!isSanityProjectDetail(project)) return null;
+      if (!isSanityInitiativeDetail(initiative)) return null;
 
       const [articles, events] = await Promise.all([
-        client.fetch<unknown>(articlesByInitiativeQuery, { initiativeId: project._id }),
-        client.fetch<unknown>(eventsByInitiativeQuery, { initiativeId: project._id }),
+        client.fetch<unknown>(articlesByInitiativeQuery, { initiativeId: initiative._id }),
+        client.fetch<unknown>(eventsByInitiativeQuery, { initiativeId: initiative._id }),
       ]);
 
       return {
-        ...toInitiativeSummary(project),
-        descriptionHtml: renderRichText(project.description),
+        ...toInitiativeSummary(initiative),
+        descriptionHtml: renderRichText(initiative.description),
         relatedArticles: (Array.isArray(articles) ? articles : []).filter(isSanityArticle).map(toArticleSummary),
         relatedEvents: (Array.isArray(events) ? events : []).filter(isSanityEvent).map(toEventSummary),
       };
@@ -136,7 +136,7 @@ export function createSanityRepository({
         bodyHtml: renderRichText(article.body),
         discussionUrl: facebookPostUrlOrUndefined(article.facebookPostUrl),
         galleryImageUrls: safeSanityAssetUrls(article.galleryImageUrls),
-        relatedInitiatives: toRelatedInitiatives(article.projects),
+        relatedInitiatives: toRelatedInitiatives(article.initiatives),
         relatedEvent: isSanityEvent(article.event)
           ? toEventSummary(article.event)
           : undefined,
@@ -155,7 +155,7 @@ export function createSanityRepository({
         descriptionHtml: renderRichText(event.description),
         discussionUrl: facebookPostUrlOrUndefined(event.facebookPostUrl),
         galleryImageUrls: safeSanityAssetUrls(event.galleryImageUrls),
-        relatedInitiatives: toRelatedInitiatives(event.projects),
+        relatedInitiatives: toRelatedInitiatives(event.initiatives),
       };
     },
 
