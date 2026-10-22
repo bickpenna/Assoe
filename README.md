@@ -35,7 +35,7 @@ git switch develop
 npm run dev
 ```
 
-Aprire l'indirizzo mostrato da Astro nel terminale (di solito `http://localhost:4321/`). Il server locale usa i contenuti **reali e pubblicati** del dataset Sanity configurato nel proprio `.env`. Le modifiche al codice su `develop` non cambiano il sito online. I push su `develop` eseguono i controlli CI, ma il workflow Pages è limitato a `main`. Quando una modifica è pronta, aprire una pull request verso `main`, verificarla e unirla; poi avviare il workflow Pages su `main` per pubblicare il nuovo codice.
+Aprire l'indirizzo mostrato da Astro nel terminale (di solito `http://localhost:4321/`). Il server locale usa i contenuti **reali e pubblicati** del dataset Sanity configurato nel proprio `.env`. Le modifiche al codice su `develop` non cambiano il sito online. I push su `develop` eseguono i controlli CI, ma il workflow Pages è limitato a `main`. Quando una modifica è pronta, aprire una pull request verso `main`, verificarla e unirla: il push su `main` pubblica automaticamente il nuovo codice.
 
 Attenzione: `develop` e il sito online leggono lo **stesso dataset Sanity**. Pubblicare o modificare contenuti nello Studio può quindi aggiornare anche il sito online tramite il webhook di ricostruzione già configurato. La branch isola il codice, non i contenuti; per provare contenuti senza renderli pubblici servirebbe un dataset separato.
 
@@ -100,7 +100,7 @@ npm run check:build
 
 `check:build` controlla i file statici prodotti dall'ultima build. `npm run build` genera il sito con i contenuti reali e richiede un progetto Sanity raggiungibile. Anche la CI usa Sanity per la build; per verificarla deve essere configurata la variabile GitHub `PUBLIC_SANITY_PROJECT_ID`. Per verificare la build dello Studio: `cd studio && npm run build`.
 
-Il workflow in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) esegue i controlli di sito e Studio anche su `develop`. [`.github/workflows/pages.yml`](.github/workflows/pages.yml) pubblica **il sito con i contenuti reali di Sanity** su GitHub Pages solo quando è eseguito su `main`: si può avviare manualmente da **Actions → Publish Astro to GitHub Pages → Run workflow**, selezionando `main`, oppure tramite il webhook Sanity già configurato. Un push del solo codice su `main` non avvia automaticamente il deploy: dopo il merge va lanciato manualmente il workflow.
+Il workflow in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) esegue i controlli di sito e Studio anche su `develop`. [`.github/workflows/pages.yml`](.github/workflows/pages.yml) pubblica **il sito con i contenuti reali di Sanity** su GitHub Pages a ogni push su `main`. Si può anche avviare manualmente da **Actions → Publish Astro to GitHub Pages → Run workflow**, selezionando `main`, oppure tramite il webhook Sanity già configurato.
 
 L'indirizzo dell'anteprima pubblica è `https://bickpenna.github.io/Assoe/`. In **Settings → Pages**, la sorgente deve essere **GitHub Actions**. In **Settings → Secrets and variables → Actions → Variables** serve `PUBLIC_SANITY_PROJECT_ID`; `PUBLIC_SANITY_DATASET` è facoltativa e, se assente, vale `production`. Il Project ID non è una credenziale; non aggiungere token Sanity al sito statico. La build fallisce se manca il Project ID. L'anteprima pubblica aggiunge `noindex` ai motori di ricerca, ma **resta accessibile a chiunque abbia il link**.
 
