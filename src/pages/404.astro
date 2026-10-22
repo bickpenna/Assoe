@@ -1,16 +1,16 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
 import { sitePath } from '@/utils/sitePath';
 
 const homePath = sitePath('/');
 ---
 
-<BaseLayout title="Pagina non trovata | Asso è…" description="La pagina richiesta non esiste.">
-  <meta slot="head" http-equiv="refresh" content={`0;url=${homePath}`} />
-  <meta slot="head" name="robots" content="noindex" />
-  <main id="contenuto" class="section container">
-    <h1>Pagina non trovata</h1>
-    <p>Stai tornando alla homepage.</p>
-    <p><a class="text-link" href={homePath}>Vai alla homepage</a></p>
-  </main>
-</BaseLayout>
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content={`0;url=${homePath}`} />
+    <meta name="robots" content="noindex" />
+    <title>Reindirizzamento</title>
+  </head>
+  <body></body>
+</html>
