@@ -141,7 +141,7 @@ npm run audit:high
 - `develop`: sviluppo e verifiche.
 - `main`: codice destinato alla pubblicazione.
 
-Il workflow [`ci.yml`](.github/workflows/ci.yml) esegue i controlli frontend e Studio sui push e sulle pull request. Il workflow [`pages.yml`](.github/workflows/pages.yml) pubblica su GitHub Pages dopo un push su `main` oppure quando viene avviato manualmente da **Actions → Publish Astro to GitHub Pages → Run workflow**.
+Il workflow [`ci.yml`](.github/workflows/ci.yml) esegue i controlli frontend e Studio sui push e sulle pull request. Il workflow [`pages.yml`](.github/workflows/pages.yml) pubblica su GitHub Pages dopo un push su `main`, quando viene avviato manualmente da **Actions → Publish Astro to GitHub Pages → Run workflow**, oppure ogni giorno alle **00:17, ora italiana** (`Europe/Rome`, anche durante l’ora legale). La pianificazione funziona solo quando il workflow è presente sul branch predefinito (`main`); GitHub può ritardare o, in casi eccezionali, saltare un’esecuzione programmata. Nei repository pubblici GitHub disattiva i workflow programmati dopo 60 giorni senza attività nel repository: controllare periodicamente la cronologia in **Actions**.
 
 L’anteprima pubblica corrente è:
 
@@ -168,7 +168,7 @@ Per verificare che un aggiornamento sia arrivato online:
 
 Un webhook Sanity può avviare automaticamente la build, ma questa integrazione va verificata nelle impostazioni del progetto Sanity e nei log di GitHub Actions: il solo salvataggio o la pubblicazione in Sanity non garantisce una nuova build.
 
-Il passaggio automatico di un evento da futuro a passato non è una modifica in Sanity. Per rifletterlo sul sito serve una nuova build manuale o un’automazione periodica.
+Il passaggio automatico di un evento da futuro a passato non è una modifica in Sanity. La build quotidiana aggiorna questa distinzione e recepisce gli altri contenuti pubblicati dopo la build precedente. Un deploy non è però un backup dei dati Sanity: se la build fallisce, controllare il workflow e avviarlo nuovamente quando il problema è risolto.
 
 Gli avvisi della homepage fanno eccezione: quelli già scaduti sono esclusi durante la build, mentre un piccolo script locale nasconde quelli che scadono dopo l’ultima build, senza interrogare Sanity. Senza JavaScript, una pagina già generata conserva gli avvisi fino alla build successiva.
 

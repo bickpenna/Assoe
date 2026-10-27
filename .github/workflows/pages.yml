@@ -5,6 +5,9 @@ on:
     branches:
       - main
   workflow_dispatch:
+  schedule:
+    - cron: '17 0 * * *'
+      timezone: 'Europe/Rome'
 
 permissions:
   contents: read
