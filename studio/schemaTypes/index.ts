@@ -1,6 +1,7 @@
 import type { SchemaTypeDefinition } from 'sanity';
 import { article } from './article';
 import { event } from './event';
+import { homeSettings } from './homeSettings';
 import { person } from './person';
 import { initiative } from './initiative';
 import { richText, siteContacts, socialLink } from './objects';
@@ -11,6 +12,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   socialLink,
   siteContacts,
   siteSettings,
+  homeSettings,
   initiative,
   article,
   event,

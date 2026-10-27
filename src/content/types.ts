@@ -92,8 +92,19 @@ export interface AssociationInfo {
   };
 }
 
+export interface HomeNotice {
+  id: string;
+  title: string;
+  text: string;
+  documentUrl?: string;
+  linkUrl?: string;
+  linkLabel?: string;
+  expiresOn?: string;
+}
+
 /** Le pagine dipendono da questo contratto, non da un client CMS. */
 export interface ContentRepository {
+  listHomeNotices(): Promise<HomeNotice[]>;
   listInitiatives(): Promise<InitiativeSummary[]>;
   getInitiativeBySlug(slug: string): Promise<InitiativeDetail | null>;
   listArticles(): Promise<ArticleSummary[]>;

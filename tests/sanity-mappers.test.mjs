@@ -6,6 +6,7 @@ import {
   toArticleSummary,
   toAssociationInfo,
   toEventSummary,
+  toHomeNotices,
   toRelatedInitiatives,
 } from '../src/content/providers/sanityMappers.ts';
 
@@ -16,6 +17,68 @@ const initiative = {
   image: { url: 'https://cdn.sanity.io/image.jpg', width: 800, height: 600, crop: null },
   active: true,
 };
+
+test('gli avvisi mantengono l’ordine dello Studio e non superano tre elementi', () => {
+  const notices = [
+    { _key: 'second', title: ' Secondo ', text: ' Testo 2 ' },
+    { _key: 'invalid', title: '  ', text: 'Da ignorare' },
+    { _key: 'first', title: 'Primo', text: 'Testo 1' },
+    { _key: 'third', title: 'Terzo', text: 'Testo 3' },
+    { _key: 'fourth', title: 'Quarto', text: 'Testo 4' },
+  ];
+
+  assert.deepEqual(toHomeNotices(notices), [
+    { id: 'second', title: 'Secondo', text: 'Testo 2' },
+    { id: 'first', title: 'Primo', text: 'Testo 1' },
+    { id: 'third', title: 'Terzo', text: 'Testo 3' },
+  ]);
+  assert.deepEqual(toHomeNotices(null), []);
+  assert.deepEqual(toHomeNotices([]), []);
+});
+
+test('gli avvisi con scadenza restano visibili quel giorno e liberano posto il giorno dopo', () => {
+  const notices = [
+    { _key: 'expired', title: 'Scaduto', text: 'Passato', expiresOn: '2026-10-26' },
+    { _key: 'today', title: 'Oggi', text: 'Ancora visibile', expiresOn: '2026-10-27' },
+    { _key: 'invalid-date', title: 'Data errata', text: 'Scartato', expiresOn: '2026-02-30' },
+    { _key: 'future', title: 'Domani', text: 'Futuro', expiresOn: '2026-10-28' },
+    { _key: 'permanent', title: 'Senza scadenza', text: 'Sempre visibile', expiresOn: null },
+  ];
+
+  assert.deepEqual(toHomeNotices(notices, '2026-10-27'), [
+    { id: 'today', title: 'Oggi', text: 'Ancora visibile', expiresOn: '2026-10-27' },
+    { id: 'future', title: 'Domani', text: 'Futuro', expiresOn: '2026-10-28' },
+    { id: 'permanent', title: 'Senza scadenza', text: 'Sempre visibile' },
+  ]);
+  assert.deepEqual(toHomeNotices(notices, '2026-10-29'), [
+    { id: 'permanent', title: 'Senza scadenza', text: 'Sempre visibile' },
+  ]);
+});
+
+test('gli avvisi espongono solo documenti Sanity e link HTTPS validi', () => {
+  assert.deepEqual(toHomeNotices([
+    { _key: 'safe', title: 'Avviso', text: '**Importante**', documentUrl: 'https://cdn.sanity.io/files/project/production/notice.pdf', linkUrl: 'https://example.org/approfondimento', linkLabel: ' Leggi il bando ' },
+    { _key: 'unsafe', title: 'Avviso 2', text: 'Testo', documentUrl: 'https://evil.example/notice.pdf', linkUrl: 'javascript:alert(1)', linkLabel: 'Non mostrare' },
+    { _key: 'without-label', title: 'Avviso 3', text: 'Testo', linkUrl: 'https://example.org/dettagli', linkLabel: '   ' },
+  ], '2026-10-27'), [
+    { id: 'safe', title: 'Avviso', text: '**Importante**', documentUrl: 'https://cdn.sanity.io/files/project/production/notice.pdf', linkUrl: 'https://example.org/approfondimento', linkLabel: 'Leggi il bando' },
+    { id: 'unsafe', title: 'Avviso 2', text: 'Testo' },
+    { id: 'without-label', title: 'Avviso 3', text: 'Testo', linkUrl: 'https://example.org/dettagli' },
+  ]);
+});
+
+test('un’etichetta facoltativa non valida non nasconde l’avviso', () => {
+  const linkUrl = 'https://example.org/dettagli';
+  assert.deepEqual(toHomeNotices([
+    { _key: 'too-long', title: 'Lungo', text: 'Testo', linkUrl, linkLabel: 'a'.repeat(81) },
+    { _key: 'wrong-type', title: 'Tipo errato', text: 'Testo', linkUrl, linkLabel: 42 },
+    { _key: 'without-url', title: 'Senza link', text: 'Testo', linkLabel: 'Leggi' },
+  ], '2026-10-27'), [
+    { id: 'too-long', title: 'Lungo', text: 'Testo', linkUrl },
+    { id: 'wrong-type', title: 'Tipo errato', text: 'Testo', linkUrl },
+    { id: 'without-url', title: 'Senza link', text: 'Testo' },
+  ]);
+});
 
 test('mappa articoli ed eventi mantenendo solo URL immagine sicuri', () => {
   assert.deepEqual(toArticleSummary({

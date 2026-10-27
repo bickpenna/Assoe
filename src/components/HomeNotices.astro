@@ -1,0 +1,68 @@
+---
+import type { HomeNotice } from '@/content/types';
+import { renderNoticeMarkdown } from '@/utils/noticeMarkdown';
+import { noticeActionLabels } from '@/utils/noticeActions';
+
+interface Props {
+  notices: HomeNotice[];
+}
+
+const { notices } = Astro.props;
+---
+
+{notices.length > 0 && (
+  <section class="container home-notices" aria-labelledby="avvisi-home" data-home-notices>
+    <div class="home-notices__heading">
+      <h2 id="avvisi-home">Avvisi</h2>
+    </div>
+    <ul class="home-notices__list">
+      {notices.map((notice) => {
+        const labels = noticeActionLabels(notice);
+        return (
+          <li class="home-notices__item" data-expires-on={notice.expiresOn}>
+            <h3>{notice.title}</h3>
+            <div class="home-notices__body">
+              <div class="home-notices__text" set:html={renderNoticeMarkdown(notice.text)} />
+              {(notice.documentUrl || notice.linkUrl) && (
+                <div class="home-notices__actions">
+                  {notice.documentUrl && <a href={notice.documentUrl} aria-label={labels.documentAccessibleName}>{labels.documentText} <span aria-hidden="true">↗</span></a>}
+                  {notice.linkUrl && <a href={notice.linkUrl} aria-label={labels.linkAccessibleName}>{labels.linkText} <span aria-hidden="true">↗</span></a>}
+                </div>
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+)}
+
+<script>
+  import { isHomeNoticeExpired, todayInRome } from '../../shared/homeNotices';
+
+  const noticesSection = document.querySelector<HTMLElement>('[data-home-notices]');
+  if (noticesSection) {
+    const noticeItems = [...noticesSection.querySelectorAll<HTMLElement>('.home-notices__item')];
+
+    const refreshNotices = () => {
+      const today = todayInRome();
+      for (const item of noticeItems) {
+        item.hidden = isHomeNoticeExpired(item.dataset.expiresOn, today);
+      }
+      noticesSection.hidden = noticeItems.every((item) => item.hidden);
+    };
+
+    refreshNotices();
+    if (noticeItems.some((item) => item.dataset.expiresOn)) {
+      const intervalId = window.setInterval(() => {
+        refreshNotices();
+        if (noticeItems.every((item) => item.hidden || !item.dataset.expiresOn)) {
+          window.clearInterval(intervalId);
+        }
+      }, 60_000);
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) refreshNotices();
+      });
+    }
+  }
+</script>

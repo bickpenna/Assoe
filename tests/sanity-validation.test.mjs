@@ -6,6 +6,7 @@ import {
   isSanityAssociation,
   isSanityEvent,
   isSanityEventDetail,
+  isSanityHomeNotice,
   isSanityPerson,
   isSanityInitiative,
   isSanityInitiativeDetail,
@@ -94,4 +95,26 @@ test('valida persone, impostazioni associative e rich text', () => {
   assert.deepEqual(toPortableTextBlocks([{ _type: 'block' }]), [{ _type: 'block' }]);
   assert.equal(toPortableTextBlocks(null), null);
   assert.equal(toPortableTextBlocks([{ _type: '' }]), null);
+});
+
+test('accetta solo avvisi con chiave, titolo e testo non vuoti', () => {
+  const notice = { _key: 'notice-1', title: 'Orari aggiornati', text: 'La sede apre alle 15.' };
+  assert.equal(isSanityHomeNotice(notice), true);
+  assert.equal(isSanityHomeNotice({ ...notice, text: 'a'.repeat(500) }), true);
+  assert.equal(isSanityHomeNotice({ ...notice, text: 'a'.repeat(501) }), false);
+  assert.equal(isSanityHomeNotice({ ...notice, documentUrl: 42 }), false);
+  assert.equal(isSanityHomeNotice({ ...notice, linkUrl: 42 }), false);
+  assert.equal(isSanityHomeNotice({ ...notice, linkLabel: 'Bando completo' }), true);
+  assert.equal(isSanityHomeNotice({ ...notice, linkLabel: null }), true);
+  assert.equal(isSanityHomeNotice({ ...notice, linkLabel: 'a'.repeat(80) }), true);
+  assert.equal(isSanityHomeNotice({ ...notice, linkLabel: 'a'.repeat(81) }), true);
+  assert.equal(isSanityHomeNotice({ ...notice, linkLabel: 42 }), true);
+  assert.equal(isSanityHomeNotice({ ...notice, expiresOn: '2026-10-27' }), true);
+  assert.equal(isSanityHomeNotice({ ...notice, expiresOn: null }), true);
+  assert.equal(isSanityHomeNotice({ ...notice, expiresOn: '2026-02-30' }), false);
+  assert.equal(isSanityHomeNotice({ ...notice, expiresOn: 42 }), false);
+  assert.equal(isSanityHomeNotice({ ...notice, _key: '' }), false);
+  assert.equal(isSanityHomeNotice({ ...notice, title: '   ' }), false);
+  assert.equal(isSanityHomeNotice({ ...notice, text: null }), false);
+  assert.equal(isSanityHomeNotice(null), false);
 });

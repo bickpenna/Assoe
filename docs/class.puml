@@ -39,6 +39,19 @@ class DatiBancari {
     -banca: String (opzionale)
 }
 
+class Avvisi <<singleton>> {
+    -avvisi: List<Avviso> (massimo 3, ordinabile)
+}
+
+class Avviso {
+    -titolo: String
+    -testo: Markdown (massimo 500 caratteri)
+    -documento: File PDF (opzionale)
+    -link: URL HTTPS (opzionale)
+    -testoLink: String (opzionale)
+    -visibileFinoAl: Date (opzionale)
+}
+
 ' ============================================================
 ' Contenuti editoriali
 ' ============================================================
@@ -113,6 +126,7 @@ enum StatoEvento {
 InformazioniAssociazione "1" *-- "1" Contatti
 InformazioniAssociazione "1" *-- "0..*" ProfiloSocial
 InformazioniAssociazione "1" *-- "0..1" DatiBancari
+Avvisi "1" *-- "0..3" Avviso
 
 Articolo "0..*" --> "0..*" Iniziativa : riguarda
 Evento "0..*" --> "0..*" Iniziativa : riguarda
@@ -126,6 +140,14 @@ note right of InformazioniAssociazione
     nelle pagine Chi siamo e Sostienici.
     Le coordinate bancarie sono
     mostrate solo se complete.
+end note
+
+note right of Avvisi
+    Documento singleton "homeSettings" in Sanity.
+    Nello Studio appare come "Avvisi".
+    L'ordine della lista è quello mostrato
+    nella homepage; senza avvisi visibili la sezione non appare.
+    La data di scadenza è inclusa (fuso Europe/Rome).
 end note
 
 note right of ProfiloSocial

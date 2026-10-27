@@ -1,0 +1,82 @@
+import { defineArrayMember, defineField, defineType } from 'sanity';
+import { hasVisibleText, MAX_HOME_NOTICES, MAX_HOME_NOTICE_LINK_LABEL_LENGTH, MAX_HOME_NOTICE_TEXT_LENGTH } from '../../shared/homeNotices';
+import { NoticeMarkdownInput } from './NoticeMarkdownInput';
+
+export const homeSettings = defineType({
+  name: 'homeSettings',
+  title: 'Avvisi',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'notices',
+      title: 'Avvisi',
+      description: 'Massimo tre avvisi. Trascinali per cambiare l’ordine in cui compaiono nella homepage. Gli avvisi scaduti occupano comunque un posto: rimuovili quando non servono più.',
+      type: 'array',
+      of: [defineArrayMember({
+        name: 'homeNotice',
+        title: 'Avviso',
+        type: 'object',
+        fieldsets: [
+          { name: 'moreLink', title: 'Link di approfondimento' },
+        ],
+        fields: [
+          defineField({
+            name: 'title',
+            title: 'Titolo',
+            type: 'string',
+            validation: (rule) => rule.required().max(100)
+              .custom((value) => hasVisibleText(value) ? true : 'Il titolo non può contenere solo spazi.'),
+          }),
+          defineField({
+            name: 'text',
+            title: 'Testo',
+            description: `Scrivi un testo breve, fino a ${MAX_HOME_NOTICE_TEXT_LENGTH} caratteri. Puoi usare grassetto, corsivo ed elenchi con i pulsanti dell’editor. Anche i simboli di formattazione contano nel limite; non inserire immagini o codice HTML.`,
+            type: 'markdown',
+            components: { input: NoticeMarkdownInput },
+            validation: (rule) => rule.required().max(MAX_HOME_NOTICE_TEXT_LENGTH)
+              .custom((value) => hasVisibleText(value) ? true : 'Il testo non può contenere solo spazi.'),
+          }),
+          defineField({
+            name: 'document',
+            title: 'Documento PDF',
+            type: 'file',
+            description: 'Facoltativo. Carica un PDF da aprire dall’avviso.',
+            options: { accept: 'application/pdf' },
+          }),
+          defineField({
+            name: 'linkUrl',
+            title: 'Indirizzo del link (URL)',
+            type: 'url',
+            fieldset: 'moreLink',
+            description: 'Facoltativo. Incolla un indirizzo HTTPS, anche di una pagina del nostro sito.',
+            validation: (rule) => rule.uri({ scheme: ['https'] }),
+          }),
+          defineField({
+            name: 'linkLabel',
+            title: 'Testo del link',
+            type: 'string',
+            fieldset: 'moreLink',
+            description: 'Facoltativo. Se lasci vuoto questo campo, sul sito compare “Approfondisci”. Viene mostrato solo se hai inserito un link.',
+            validation: (rule) => rule.max(MAX_HOME_NOTICE_LINK_LABEL_LENGTH)
+              .custom((value) => value === undefined || value === null || value === '' || hasVisibleText(value)
+                ? true
+                : 'Il testo del link non può contenere solo spazi.'),
+          }),
+          defineField({
+            name: 'expiresOn',
+            title: 'Visibile fino al',
+            type: 'date',
+            description: 'Facoltativa. L’avviso resta visibile per tutta questa data (ora italiana) e scompare dal giorno successivo. Se la lasci vuota, rimane visibile finché non lo rimuovi.',
+          }),
+        ],
+        preview: {
+          select: { title: 'title', subtitle: 'text' },
+        },
+      })],
+      validation: (rule) => rule.max(MAX_HOME_NOTICES),
+    }),
+  ],
+  preview: {
+    prepare: () => ({ title: 'Avvisi' }),
+  },
+});

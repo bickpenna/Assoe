@@ -9,6 +9,10 @@ test('mantiene il contenuto formattato consentito', () => {
   );
 });
 
+test('la restrizione degli avvisi non cambia i titoli del rich text degli articoli', () => {
+  assert.equal(sanitizeRichTextHtml('<h2>Un titolo</h2>'), '<h2>Un titolo</h2>');
+});
+
 test('rimuove script, attributi e protocolli non sicuri', () => {
   const html = sanitizeRichTextHtml(
     '<p onclick="alert(1)">Test</p><script>alert(1)</script><a href="javascript:alert(1)">link</a>',

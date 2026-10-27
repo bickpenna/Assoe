@@ -86,6 +86,7 @@ Le pagine dipendono dal contratto applicativo in `src/content/types.ts`, non dir
 
 Il sito legge questi documenti:
 
+- **Avvisi**: documento dedicato agli avvisi della homepage, fino a tre e riordinabili trascinandoli nello Studio. Titolo e testo non possono essere vuoti o composti solo da spazi. Il testo usa Markdown (massimo 500 caratteri di sorgente); un PDF e un link HTTPS sono facoltativi. Il testo del link è personalizzabile (massimo 80 caratteri); se vuoto, compare «Approfondisci». Ogni avviso può avere una data «Visibile fino al»: resta visibile per tutta quella data nel fuso italiano e scompare dal giorno successivo. Gli avvisi scaduti occupano ancora un posto nell’elenco dello Studio; rimuoverli quando non servono più. La sezione non compare se non ci sono avvisi visibili.
 - **Informazioni associazione**: documento singleton con logo, descrizione, contatti, social, donazioni, 5×1000 e documenti.
 - **Iniziative**: documenti ordinabili; le prime quattro compaiono nella home.
 - **Articoli**: contenuti editoriali con data, immagini, galleria e collegamenti opzionali alle iniziative.
@@ -168,6 +169,8 @@ Per verificare che un aggiornamento sia arrivato online:
 Un webhook Sanity può avviare automaticamente la build, ma questa integrazione va verificata nelle impostazioni del progetto Sanity e nei log di GitHub Actions: il solo salvataggio o la pubblicazione in Sanity non garantisce una nuova build.
 
 Il passaggio automatico di un evento da futuro a passato non è una modifica in Sanity. Per rifletterlo sul sito serve una nuova build manuale o un’automazione periodica.
+
+Gli avvisi della homepage fanno eccezione: quelli già scaduti sono esclusi durante la build, mentre un piccolo script locale nasconde quelli che scadono dopo l’ultima build, senza interrogare Sanity. Senza JavaScript, una pagina già generata conserva gli avvisi fino alla build successiva.
 
 ## Routing e GitHub Pages
 

@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ArticleList from '@/components/ArticleList.astro';
 import ContentImage from '@/components/ContentImage.astro';
+import HomeNotices from '@/components/HomeNotices.astro';
 import InitiativeList from '@/components/InitiativeList.astro';
 import { contentRepository } from '@/content';
 import { formatDateTime } from '@/utils/date';
@@ -9,7 +10,8 @@ import { getNextEvent } from '@/utils/events';
 import { ARTICLES_TITLE, BRAND_WORDMARK, SITE_NAME } from '@/config/site';
 import { sitePath } from '@/utils/sitePath';
 
-const [initiatives, articles, events, association] = await Promise.all([
+const [notices, initiatives, articles, events, association] = await Promise.all([
+  contentRepository.listHomeNotices(),
   contentRepository.listInitiatives(),
   contentRepository.listArticles(),
   contentRepository.listEvents(),
@@ -38,6 +40,8 @@ const featuredEvent = getNextEvent(events);
         )}
       </div>
     </section>
+
+    <HomeNotices notices={notices} />
 
     {featuredEvent && (
       <section class="section container" aria-labelledby="eventi-home">

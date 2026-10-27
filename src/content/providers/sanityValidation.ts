@@ -2,6 +2,7 @@ import { PERSON_ROLE_GROUPS, type PersonRole } from '../../../shared/personRoles
 import { articleSlugError } from '../../../shared/articleSlug.ts';
 import { isValidSlug } from '../../../shared/slug.ts';
 import { isValidSanityDateTime } from '../../../shared/sanityDateTime.ts';
+import { isCalendarDate, MAX_HOME_NOTICE_TEXT_LENGTH } from '../../../shared/homeNotices.ts';
 import type { EventStatus } from '../types';
 import type { SanityImage } from './sanityImage';
 
@@ -60,6 +61,16 @@ export interface SanityPerson {
   lastName: string;
   role: PersonRole;
   photoUrl: string | null;
+}
+
+export interface SanityHomeNotice {
+  _key: string;
+  title: string;
+  text: string;
+  documentUrl?: string | null;
+  linkUrl?: string | null;
+  linkLabel?: unknown;
+  expiresOn?: string | null;
 }
 
 export interface SanityAssociation {
@@ -205,6 +216,17 @@ export function isSanityPerson(value: unknown): value is SanityPerson {
     && typeof value.role === 'string'
     && personRoles.has(value.role as PersonRole)
     && isNullableString(value.photoUrl);
+}
+
+export function isSanityHomeNotice(value: unknown): value is SanityHomeNotice {
+  return isRecord(value)
+    && isNonEmptyString(value._key)
+    && isNonEmptyString(value.title)
+    && isNonEmptyString(value.text)
+    && value.text.length <= MAX_HOME_NOTICE_TEXT_LENGTH
+    && (value.documentUrl === undefined || isNullableString(value.documentUrl))
+    && (value.linkUrl === undefined || isNullableString(value.linkUrl))
+    && (value.expiresOn === undefined || value.expiresOn === null || isCalendarDate(value.expiresOn));
 }
 
 export function isSanityAssociation(value: unknown): value is SanityAssociation {

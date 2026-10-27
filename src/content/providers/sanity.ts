@@ -11,6 +11,7 @@ import {
   eventBySlugQuery,
   eventsByInitiativeQuery,
   eventsQuery,
+  homeNoticesQuery,
   initiativeBySlugQuery,
   initiativesQuery,
   peopleQuery,
@@ -31,6 +32,7 @@ import {
   toArticleSummary,
   toAssociationInfo,
   toEventSummary,
+  toHomeNotices,
   toInitiativeSummary,
   toRelatedInitiatives,
 } from './sanityMappers';
@@ -91,6 +93,8 @@ export function createSanityRepository({
     }));
   });
 
+  const listHomeNotices = cachePromise(async () => toHomeNotices(await client.fetch<unknown>(homeNoticesQuery)));
+
   const getAssociationInfo = cachePromise(async (): Promise<AssociationInfo | null> => {
     const info = await client.fetch<unknown>(associationQuery);
 
@@ -100,6 +104,7 @@ export function createSanityRepository({
   });
 
   return {
+    listHomeNotices,
     listInitiatives,
 
     async getInitiativeBySlug(slug: string): Promise<InitiativeDetail | null> {

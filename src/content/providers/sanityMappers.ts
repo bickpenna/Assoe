@@ -9,7 +9,9 @@ import {
 } from '../../../shared/url.ts';
 import { validIbanOrUndefined } from '../../../shared/iban.ts';
 import { initiativeImageUrl } from './sanityImage.ts';
+import { isHomeNoticeExpired, MAX_HOME_NOTICES, MAX_HOME_NOTICE_LINK_LABEL_LENGTH, todayInRome } from '../../../shared/homeNotices.ts';
 import {
+  isSanityHomeNotice,
   isSanityRelatedInitiative,
   toPortableTextBlocks,
   type SanityArticle,
@@ -22,8 +24,35 @@ import type {
   ArticleSummary,
   AssociationInfo,
   EventSummary,
+  HomeNotice,
   InitiativeSummary,
 } from '../types.ts';
+
+export function toHomeNotices(value: unknown, today: string = todayInRome()): HomeNotice[] {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .filter(isSanityHomeNotice)
+    .filter(({ expiresOn }) => !isHomeNoticeExpired(expiresOn ?? undefined, today))
+    .slice(0, MAX_HOME_NOTICES)
+    .map(({ _key, title, text, documentUrl, linkUrl, linkLabel, expiresOn }) => {
+      const safeDocumentUrl = sanityAssetUrlOrUndefined(documentUrl);
+      const safeLinkUrl = httpsUrlOrUndefined(linkUrl);
+      const trimmedLinkLabel = typeof linkLabel === 'string' && linkLabel.length <= MAX_HOME_NOTICE_LINK_LABEL_LENGTH
+        ? linkLabel.trim()
+        : undefined;
+
+      return {
+        id: _key,
+        title: title.trim(),
+        text: text.trim(),
+        ...(safeDocumentUrl ? { documentUrl: safeDocumentUrl } : {}),
+        ...(safeLinkUrl ? { linkUrl: safeLinkUrl } : {}),
+        ...(safeLinkUrl && trimmedLinkLabel ? { linkLabel: trimmedLinkLabel } : {}),
+        ...(expiresOn ? { expiresOn } : {}),
+      };
+    });
+}
 
 export function renderRichText(blocks: unknown): string | undefined {
   const validBlocks = toPortableTextBlocks(blocks);

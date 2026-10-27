@@ -138,6 +138,16 @@ export const peopleQuery = `*[
   "photoUrl": photo.asset->url
 }`;
 
+export const homeNoticesQuery = `*[_type == "homeSettings"][0].notices[] {
+  _key,
+  title,
+  text,
+  "documentUrl": document.asset->url,
+  linkUrl,
+  linkLabel,
+  expiresOn
+}`;
+
 export const associationQuery = `*[_type == "siteSettings" && defined(associationName)][0] {
   associationName,
   "logoUrl": logo.asset->url,
