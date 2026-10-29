@@ -126,8 +126,6 @@ npm run build
 npm run check:build
 ```
 
-I test automatici coprono logica dei contenuti, provider Sanity, interazioni di avvisi e galleria in un DOM simulato e logica di upload dello Studio, senza accedere al CMS. Il controllo di copertura richiede almeno il 95% delle righe, il 90% dei rami e il 100% delle funzioni nei moduli verificati; fallisce anche se un modulo previsto non viene caricato dai test.
-
 Per controllare anche lo Studio:
 
 ```bash
@@ -137,6 +135,12 @@ npm run audit:high
 ```
 
 `npm run build` richiede un `PUBLIC_SANITY_PROJECT_ID` valido e una rete disponibile per leggere Sanity. `npm run check:build` controlla l’output statico dell’ultima build, compresi i link con il prefisso GitHub Pages.
+
+## Test e copertura
+
+Le suite in [`tests/`](tests/) usano `node:test`: verificano regole dei contenuti, provider Sanity, cache, upload dello Studio e script di avvisi e galleria in un DOM simulato. Combinano verifiche black box sui risultati e white box su chiamate, stato e percorsi del codice, senza accedere al CMS o a un browser reale.
+
+`npm run test:coverage` misura con V8 righe, rami e funzioni eseguiti, con soglie complessive del **95%**, **90%** e **100%**. Il [perimetro](scripts/coverage-scope.mjs) comprende utilità, script, provider, moduli condivisi e tre moduli di logica dello Studio; esclude componenti Astro, CSS e interfaccia React. Il [controllo](scripts/test-coverage.mjs) fallisce anche se un modulo previsto non compare nel report. Le percentuali descrivono l’esecuzione del codice incluso, non la copertura di tutti i requisiti.
 
 ## Branch e pubblicazione
 

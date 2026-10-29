@@ -6,6 +6,7 @@
 
 class InformazioniAssociazione <<singleton>> {
     -nomeAssociazione: String
+    -testoBreveHome: Text (opzionale, massimo 200 caratteri)
     -logo: Image (opzionale)
     -testoChiSiamo: Text (opzionale)
     -fotoChiSiamo: Image (opzionale)
@@ -48,7 +49,7 @@ class Avviso {
     -testo: Markdown (massimo 500 caratteri)
     -documento: File PDF (opzionale)
     -link: URL HTTPS (opzionale)
-    -testoLink: String (opzionale)
+    -testoLink: String (opzionale, massimo 80 caratteri)
     -visibileFinoAl: Date (opzionale)
 }
 
@@ -137,7 +138,7 @@ note right of InformazioniAssociazione
     tipo e ID "siteSettings".
     Contiene i dati usati
     nell'header, nel footer e
-    nelle pagine Chi siamo e Sostienici.
+    nelle pagine Home, Chi siamo e Sostienici.
     Le coordinate bancarie sono
     mostrate solo se complete.
 end note
@@ -169,6 +170,9 @@ note right of Articolo
     Il layout è deciso da Astro.
     I volontari compilano solo
     contenuti e metadati.
+    Lo slug pubblico include la data
+    di pubblicazione nel fuso Europe/Rome
+    e la parte breve inserita nello Studio.
 end note
 
 @enduml
