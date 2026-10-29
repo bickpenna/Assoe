@@ -1,0 +1,22 @@
+---
+interface Props {
+  name: string;
+  shortDescription?: string;
+}
+
+const { name, shortDescription } = Astro.props;
+// Keep Italian articles with the following word when the title wraps.
+const displayName = name.replace(/\b(il|lo|la|i|gli|le|un|uno|una)[ \t]+(?=\S)/giu, '$1\u00a0');
+---
+
+<h1>{displayName}</h1>
+{shortDescription && <p class="hero__description">{shortDescription}</p>}
+
+<style>
+  .hero__description {
+    max-width: 42ch;
+    margin: 1.25rem 0 0;
+    color: var(--muted);
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+  }
+</style>

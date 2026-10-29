@@ -3,6 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import BrandEyebrow from '@/components/BrandEyebrow.astro';
 import ArticleList from '@/components/ArticleList.astro';
 import ContentImage from '@/components/ContentImage.astro';
+import HomeHeroIntro from '@/components/HomeHeroIntro.astro';
 import HomeNotices from '@/components/HomeNotices.astro';
 import InitiativeList from '@/components/InitiativeList.astro';
 import { contentRepository } from '@/content';
@@ -27,8 +28,7 @@ const featuredEvent = getNextEvent(events);
     <section class="hero">
       <div class="container hero__panel">
         <div class="hero__text">
-          <p class="eyebrow">La Strada ci Insegna · ODV</p>
-          <h1>{BRAND_WORDMARK}<br />La Strada ci Insegna.</h1>
+          <HomeHeroIntro name={association?.name ?? SITE_NAME} shortDescription={association?.shortDescription} />
           <div class="hero__actions">
             <a class="button" href={sitePath('/iniziative/')}>Scopri le iniziative</a>
             <a class="button button--light" href={sitePath('/chi-siamo/')}>Chi siamo</a>

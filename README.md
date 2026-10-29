@@ -82,22 +82,18 @@ Lo Studio online è [assoe.sanity.studio](https://assoe.sanity.studio/). Il depl
 
 Le pagine dipendono dal contratto applicativo in `src/content/types.ts`, non direttamente dalle strutture Sanity. L’adattamento del CMS resta concentrato nel provider.
 
-La scritta breve dell’associazione è definita da `BRAND_WORDMARK` in `src/config/site.ts`.
-Le etichette “Asso è…” sopra i titoli e nelle schede usano `src/components/BrandEyebrow.astro`:
-per cambiarne la presentazione, modificare lo stile in quel componente, senza intervenire sulle singole pagine.
-
 ## Contenuti Sanity
 
 Il sito legge questi documenti:
 
 - **Avvisi**: documento dedicato agli avvisi della homepage, fino a tre e riordinabili trascinandoli nello Studio. Titolo e testo non possono essere vuoti o composti solo da spazi. Il testo usa Markdown (massimo 500 caratteri di sorgente); un PDF e un link HTTPS sono facoltativi. Il testo del link è personalizzabile (massimo 80 caratteri); se vuoto, compare «Approfondisci». Ogni avviso può avere una data «Visibile fino al»: resta visibile per tutta quella data nel fuso italiano e scompare dal giorno successivo. Gli avvisi scaduti occupano ancora un posto nell’elenco dello Studio; rimuoverli quando non servono più. La sezione non compare se non ci sono avvisi visibili.
-- **Informazioni associazione**: documento singleton con logo, descrizione, contatti, social, donazioni, 5×1000 e documenti.
+- **Informazioni associazione**: documento singleton con nome, testo breve della homepage (facoltativo, massimo 200 caratteri), logo, descrizione, contatti, social, donazioni, 5×1000 e documenti. Il nome e il testo breve alimentano la sezione iniziale della home.
 - **Iniziative**: documenti ordinabili; le prime quattro compaiono nella home.
 - **Articoli**: contenuti editoriali con data, immagini, galleria e collegamenti opzionali alle iniziative.
 - **Eventi**: eventi futuri e passati, con collegamenti opzionali alle iniziative.
 - **Persone**: profili mostrati nella pagina Associati e, quando previsto, in Chi siamo.
 
-Nel modello attuale il tipo tecnico delle iniziative è **`initiative`** e il campo di relazione negli articoli e negli eventi è **`initiatives`**. Il frontend non legge più documenti di tipo `project`: i vecchi documenti devono essere ricreati o migrati nel nuovo modello prima di poter comparire sul sito.
+Le iniziative usano il tipo **`initiative`**; articoli ed eventi le collegano tramite il campo **`initiatives`**.
 
 Gli URL pubblici sono:
 
@@ -165,7 +161,7 @@ Pubblicare un documento in Sanity e ricostruire il sito sono due operazioni dist
 Per verificare che un aggiornamento sia arrivato online:
 
 1. controllare che il documento sia **Published**, non solo Draft;
-2. verificare che il tipo sia quello previsto dal modello attuale;
+2. verificare che il tipo sia quello previsto dallo schema;
 3. controllare in **GitHub → Actions** che `Publish Astro to GitHub Pages` sia partito e terminato con successo;
 4. se necessario, avviare manualmente il workflow su `main`;
 5. ricaricare la pagina senza cache dopo il deploy.
@@ -180,7 +176,7 @@ Gli avvisi della homepage fanno eccezione: quelli già scaduti sono esclusi dura
 
 Il sito usa il prefisso configurato da `SITE_BASE` quando viene pubblicato in una sottocartella. Le pagine inesistenti usano `src/pages/404.astro` per reindirizzare alla home, così il visitatore non resta su una pagina 404 dell’applicazione.
 
-Quando il repository passerà all’account dell’associazione, il workflow calcolerà automaticamente il nuovo proprietario GitHub. Per usare un dominio personalizzato serviranno invece configurazione DNS e aggiornamento di `SITE_URL` e `SITE_BASE` nel workflow.
+Il workflow ricava il proprietario e il nome del repository da GitHub per configurare l’indirizzo Pages. Un dominio personalizzato richiede la configurazione DNS e l’aggiornamento di `SITE_URL` e `SITE_BASE` nel workflow.
 
 ## Note operative
 

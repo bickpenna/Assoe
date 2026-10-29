@@ -97,6 +97,17 @@ test('valida persone, impostazioni associative e rich text', () => {
   assert.equal(toPortableTextBlocks([{ _type: '' }]), null);
 });
 
+test('il testo breve dell’associazione è facoltativo e accetta solo testo', () => {
+  const association = { associationName: 'Nome da Sanity ODV' };
+  assert.equal(isSanityAssociation(association), true);
+  for (const shortDescription of [null, '', '   ', 'Volontariato nella comunità', 'a'.repeat(200)]) {
+    assert.equal(isSanityAssociation({ ...association, shortDescription }), true);
+  }
+  for (const shortDescription of [42, {}, []]) {
+    assert.equal(isSanityAssociation({ ...association, shortDescription }), false);
+  }
+});
+
 test('accetta solo avvisi con chiave, titolo e testo non vuoti', () => {
   const notice = { _key: 'notice-1', title: 'Orari aggiornati', text: 'La sede apre alle 15.' };
   assert.equal(isSanityHomeNotice(notice), true);

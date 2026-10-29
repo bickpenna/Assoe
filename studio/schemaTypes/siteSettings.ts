@@ -14,6 +14,14 @@ export const siteSettings = defineType({
       type: 'string',
       validation: (rule) => rule.required(),
     }),
+    defineField({
+      name: 'shortDescription',
+      title: 'Home · testo breve',
+      description: 'Frase sotto il nome dell’associazione nella sezione iniziale della homepage. Puoi spiegare in breve il vostro impegno nel volontariato. Se vuota, non viene mostrata.',
+      type: 'text',
+      rows: 3,
+      validation: (rule) => rule.max(200),
+    }),
     defineField({ name: 'logo', title: 'Logo', type: 'image', description: 'Il logo non ha il limite di 5 MB previsto per le altre immagini.' }),
     defineField({
       name: 'aboutText',

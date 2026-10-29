@@ -71,6 +71,7 @@ export interface ContactInfo {
 
 export interface AssociationInfo {
   name: string;
+  shortDescription?: string;
   logoUrl?: string;
   aboutText?: string;
   aboutImageUrl?: string;

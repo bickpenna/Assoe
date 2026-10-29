@@ -131,6 +131,20 @@ test('scarta iniziative correlate inattive, nulle o corrotte', () => {
   assert.deepEqual(toRelatedInitiatives(null), []);
 });
 
+test('il titolo e il testo breve della home mantengono i contenuti Sanity senza testi sostitutivi', () => {
+  const association = toAssociationInfo({
+    associationName: '  Nome da Sanity ODV  ',
+    shortDescription: '  Volontariato nella comunità.  ',
+  });
+  assert.equal(association.name, 'Nome da Sanity ODV');
+  assert.equal(association.shortDescription, 'Volontariato nella comunità.');
+
+  assert.equal(toAssociationInfo({ associationName: 'Nome da Sanity ODV' }).shortDescription, undefined);
+  for (const shortDescription of [null, '', '   ']) {
+    assert.equal(toAssociationInfo({ associationName: 'Nome da Sanity ODV', shortDescription }).shortDescription, undefined);
+  }
+});
+
 test('normalizza galleria, rich text e impostazioni associative incomplete', () => {
   assert.deepEqual(safeSanityAssetUrls([
     'https://cdn.sanity.io/one.jpg',
@@ -150,6 +164,7 @@ test('normalizza galleria, rich text e impostazioni associative incomplete', () 
     socialLinks: [{ platform: 'Facebook', url: 'javascript:alert(1)' }, null],
   }), {
     name: 'Asso è…',
+    shortDescription: undefined,
     logoUrl: undefined,
     aboutText: undefined,
     aboutImageUrl: undefined,
@@ -195,6 +210,7 @@ test('normalizza galleria, rich text e impostazioni associative incomplete', () 
     cookiePolicyUrl: 'https://cdn.sanity.io/cookie.pdf',
   }), {
     name: 'Asso è…',
+    shortDescription: undefined,
     logoUrl: 'https://cdn.sanity.io/logo.png',
     aboutText: 'Descrizione',
     aboutImageUrl: 'https://cdn.sanity.io/about.png',

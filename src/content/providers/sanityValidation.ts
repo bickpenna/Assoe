@@ -75,6 +75,7 @@ export interface SanityHomeNotice {
 
 export interface SanityAssociation {
   associationName: string;
+  shortDescription?: string | null;
   logoUrl?: string | null;
   aboutText?: string | null;
   aboutImageUrl?: string | null;
@@ -233,6 +234,7 @@ export function isSanityAssociation(value: unknown): value is SanityAssociation 
   if (!isRecord(value) || !isNonEmptyString(value.associationName)) return false;
 
   const stringFields = [
+    'shortDescription',
     'logoUrl',
     'aboutText',
     'aboutImageUrl',

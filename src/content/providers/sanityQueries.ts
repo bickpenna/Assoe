@@ -150,6 +150,7 @@ export const homeNoticesQuery = `*[_type == "homeSettings"][0].notices[] {
 
 export const associationQuery = `*[_type == "siteSettings" && defined(associationName)][0] {
   associationName,
+  shortDescription,
   "logoUrl": logo.asset->url,
   aboutText,
   "aboutImageUrl": aboutImage.asset->url,

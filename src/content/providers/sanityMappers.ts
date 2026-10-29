@@ -109,7 +109,8 @@ export function toAssociationInfo(info: SanityAssociation): AssociationInfo {
   const accountHolder = info.bankDetails?.accountHolder?.trim();
 
   return {
-    name: info.associationName,
+    name: info.associationName.trim(),
+    shortDescription: info.shortDescription?.trim() || undefined,
     logoUrl: sanityAssetUrlOrUndefined(info.logoUrl),
     aboutText: info.aboutText?.trim() || undefined,
     aboutImageUrl: sanityAssetUrlOrUndefined(info.aboutImageUrl),
