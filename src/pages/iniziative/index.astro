@@ -3,11 +3,10 @@ import ArchiveLayout from '@/layouts/ArchiveLayout.astro';
 import InitiativeList from '@/components/InitiativeList.astro';
 import { contentRepository } from '@/content';
 import { ARCHIVE_PAGE_SIZE } from '@/config/pagination';
-import { BRAND_WORDMARK } from '@/config/site';
 
 const initiatives = await contentRepository.listInitiatives();
 ---
 
-<ArchiveLayout title="Le nostre iniziative" eyebrow={BRAND_WORDMARK} emptyMessage="Non ci sono ancora iniziative pubblicate." basePath="/iniziative/" currentPage={1} totalItems={initiatives.length}>
+<ArchiveLayout title="Le nostre iniziative" emptyMessage="Non ci sono ancora iniziative pubblicate." basePath="/iniziative/" currentPage={1} totalItems={initiatives.length}>
   <InitiativeList initiatives={initiatives.slice(0, ARCHIVE_PAGE_SIZE)} headingLevel={2} />
 </ArchiveLayout>

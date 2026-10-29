@@ -82,6 +82,10 @@ Lo Studio online è [assoe.sanity.studio](https://assoe.sanity.studio/). Il depl
 
 Le pagine dipendono dal contratto applicativo in `src/content/types.ts`, non direttamente dalle strutture Sanity. L’adattamento del CMS resta concentrato nel provider.
 
+La scritta breve dell’associazione è definita da `BRAND_WORDMARK` in `src/config/site.ts`.
+Le etichette “Asso è…” sopra i titoli e nelle schede usano `src/components/BrandEyebrow.astro`:
+per cambiarne la presentazione, modificare lo stile in quel componente, senza intervenire sulle singole pagine.
+
 ## Contenuti Sanity
 
 Il sito legge questi documenti:

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import BrandEyebrow from '@/components/BrandEyebrow.astro';
 import ArticleList from '@/components/ArticleList.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import HomeNotices from '@/components/HomeNotices.astro';
@@ -47,7 +48,7 @@ const featuredEvent = getNextEvent(events);
       <section class="section container" aria-labelledby="eventi-home">
         <div class="section__header">
           <div>
-            <p class="eyebrow eyebrow--brand">{BRAND_WORDMARK}</p>
+            <BrandEyebrow />
             <h2 id="eventi-home">Il prossimo appuntamento</h2>
             <p class="section__intro">Incontri, attività e momenti da condividere.</p>
           </div>
@@ -75,7 +76,7 @@ const featuredEvent = getNextEvent(events);
     <section class="section container home-initiatives" aria-labelledby="iniziative-home">
       <div class="section__header">
         <div>
-          <p class="eyebrow eyebrow--brand">{BRAND_WORDMARK}</p>
+          <BrandEyebrow />
           <h2 id="iniziative-home">Le nostre iniziative</h2>
           <p class="section__intro">Le idee a cui stiamo dando forma, una alla volta.</p>
         </div>

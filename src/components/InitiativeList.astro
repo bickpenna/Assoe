@@ -1,6 +1,6 @@
 ---
 import ContentImage from './ContentImage.astro';
-import { BRAND_WORDMARK } from '@/config/site';
+import BrandEyebrow from './BrandEyebrow.astro';
 import type { InitiativeSummary } from '@/content/types';
 import { sitePath } from '@/utils/sitePath';
 
@@ -19,7 +19,7 @@ const hasImages = initiatives.some(({ imageUrl }) => Boolean(imageUrl));
     <li class="initiative-list__item">
       <a class:list={['initiative-list__link', { 'initiative-list__link--text-only': !initiative.imageUrl }]} href={sitePath(`/iniziative/${initiative.slug}/`)}>
         <div class="initiative-list__content">
-          <p class="eyebrow eyebrow--brand">{BRAND_WORDMARK}</p>
+          <BrandEyebrow />
           {headingLevel === 2 ? <h2>{initiative.name}</h2> : <h3>{initiative.name}</h3>}
           <span class="initiative-list__bottom">
             <span class="initiative-list__more">Scopri l’iniziativa</span>

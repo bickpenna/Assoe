@@ -1,12 +1,13 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import BrandEyebrow from '@/components/BrandEyebrow.astro';
 import Pagination from '@/components/Pagination.astro';
 import { ARCHIVE_PAGE_SIZE } from '@/config/pagination';
-import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
+import { SITE_NAME } from '@/config/site';
 
 interface Props {
   title: string;
-  eyebrow: string;
+  eyebrow?: string;
   emptyMessage: string;
   basePath: string;
   currentPage: number;
@@ -21,7 +22,7 @@ const pageTitle = currentPage === 1 ? title : `${title} · Pagina ${currentPage}
 <BaseLayout title={`${pageTitle} | ${SITE_NAME}`}>
   <main id="contenuto" class="container">
     <div class="page-intro">
-      <p class:list={['eyebrow', { 'eyebrow--brand': eyebrow === BRAND_WORDMARK }]}>{eyebrow}</p>
+      {eyebrow === undefined ? <BrandEyebrow /> : <p class="eyebrow">{eyebrow}</p>}
       <h1>{title}</h1>
     </div>
     {totalItems === 0 ? <p class="notice">{emptyMessage}</p> : <slot />}

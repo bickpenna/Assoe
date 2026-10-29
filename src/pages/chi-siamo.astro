@@ -1,10 +1,11 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import BrandEyebrow from '@/components/BrandEyebrow.astro';
 import ContentImage from '@/components/ContentImage.astro';
 import JoinUsCta from '@/components/JoinUsCta.astro';
 import PersonCard from '@/components/PersonCard.astro';
 import { contentRepository } from '@/content';
-import { BRAND_WORDMARK, SITE_NAME } from '@/config/site';
+import { SITE_NAME } from '@/config/site';
 import { getBoardMembers } from '@/utils/people';
 import { toParagraphs } from '@/utils/paragraphs';
 import { sitePath } from '@/utils/sitePath';
@@ -32,7 +33,7 @@ const phoneHref = telephoneHrefOrUndefined(contacts?.phone);
 <BaseLayout title={`Chi siamo | ${SITE_NAME}`} association={association}>
   <main id="contenuto" class="container">
     <div class="page-intro">
-      <p class="eyebrow eyebrow--brand">{BRAND_WORDMARK}</p>
+      <BrandEyebrow />
       <h1>Chi siamo</h1>
     </div>
 

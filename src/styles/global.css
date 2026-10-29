@@ -73,7 +73,6 @@ p { line-height: 1.65; }
 .site-footer__bottom .site-footer__contact-mobile,
 .site-footer__bottom .site-footer__bottom-links--contact-only { display: none; }
 .eyebrow { color: var(--green); text-transform: uppercase; letter-spacing: .14em; font-size: .72rem; font-weight: 800; line-height: 1.4; margin: 0 0 .4rem; }
-.eyebrow--brand { text-transform: none; }
 .section { padding: 4.5rem 0 0; }
 .section__header { display: flex; align-items: end; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.7rem; }
 .section__header h2 { margin-bottom: 0; }
