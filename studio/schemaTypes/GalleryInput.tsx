@@ -1,7 +1,8 @@
 import { useRef, useState, type ChangeEvent } from 'react';
 import { Button } from '@sanity/ui';
 import { insert, setIfMissing, useClient, type ArrayOfObjectsInputProps } from 'sanity';
-import { gallerySelectionError, MAX_GALLERY_IMAGES } from '../../shared/imageSize';
+import { MAX_GALLERY_IMAGES } from '../../shared/imageSize';
+import { uploadGalleryFiles } from './galleryUpload';
 
 export function GalleryInput(props: ArrayOfObjectsInputProps) {
   const client = useClient({ apiVersion: '2026-03-01' });
@@ -13,35 +14,19 @@ export function GalleryInput(props: ArrayOfObjectsInputProps) {
   const count = props.value?.length ?? 0;
 
   async function uploadFiles(files: File[]) {
-    if (uploading.current || props.readOnly) return;
-
-    setMessage('');
-    const validationError = gallerySelectionError(count, files);
-    setError(validationError ?? '');
-    if (validationError) return;
-
-    uploading.current = true;
-    setBusy(true);
-    let completed = 0;
-
-    try {
-      for (const file of files) {
-        setMessage(`Caricamento ${completed + 1} di ${files.length}…`);
-        const asset = await client.assets.upload('image', file, { filename: file.name });
-        props.onChange([
-          setIfMissing([]),
-          insert([{ _key: crypto.randomUUID(), _type: 'image', asset: { _type: 'reference', _ref: asset._id } }], 'after', [-1]),
-        ]);
-        completed += 1;
-      }
-      setMessage(`${completed} ${completed === 1 ? 'foto caricata' : 'foto caricate'}.`);
-    } catch {
-      setError(`Caricamento interrotto. ${completed} ${completed === 1 ? 'foto è stata aggiunta' : 'foto sono state aggiunte'}; controlla la galleria prima di riprovare.`);
-      setMessage('');
-    } finally {
-      uploading.current = false;
-      setBusy(false);
-    }
+    await uploadGalleryFiles(files, {
+      count,
+      readOnly: props.readOnly,
+      uploading,
+      setBusy,
+      setMessage,
+      setError,
+      upload: (file) => client.assets.upload('image', file, { filename: file.name }),
+      append: (assetId) => props.onChange([
+        setIfMissing([]),
+        insert([{ _key: crypto.randomUUID(), _type: 'image', asset: { _type: 'reference', _ref: assetId } }], 'after', [-1]),
+      ]),
+    });
   }
 
   function onSelect(event: ChangeEvent<HTMLInputElement>) {

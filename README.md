@@ -126,6 +126,8 @@ npm run build
 npm run check:build
 ```
 
+I test automatici coprono logica dei contenuti, provider Sanity, interazioni di avvisi e galleria in un DOM simulato e logica di upload dello Studio, senza accedere al CMS. Il controllo di copertura richiede almeno il 95% delle righe, il 90% dei rami e il 100% delle funzioni nei moduli verificati; fallisce anche se un modulo previsto non viene caricato dai test.
+
 Per controllare anche lo Studio:
 
 ```bash

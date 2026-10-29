@@ -1,5 +1,5 @@
 import type { Image, ValidationContext } from 'sanity';
-import { editorialImageSizeResult } from '../../shared/imageSize';
+import { editorialImageSizeResult } from '../../shared/imageSize.ts';
 
 export async function validateEditorialImageSize(
   value: Image | undefined,
