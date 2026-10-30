@@ -5,6 +5,12 @@ const audit = spawnSync('npm', ['audit', '--audit-level=high', '--json'], {
   encoding: 'utf8',
 });
 
+if (audit.error || audit.signal || ![0, 1].includes(audit.status)) {
+  console.error('Impossibile completare npm audit dello Studio.');
+  if (audit.stderr) console.error(audit.stderr.trim());
+  process.exit(1);
+}
+
 let report;
 try {
   report = JSON.parse(audit.stdout);
@@ -14,8 +20,20 @@ try {
   process.exit(audit.status || 1);
 }
 
+if (!report || report.error || report.auditReportVersion !== 2
+  || !report.vulnerabilities || typeof report.vulnerabilities !== 'object'
+  || Array.isArray(report.vulnerabilities) || !report.metadata?.vulnerabilities) {
+  console.error('Report npm audit dello Studio assente, incompleto o non valido.');
+  process.exit(1);
+}
+
 const vulnerabilities = Object.entries(report.vulnerabilities ?? {})
   .filter(([, vulnerability]) => ['high', 'critical'].includes(vulnerability.severity));
+
+if (audit.status === 1 && vulnerabilities.length === 0) {
+  console.error('npm audit dello Studio è fallito senza un report high/critical coerente.');
+  process.exit(1);
+}
 const advisoryIds = new Set();
 const packagesWithCompatibleFix = [];
 

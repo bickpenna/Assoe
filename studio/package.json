@@ -20,6 +20,9 @@
   },
   "overrides": {
     "chokidar": "^5.0.0",
+    "@module-federation/dts-plugin": {
+      "undici": "^7.30.1"
+    },
     "@vercel/frameworks": {
       "js-yaml": "^4.1.1",
       "smol-toml": "^1.9.1"
