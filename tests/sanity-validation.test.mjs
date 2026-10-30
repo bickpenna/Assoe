@@ -66,6 +66,8 @@ test('valida articoli ed eventi con date e stati ammessi', () => {
   assert.equal(isSanityArticle({ ...article, publishedAt: '2026-02-31T12:00:00Z' }), false);
   assert.equal(isSanityEvent(event), true);
   assert.equal(isSanityEvent({ ...event, slug: 'Evento' }), false);
+  assert.equal(isSanityEvent({ ...event, slug: 'archivio' }), false);
+  assert.equal(isSanityInitiative({ ...initiative, slug: 'archivio' }), true);
   assert.equal(isSanityEvent({ ...event, slug: 'evento non valido' }), false);
   assert.equal(isSanityEvent({ ...event, slug: 'a'.repeat(97) }), false);
   assert.equal(isSanityEvent({ ...event, status: 'unknown' }), false);

@@ -1,0 +1,35 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ArchiveLayout from '@/layouts/ArchiveLayout.astro';
+import EventArchiveSections from '@/components/EventArchiveSections.astro';
+import EventNavigation from '@/components/EventNavigation.astro';
+import { contentRepository } from '@/content';
+import { eventArchivePages } from '@/utils/eventArchive';
+import { sitePath } from '@/utils/sitePath';
+
+export const getStaticPaths = (async () => {
+  const pages = eventArchivePages(await contentRepository.listEvents());
+  return pages.map((page) => ({ params: { archive: page.route }, props: { page } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: ReturnType<typeof eventArchivePages>[number];
+}
+const { page } = Astro.props;
+const title = page.year ? `Archivio eventi · ${page.year}` : 'Archivio eventi';
+---
+
+<ArchiveLayout title={title} description="Gli eventi passati, raccolti per anno dal più recente." emptyMessage="Non ci sono ancora eventi da mostrare nell’archivio." basePath={page.basePath} currentPage={page.currentPage} totalItems={page.totalItems}>
+  <Fragment slot="navigation">
+    <EventNavigation archive />
+    {page.years.length > 0 && (
+      <nav class="event-archive__nav" aria-label="Archivio per anno">
+        <a href={sitePath('/eventi/archivio/')} aria-current={!page.year ? 'page' : undefined}>Tutti gli anni</a>
+        {page.years.map((year) => (
+          <a href={sitePath(`/eventi/archivio/${year}/`)} aria-current={page.year === year ? 'page' : undefined}>{year}</a>
+        ))}
+      </nav>
+    )}
+  </Fragment>
+  <EventArchiveSections events={page.events} />
+</ArchiveLayout>

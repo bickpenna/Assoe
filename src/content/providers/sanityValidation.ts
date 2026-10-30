@@ -1,6 +1,6 @@
 import { PERSON_ROLE_GROUPS, type PersonRole } from '../../../shared/personRoles.ts';
 import { articleSlugError } from '../../../shared/articleSlug.ts';
-import { isValidSlug } from '../../../shared/slug.ts';
+import { EVENT_RESERVED_SLUGS, isValidSlug } from '../../../shared/slug.ts';
 import { isValidSanityDateTime } from '../../../shared/sanityDateTime.ts';
 import { isCalendarDate, MAX_HOME_NOTICE_TEXT_LENGTH } from '../../../shared/homeNotices.ts';
 import type { EventStatus } from '../types';
@@ -193,7 +193,7 @@ export function isSanityEvent(value: unknown): value is SanityEvent {
   return isRecord(value)
     && isNonEmptyString(value._id)
     && isNonEmptyString(value.title)
-    && isValidSlug(value.slug)
+    && isValidSlug(value.slug, { reserved: EVENT_RESERVED_SLUGS })
     && isValidSanityDateTime(value.date)
     && isNullableString(value.place)
     && typeof value.status === 'string'

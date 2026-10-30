@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { ARTICLE_SLUG_MAX_LENGTH, articleSlugError } from '../shared/articleSlug.ts';
-import { CONTENT_SLUG_MAX_LENGTH, isValidSlug, slugError } from '../shared/slug.ts';
+import { CONTENT_SLUG_MAX_LENGTH, EVENT_RESERVED_SLUGS, isValidSlug, slugError } from '../shared/slug.ts';
 import { isValidSanityDateTime } from '../shared/sanityDateTime.ts';
 import { articlePublicSlug } from '../src/utils/articleSlug.ts';
 
@@ -56,4 +56,11 @@ test('condivide formato e lunghezza degli slug tra contenuti', () => {
   assert.equal(isValidSlug(null), false);
   assert.match(slugError('a'.repeat(CONTENT_SLUG_MAX_LENGTH + 1)), /massimo/);
   assert.equal(slugError(undefined), undefined);
+});
+
+test('lo slug dell’archivio eventi è riservato solo quando richiesto dal tipo di contenuto', () => {
+  assert.equal(isValidSlug('archivio'), true);
+  assert.equal(isValidSlug('archivio', { reserved: EVENT_RESERVED_SLUGS }), false);
+  assert.match(slugError('archivio', { reserved: EVENT_RESERVED_SLUGS }), /riservata/);
+  assert.equal(isValidSlug('archivio-storico', { reserved: EVENT_RESERVED_SLUGS }), true);
 });

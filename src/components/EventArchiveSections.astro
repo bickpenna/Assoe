@@ -1,43 +1,18 @@
 ---
 import EventGrid from './EventGrid.astro';
 import type { EventSummary } from '@/content/types';
-import { ARCHIVE_PAGE_SIZE } from '@/config/pagination';
-import { sitePath } from '@/utils/sitePath';
+import { groupEventsByYear } from '@/utils/events';
 
 interface Props {
   events: EventSummary[];
-  futureCount: number;
-  pastCount: number;
-  startIndex: number;
 }
 
-const { events, futureCount, pastCount, startIndex } = Astro.props;
-const futureOnPage = Math.max(0, Math.min(events.length, futureCount - startIndex));
-const future = events.slice(0, futureOnPage);
-const past = events.slice(futureOnPage);
-const firstPastPage = Math.floor(futureCount / ARCHIVE_PAGE_SIZE) + 1;
-const pastHref = sitePath(firstPastPage === 1
-  ? '/eventi/#eventi-passati'
-  : `/eventi/pagina/${firstPastPage}/#eventi-passati`);
+const groups = groupEventsByYear(Astro.props.events);
 ---
 
-{futureCount > 0 && pastCount > 0 && (
-  <nav class="event-archive__nav" aria-label="Vai agli eventi futuri o passati">
-    <a href={sitePath('/eventi/#eventi-futuri')}>Eventi futuri</a>
-    <a href={pastHref}>Eventi passati</a>
-  </nav>
-)}
-
-{future.length > 0 && (
-  <section class="event-archive__group" aria-labelledby="eventi-futuri">
-    <h2 id="eventi-futuri">Eventi futuri</h2>
-    <EventGrid events={future} />
+{groups.map(({ year, events }) => (
+  <section class="event-archive__group" aria-labelledby={`eventi-${year}`}>
+    <h2 id={`eventi-${year}`}>{year}</h2>
+    <EventGrid events={events} />
   </section>
-)}
-
-{past.length > 0 && (
-  <section class="event-archive__group" aria-labelledby="eventi-passati">
-    <h2 id="eventi-passati">Eventi passati</h2>
-    <EventGrid events={past} />
-  </section>
-)}
+))}

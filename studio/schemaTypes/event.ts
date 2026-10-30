@@ -1,5 +1,5 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
-import { CONTENT_SLUG_MAX_LENGTH, slugError } from '../../shared/slug';
+import { CONTENT_SLUG_MAX_LENGTH, EVENT_RESERVED_SLUGS, slugError } from '../../shared/slug';
 import { MAX_GALLERY_IMAGES } from '../../shared/imageSize';
 import { validateEditorialImageSize } from './editorialImage';
 import { validateUniqueSlug } from './slugValidation';
@@ -24,7 +24,7 @@ export const event = defineType({
       type: 'slug',
       options: { source: 'title', maxLength: CONTENT_SLUG_MAX_LENGTH },
       validation: (rule) => rule.required()
-        .custom((value) => slugError(value?.current) ?? true)
+        .custom((value) => slugError(value?.current, { reserved: EVENT_RESERVED_SLUGS }) ?? true)
         .custom(validateUniqueSlug),
     }),
     defineField({ name: 'description', title: 'Descrizione', type: 'richText' }),
@@ -32,6 +32,7 @@ export const event = defineType({
     defineField({
       name: 'date',
       title: 'Data e ora',
+      description: 'Il sito sposta automaticamente l’evento nell’archivio dal giorno successivo, nel fuso italiano, alla nuova build. Lo stato non impedisce l’archiviazione.',
       type: 'datetime',
       validation: (rule) => rule.required(),
     }),

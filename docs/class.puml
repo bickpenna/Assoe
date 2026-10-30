@@ -179,6 +179,13 @@ note right of Iniziativa
     Il dettaglio mantiene /iniziative/<slug>/.
 end note
 
+note right of Evento
+    L'archivio è calcolato solo dal sito.
+    Dal giorno successivo alla data in Europe/Rome,
+    l'evento compare nell'archivio e nell'anno pertinente.
+    I documenti CMS e gli URL non vengono spostati.
+end note
+
 note right of Articolo
     Il layout è deciso da Astro.
     I volontari compilano solo

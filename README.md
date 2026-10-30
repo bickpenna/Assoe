@@ -90,7 +90,7 @@ Il sito legge questi documenti:
 - **Informazioni associazione**: documento singleton con nome, testo breve della homepage (facoltativo, massimo 200 caratteri), logo, descrizione, contatti, social, donazioni, 5×1000 e documenti. Il nome e il testo breve alimentano la sezione iniziale della home.
 - **Iniziative**: un solo tipo di documento con ambito obbligatorio **Iniziative sociali** o **Volontariato**. Nello Studio, “Iniziative” contiene i due ambiti, ciascuno con “Elenco e ricerca” e il proprio riordino trascinabile. La voce “Iniziative” del menu porta alla panoramica in `/iniziative/`, divisa in Sociali e Volontariato con due archivi distinti; la home mostra le prime due iniziative di ciascun ambito nell’ordine editoriale. Cambiare “Ambito”, pubblicare e ricostruire il sito sposta l’iniziativa mantenendo URL e collegamenti; la posizione si sceglie nel riordino del nuovo ambito. Il provider esclude iniziative senza un ambito valido, anche dai contenuti correlati.
 - **Articoli**: contenuti editoriali con data, immagini, galleria e collegamenti opzionali alle iniziative.
-- **Eventi**: eventi futuri e passati, con collegamenti opzionali alle iniziative.
+- **Eventi**: oggi e futuri in `/eventi/`, passati in `/eventi/archivio/`, consultabile per anno con paginazione di sei elementi. L’archiviazione scatta dal giorno successivo nel fuso italiano, indipendentemente dallo stato, e si aggiorna alla build quotidiana o manuale. Gli annullamenti restano visibili; gli altri passati sono mostrati come conclusi. Sanity mantiene un elenco unico; documenti, URL e collegamenti restano invariati.
 - **Persone**: profili mostrati nella pagina Associati e, quando previsto, in Chi siamo.
 
 Le iniziative usano il tipo **`initiative`**; articoli ed eventi le collegano tramite il campo **`initiatives`**.
@@ -104,9 +104,12 @@ Gli URL pubblici sono:
 - `/articoli/`
 - `/articoli/<data>-<slug>/`
 - `/eventi/`
+- `/eventi/archivio/` e `/eventi/archivio/<anno>/`
 - `/eventi/<slug>/`
 
 Per gli articoli, nello Studio si inserisce solo la parte breve dello slug, senza la data. La data viene aggiunta automaticamente dal sito. Cambiare data o slug dopo la pubblicazione cambia l’indirizzo pubblico.
+
+Per gli eventi, lo slug `archivio` è riservato alla pagina del sito.
 
 Il sito usa solo contenuti pubblicati. Una bozza Sanity non viene inclusa nella build.
 
