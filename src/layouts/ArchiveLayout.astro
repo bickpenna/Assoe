@@ -12,6 +12,7 @@ interface Props {
   basePath: string;
   currentPage: number;
   totalItems: number;
+  description?: string;
 }
 
 const { title, eyebrow, emptyMessage, basePath, currentPage, totalItems } = Astro.props;
@@ -19,12 +20,14 @@ const lastPage = Math.ceil(totalItems / ARCHIVE_PAGE_SIZE);
 const pageTitle = currentPage === 1 ? title : `${title} · Pagina ${currentPage}`;
 ---
 
-<BaseLayout title={`${pageTitle} | ${SITE_NAME}`}>
+<BaseLayout title={`${pageTitle} | ${SITE_NAME}`} description={Astro.props.description}>
   <main id="contenuto" class="container">
     <div class="page-intro">
       {eyebrow === undefined ? <BrandEyebrow /> : <p class="eyebrow">{eyebrow}</p>}
       <h1>{title}</h1>
+      {Astro.props.description && <p>{Astro.props.description}</p>}
     </div>
+    <slot name="navigation" />
     {totalItems === 0 ? <p class="notice">{emptyMessage}</p> : <slot />}
     {lastPage > 1 && <Pagination basePath={basePath} currentPage={currentPage} lastPage={lastPage} label={title} />}
   </main>

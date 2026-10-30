@@ -1,8 +1,11 @@
 /** Dati che il sito usa, indipendenti dalla forma scelta dal CMS. */
+export type InitiativeArea = import('../../shared/initiativeAreas').InitiativeArea;
+
 export interface InitiativeSummary {
   id: string;
   name: string;
   slug: string;
+  area: InitiativeArea;
   imageUrl?: string;
 }
 

@@ -46,8 +46,7 @@ test('le liste per ambito selezionano soltanto le iniziative corrette, comprese 
 });
 
 test('esistono solo due ambiti e i valori mancanti o invalidi non costituiscono una terza scelta', async () => {
-  assert.equal(initiativePanes.length, 3);
-  assert.deepEqual(await members('initiatives-all'), documents.filter(({ _type }) => _type === 'initiative').map(({ _id }) => _id));
+  assert.equal(initiativePanes.length, 2);
   for (const record of documents.filter(({ _type }) => _type === 'initiative')) {
     const lists = await Promise.all(['initiatives-social', 'initiatives-volunteering'].map((id) => members(id, [record])));
     const valid = isInitiativeArea(record.area);
@@ -83,7 +82,6 @@ test('la creazione da un ambito precompila la scelta senza creare un nuovo tipo 
     const pane = initiativePanes.find(({ params }) => params.area === template.value.area);
     assert.deepEqual(pane.templateIds, [template.id]);
   }
-  assert.deepEqual(initiativePanes.find(({ id }) => id === 'initiatives-all').templateIds, initiativeTemplates.map(({ id }) => id));
   for (const pane of initiativePanes) {
     assert.ok(pane.templateIds.length > 0);
     for (const id of pane.templateIds) {
@@ -110,24 +108,51 @@ function structureBuilder() {
   };
 }
 
-test('un solo contenitore offre liste native ricercabili e una vista di riordino separata', () => {
-  const ordering = { id: 'orderable-initiative', title: 'Ordina iniziative' };
-  const root = createInitiativesStructure(structureBuilder(), ordering).spec;
+test('un solo contenitore separa ricerca, creazione e riordino nei due ambiti', () => {
+  const orderings = [];
+  const root = createInitiativesStructure(structureBuilder(), (options) => {
+    const ordering = { ...options };
+    orderings.push(ordering);
+    return ordering;
+  }).spec;
   assert.equal(root.title, 'Iniziative');
   assert.equal(root.schemaType, 'initiative');
   const children = root.child.spec.items;
   assert.deepEqual(children.filter((item) => item.spec).map((item) => item.spec.title), [
-    'Tutte le iniziative', 'Iniziative sociali', 'Volontariato',
+    'Iniziative sociali', 'Volontariato',
   ]);
-  assert.equal(children.at(-1), ordering);
+  assert.equal(children.length, 2);
+  assert.equal(orderings.length, 2);
+  assert.equal(new Set(orderings.map(({ id }) => id)).size, 2);
   for (const item of children.filter((item) => item.spec)) {
-    const list = item.spec.child.spec;
     const pane = initiativePanes.find(({ id }) => id === item.spec.id);
+    const tools = item.spec.child.spec.items;
+    assert.equal(tools.length, 2);
+    assert.equal(tools[0].spec.title, 'Elenco e ricerca');
+    const list = tools[0].spec.child.spec;
     assert.equal(list.kind, 'documentTypeList');
     assert.equal(list.schemaType, 'initiative');
     assert.equal(list.filter, pane.filter);
     assert.deepEqual(list.params, pane.params);
-    assert.deepEqual(list.defaultOrdering, [{ field: 'name', direction: 'asc' }]);
+    assert.deepEqual(list.defaultOrdering, [{ field: 'orderRank', direction: 'asc' }, { field: 'name', direction: 'asc' }]);
     assert.deepEqual(list.initialValueTemplates.map(({ templateId }) => templateId), pane.templateIds);
+    const ordering = tools[1];
+    assert.ok(orderings.includes(ordering));
+    assert.equal(ordering.type, 'initiative');
+    assert.equal(ordering.createIntent, false);
+    assert.equal(ordering.filter, list.filter);
+    assert.deepEqual(ordering.params, list.params);
+  }
+});
+
+test('le viste di riordino selezionano soltanto i documenti del proprio ambito', async () => {
+  const orderings = [];
+  createInitiativesStructure(structureBuilder(), (options) => {
+    orderings.push(options);
+    return options;
+  });
+  for (const ordering of orderings) {
+    const result = await evaluate(parse(`*[${ordering.filter}]._id`), { dataset: documents, params: ordering.params });
+    assert.deepEqual(await result.get(), await members(`initiatives-${ordering.params.area}`));
   }
 });

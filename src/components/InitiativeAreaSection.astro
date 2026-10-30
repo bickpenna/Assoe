@@ -1,0 +1,28 @@
+---
+import BrandEyebrow from './BrandEyebrow.astro';
+import InitiativeList from './InitiativeList.astro';
+import { groupInitiatives } from '@/utils/initiatives';
+import { sitePath } from '@/utils/sitePath';
+
+interface Props {
+  group: ReturnType<typeof groupInitiatives>[number];
+  home?: boolean;
+}
+const { group, home = false } = Astro.props;
+---
+
+<section class:list={['initiative-area-section', { 'section container home-initiatives': home }]} aria-labelledby={`iniziative-${group.value}`}>
+  <div class="section__header">
+    <div>
+      <BrandEyebrow />
+      <h2 id={`iniziative-${group.value}`}>{group.title}</h2>
+      <p class="section__intro">{group.description}</p>
+    </div>
+    <a class="text-link" href={sitePath(group.path)}>{group.value === 'social' ? 'Tutte le iniziative sociali' : 'Tutto il volontariato'} <span aria-hidden="true">↗</span></a>
+  </div>
+  {group.initiatives.length > 0 ? (
+    <InitiativeList initiatives={group.initiatives.slice(0, 2)} columns={2} showArea={false} />
+  ) : (
+    <p class="notice">{group.emptyMessage}</p>
+  )}
+</section>

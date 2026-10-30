@@ -15,7 +15,7 @@ import {
 } from '../src/content/providers/sanityValidation.ts';
 
 const image = { url: 'https://cdn.sanity.io/image.jpg', width: 800, height: 600, crop: null };
-const initiative = { _id: 'initiative-1', name: 'Iniziativa', slug: 'iniziativa', image };
+const initiative = { _id: 'initiative-1', name: 'Iniziativa', slug: 'iniziativa', area: 'social', image };
 const article = {
   _id: 'article-1',
   title: 'Articolo',
@@ -44,6 +44,18 @@ test('valida i record Sanity principali e rifiuta dati incompleti', () => {
   assert.equal(isSanityInitiativeDetail({ ...initiative, description: [{ _type: '' }] }), false);
   assert.equal(isSanityRelatedInitiative({ ...initiative, active: true }), true);
   assert.equal(isSanityRelatedInitiative({ ...initiative, active: 'yes' }), false);
+});
+
+test('ogni iniziativa pubblica o correlata richiede uno dei due ambiti validi', () => {
+  for (const area of ['social', 'volunteering']) {
+    assert.equal(isSanityInitiative({ ...initiative, area }), true);
+    assert.equal(isSanityRelatedInitiative({ ...initiative, area, active: true }), true);
+  }
+  for (const area of [undefined, null, '', ' ', 'unknown', 42, {}, []]) {
+    assert.equal(isSanityInitiative({ ...initiative, area }), false);
+    assert.equal(isSanityInitiativeDetail({ ...initiative, area, description: null }), false);
+    assert.equal(isSanityRelatedInitiative({ ...initiative, area, active: true }), false);
+  }
 });
 
 test('valida articoli ed eventi con date e stati ammessi', () => {

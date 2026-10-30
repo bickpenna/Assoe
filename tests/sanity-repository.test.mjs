@@ -4,7 +4,7 @@ import { createSanityRepository } from '../src/content/providers/sanity.ts';
 import * as queries from '../src/content/providers/sanityQueries.ts';
 
 const config = { projectId: 'test123', dataset: 'production' };
-const initiative = { _id: 'initiative-1', name: 'Iniziativa', slug: 'iniziativa', image: null };
+const initiative = { _id: 'initiative-1', name: 'Iniziativa', slug: 'iniziativa', area: 'social', image: null };
 const article = {
   _id: 'article-1', title: 'Articolo', slug: 'articolo',
   publishedAt: '2026-10-20T12:00:00Z', summary: null, imageUrl: null,

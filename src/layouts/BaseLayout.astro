@@ -8,11 +8,13 @@ import type { AssociationInfo } from '@/content/types';
 import { siteNavigation } from '@/config/navigation';
 import { SITE_NAME } from '@/config/site';
 import { sitePath } from '@/utils/sitePath';
+import { initiativeNavigationPath } from '@/utils/initiatives';
 
 interface Props {
   title: string;
   description?: string;
   association?: AssociationInfo | null;
+  navigationPath?: string;
 }
 
 const {
@@ -33,7 +35,7 @@ if (association?.logoUrl) {
   }
 }
 
-const currentPath = Astro.url.pathname;
+const currentPath = initiativeNavigationPath(Astro.props.navigationPath ?? Astro.url.pathname);
 const homePath = sitePath('/');
 const isCurrent = (href: string) => href === homePath ? currentPath === homePath : currentPath.startsWith(href);
 ---

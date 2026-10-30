@@ -1,12 +1,23 @@
 ---
-import ArchiveLayout from '@/layouts/ArchiveLayout.astro';
-import InitiativeList from '@/components/InitiativeList.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BrandEyebrow from '@/components/BrandEyebrow.astro';
+import InitiativeAreaNav from '@/components/InitiativeAreaNav.astro';
+import InitiativeAreaSection from '@/components/InitiativeAreaSection.astro';
 import { contentRepository } from '@/content';
-import { ARCHIVE_PAGE_SIZE } from '@/config/pagination';
+import { groupInitiatives } from '@/utils/initiatives';
+import { SITE_NAME } from '@/config/site';
 
-const initiatives = await contentRepository.listInitiatives();
+const groups = groupInitiatives(await contentRepository.listInitiatives());
 ---
 
-<ArchiveLayout title="Le nostre iniziative" emptyMessage="Non ci sono ancora iniziative pubblicate." basePath="/iniziative/" currentPage={1} totalItems={initiatives.length}>
-  <InitiativeList initiatives={initiatives.slice(0, ARCHIVE_PAGE_SIZE)} headingLevel={2} />
-</ArchiveLayout>
+<BaseLayout title={`Iniziative | ${SITE_NAME}`}>
+  <main id="contenuto" class="container">
+    <div class="page-intro">
+      <BrandEyebrow />
+      <h1>Iniziative</h1>
+      <p>Due ambiti, un impegno comune per la comunità. Scegli quello che vuoi conoscere.</p>
+    </div>
+    <InitiativeAreaNav />
+    {groups.map((group) => <InitiativeAreaSection group={group} />)}
+  </main>
+</BaseLayout>

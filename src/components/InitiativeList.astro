@@ -3,14 +3,16 @@ import ContentImage from './ContentImage.astro';
 import BrandEyebrow from './BrandEyebrow.astro';
 import type { InitiativeSummary } from '@/content/types';
 import { sitePath } from '@/utils/sitePath';
+import { initiativeSections } from '@/utils/initiatives';
 
 interface Props {
   initiatives: InitiativeSummary[];
   headingLevel?: 2 | 3;
   columns?: 2 | 3;
+  showArea?: boolean;
 }
 
-const { initiatives, headingLevel = 3, columns = 3 } = Astro.props;
+const { initiatives, headingLevel = 3, columns = 3, showArea = true } = Astro.props;
 const hasImages = initiatives.some(({ imageUrl }) => Boolean(imageUrl));
 ---
 
@@ -22,6 +24,7 @@ const hasImages = initiatives.some(({ imageUrl }) => Boolean(imageUrl));
           <BrandEyebrow />
           {headingLevel === 2 ? <h2>{initiative.name}</h2> : <h3>{initiative.name}</h3>}
           <span class="initiative-list__bottom">
+            {showArea && <span class="initiative-list__area">{initiativeSections.find(({ value }) => value === initiative.area)?.title}</span>}
             <span class="initiative-list__more">Scopri l’iniziativa</span>
           </span>
         </div>

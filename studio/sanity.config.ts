@@ -25,9 +25,7 @@ export default defineConfig({
               .filter((item) => !['siteSettings', 'homeSettings'].includes(item.getId() ?? ''))
               .map((item) =>
                 item.getId() === 'initiative'
-                  ? createInitiativesStructure(S, orderableDocumentListDeskItem({
-                    type: 'initiative', title: 'Ordina iniziative', createIntent: false, S, context,
-                  }))
+                  ? createInitiativesStructure(S, (options) => orderableDocumentListDeskItem({ ...options, S, context }))
                   : item.getId() === 'person'
                     ? S.listItem()
                       .id('people')

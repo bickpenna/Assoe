@@ -21,7 +21,7 @@ export const initiative = defineType({
     defineField({
       name: 'area',
       title: 'Ambito',
-      description: 'Scegli uno dei due ambiti: è obbligatorio per pubblicare. Per spostare questa iniziativa, cambia ambito e pubblica. Nome, indirizzo, articoli ed eventi collegati vengono mantenuti.',
+      description: 'Scegli uno dei due ambiti: è obbligatorio per pubblicare. Per spostare questa iniziativa, cambia ambito e pubblica; poi scegli la posizione nella vista Ordina del nuovo ambito. Nome, indirizzo, articoli ed eventi collegati vengono mantenuti.',
       type: 'string',
       options: {
         list: INITIATIVE_AREAS.map(({ title, value }) => ({ title, value })),

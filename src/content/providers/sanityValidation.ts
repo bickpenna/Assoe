@@ -5,11 +5,13 @@ import { isValidSanityDateTime } from '../../../shared/sanityDateTime.ts';
 import { isCalendarDate, MAX_HOME_NOTICE_TEXT_LENGTH } from '../../../shared/homeNotices.ts';
 import type { EventStatus } from '../types';
 import type { SanityImage } from './sanityImage';
+import { isInitiativeArea, type InitiativeArea } from '../../../shared/initiativeAreas.ts';
 
 export interface SanityInitiative {
   _id: string;
   name: string;
   slug: string;
+  area: InitiativeArea;
   image: SanityImage | null;
 }
 
@@ -150,6 +152,7 @@ export function isSanityInitiative(value: unknown): value is SanityInitiative {
   return isRecord(value)
     && isNonEmptyString(value._id)
     && isNonEmptyString(value.name)
+    && isInitiativeArea(value.area)
     && isValidSlug(value.slug)
     && isSanityImage(value.image);
 }

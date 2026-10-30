@@ -88,7 +88,7 @@ Il sito legge questi documenti:
 
 - **Avvisi**: documento dedicato agli avvisi della homepage, fino a tre e riordinabili trascinandoli nello Studio. Titolo e testo non possono essere vuoti o composti solo da spazi. Il testo usa Markdown (massimo 500 caratteri di sorgente); un PDF e un link HTTPS sono facoltativi. Il testo del link è personalizzabile (massimo 80 caratteri); se vuoto, compare «Approfondisci». Ogni avviso può avere una data «Visibile fino al»: resta visibile per tutta quella data nel fuso italiano e scompare dal giorno successivo. Gli avvisi scaduti occupano ancora un posto nell’elenco dello Studio; rimuoverli quando non servono più. La sezione non compare se non ci sono avvisi visibili.
 - **Informazioni associazione**: documento singleton con nome, testo breve della homepage (facoltativo, massimo 200 caratteri), logo, descrizione, contatti, social, donazioni, 5×1000 e documenti. Il nome e il testo breve alimentano la sezione iniziale della home.
-- **Iniziative**: un solo tipo di documento con ambito obbligatorio **Iniziative sociali** o **Volontariato**. Nello Studio, sotto “Iniziative”, gli elenchi ricercabili sono “Tutte le iniziative” e i due ambiti; “Ordina iniziative” conserva il riordino trascinabile complessivo. La creazione precompila uno dei due ambiti; la pubblicazione è bloccata se manca o non è valido. Cambiare “Ambito” e pubblicare sposta l’iniziativa mantenendo indirizzo e collegamenti. Il sito mostra ancora l’elenco unico, con le prime quattro iniziative nella home.
+- **Iniziative**: un solo tipo di documento con ambito obbligatorio **Iniziative sociali** o **Volontariato**. Nello Studio, “Iniziative” contiene i due ambiti, ciascuno con “Elenco e ricerca” e il proprio riordino trascinabile. La voce “Iniziative” del menu porta alla panoramica in `/iniziative/`, divisa in Sociali e Volontariato con due archivi distinti; la home mostra le prime due iniziative di ciascun ambito nell’ordine editoriale. Cambiare “Ambito”, pubblicare e ricostruire il sito sposta l’iniziativa mantenendo URL e collegamenti; la posizione si sceglie nel riordino del nuovo ambito. Il provider esclude iniziative senza un ambito valido, anche dai contenuti correlati.
 - **Articoli**: contenuti editoriali con data, immagini, galleria e collegamenti opzionali alle iniziative.
 - **Eventi**: eventi futuri e passati, con collegamenti opzionali alle iniziative.
 - **Persone**: profili mostrati nella pagina Associati e, quando previsto, in Chi siamo.
@@ -98,6 +98,8 @@ Le iniziative usano il tipo **`initiative`**; articoli ed eventi le collegano tr
 Gli URL pubblici sono:
 
 - `/iniziative/`
+- `/iniziative-sociali/`
+- `/volontariato/`
 - `/iniziative/<slug>/`
 - `/articoli/`
 - `/articoli/<data>-<slug>/`
@@ -138,7 +140,7 @@ npm run audit:high
 
 ## Test e copertura
 
-Le suite in [`tests/`](tests/) usano `node:test`: verificano regole dei contenuti, provider Sanity, cache, upload dello Studio, gestione degli errori dell’audit e script di avvisi e galleria in un DOM simulato. Combinano verifiche black box sui risultati e white box su chiamate, stato e percorsi del codice, senza accedere al CMS o a un browser reale.
+Le suite in [`tests/`](tests/) usano `node:test`: verificano regole dei contenuti, separazione delle iniziative per ambito, provider Sanity, cache, upload dello Studio, gestione degli errori dell’audit e script di avvisi e galleria in un DOM simulato. Combinano verifiche black box sui risultati e white box su chiamate, stato e percorsi del codice. Le query delle iniziative sono eseguite anche localmente con groq-js, senza accedere al CMS o a un browser reale.
 
 `npm run test:coverage` misura con V8 righe, rami e funzioni eseguiti, con soglie complessive del **95%**, **90%** e **100%**. Il [perimetro](scripts/coverage-scope.mjs) comprende utilità, script, provider, moduli condivisi, struttura degli elenchi dello Studio e tre suoi moduli di logica; esclude componenti Astro, CSS e interfaccia React. Il [controllo](scripts/test-coverage.mjs) fallisce anche se un modulo previsto non compare nel report. Le percentuali descrivono l’esecuzione del codice incluso, non la copertura di tutti i requisiti.
 

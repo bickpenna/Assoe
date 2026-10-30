@@ -7,11 +7,13 @@ const initiativeImageProjection = `"image": image {
 
 const initiativeFields = `_id,
   name,
+  area,
   "slug": slug.current,
   ${initiativeImageProjection}`;
 
 const relatedInitiativeFields = `_id,
   name,
+  area,
   "slug": slug.current,
   active,
   ${initiativeImageProjection}`;

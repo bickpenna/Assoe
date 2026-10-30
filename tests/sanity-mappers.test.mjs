@@ -14,6 +14,7 @@ const initiative = {
   _id: 'initiative-1',
   name: 'Iniziativa',
   slug: 'iniziativa',
+  area: 'social',
   image: { url: 'https://cdn.sanity.io/image.jpg', width: 800, height: 600, crop: null },
   active: true,
 };
@@ -121,11 +122,13 @@ test('scarta iniziative correlate inattive, nulle o corrotte', () => {
     initiative,
     { ...initiative, _id: 'inactive', active: false },
     { ...initiative, _id: 'invalid', active: true, slug: 'Slug non valido' },
+    { ...initiative, _id: 'missing-area', area: undefined },
     null,
   ]), [{
     id: 'initiative-1',
     name: 'Iniziativa',
     slug: 'iniziativa',
+    area: 'social',
     imageUrl: 'https://cdn.sanity.io/image.jpg',
   }]);
   assert.deepEqual(toRelatedInitiatives(null), []);

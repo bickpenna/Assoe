@@ -75,6 +75,7 @@ export function toInitiativeSummary(initiative: SanityInitiative): InitiativeSum
     id: initiative._id,
     name: initiative.name,
     slug: initiative.slug,
+    area: initiative.area,
     imageUrl: initiativeImageUrl(initiative.image),
   };
 }

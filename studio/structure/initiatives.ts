@@ -1,4 +1,5 @@
 import type { ListItem, ListItemBuilder, StructureBuilder } from 'sanity/structure';
+import type { OrderableListConfig } from '@sanity/orderable-document-list';
 import { INITIATIVE_AREAS } from '../../shared/initiativeAreas.ts';
 
 export const initiativeTemplates = INITIATIVE_AREAS.map(({ value, title }) => ({
@@ -8,25 +9,19 @@ export const initiativeTemplates = INITIATIVE_AREAS.map(({ value, title }) => ({
   value: { area: value, active: true },
 }));
 
-export const initiativePanes = [
-  {
-    id: 'initiatives-all',
-    title: 'Tutte le iniziative',
-    filter: '_type == $type',
-    params: { type: 'initiative' },
-    templateIds: initiativeTemplates.map(({ id }) => id),
-  },
-  ...INITIATIVE_AREAS.map(({ value, title }) => ({
-    id: `initiatives-${value}`,
-    title,
-    filter: '_type == $type && area == $area',
-    params: { type: 'initiative', area: value },
-    templateIds: [`initiative-${value}`],
-  })),
-];
+export const initiativePanes = INITIATIVE_AREAS.map(({ value, title }) => ({
+  id: `initiatives-${value}`,
+  title,
+  filter: '_type == $type && area == $area',
+  params: { type: 'initiative', area: value },
+  templateIds: [`initiative-${value}`],
+}));
 
-/** Gli elenchi nativi mantengono la ricerca; il riordino resta in una vista dedicata. */
-export function createInitiativesStructure(S: StructureBuilder, ordering: ListItem): ListItemBuilder {
+/** Ricerca e riordino usano lo stesso filtro, separatamente per ciascun ambito. */
+export function createInitiativesStructure(
+  S: StructureBuilder,
+  createOrdering: (options: Omit<OrderableListConfig, 'S' | 'context'>) => ListItem,
+): ListItemBuilder {
   return S.listItem()
     .id('initiatives')
     .title('Iniziative')
@@ -42,18 +37,35 @@ export function createInitiativesStructure(S: StructureBuilder, ordering: ListIt
               .title(title)
               .schemaType('initiative')
               .child(
-                S.documentTypeList('initiative')
-                  .id(id)
+                S.list()
+                  .id(`${id}-tools`)
                   .title(title)
-                  .apiVersion('2026-03-01')
-                  .filter(filter)
-                  .params(params)
-                  .defaultOrdering([{ field: 'name', direction: 'asc' }])
-                  .initialValueTemplates(templateIds.map((templateId) => S.initialValueTemplateItem(templateId))),
+                  .items([
+                    S.listItem()
+                      .id(`${id}-search`)
+                      .title('Elenco e ricerca')
+                      .schemaType('initiative')
+                      .child(
+                        S.documentTypeList('initiative')
+                          .id(`${id}-search`)
+                          .title(title)
+                          .apiVersion('2026-03-01')
+                          .filter(filter)
+                          .params(params)
+                          .defaultOrdering([{ field: 'orderRank', direction: 'asc' }, { field: 'name', direction: 'asc' }])
+                          .initialValueTemplates(templateIds.map((templateId) => S.initialValueTemplateItem(templateId))),
+                      ),
+                    createOrdering({
+                      id: `${id}-order`,
+                      type: 'initiative',
+                      title: `Ordina ${title.toLocaleLowerCase('it-IT')}`,
+                      filter,
+                      params,
+                      createIntent: false,
+                    }),
+                  ]),
               ),
           ),
-          S.divider(),
-          ordering,
         ]),
     );
 }
