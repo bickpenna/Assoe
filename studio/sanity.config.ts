@@ -4,6 +4,7 @@ import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
 import { schemaTypes } from './schemaTypes';
 import { PERSON_ROLE_GROUPS } from '../shared/personRoles';
 import { markdownSchema } from 'sanity-plugin-markdown';
+import { createInitiativesStructure, initiativeTemplates } from './structure/initiatives';
 
 export default defineConfig({
   name: 'assoe-volontariato',
@@ -24,7 +25,9 @@ export default defineConfig({
               .filter((item) => !['siteSettings', 'homeSettings'].includes(item.getId() ?? ''))
               .map((item) =>
                 item.getId() === 'initiative'
-                  ? orderableDocumentListDeskItem({ type: 'initiative', title: 'Iniziative', S, context })
+                  ? createInitiativesStructure(S, orderableDocumentListDeskItem({
+                    type: 'initiative', title: 'Ordina iniziative', createIntent: false, S, context,
+                  }))
                   : item.getId() === 'person'
                     ? S.listItem()
                       .id('people')
@@ -59,5 +62,9 @@ export default defineConfig({
   },
   schema: {
     types: schemaTypes,
+    templates: (previous) => [
+      ...previous.filter(({ id }) => id !== 'initiative'),
+      ...initiativeTemplates,
+    ],
   },
 });

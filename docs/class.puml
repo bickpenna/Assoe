@@ -59,6 +59,7 @@ class Avviso {
 
 class Iniziativa {
     -nome: String
+    -ambito: AmbitoIniziativa (obbligatorio nello Studio)
     -slug: Slug
     -descrizione: RichText (opzionale)
     -immagine: Image (opzionale)
@@ -103,6 +104,11 @@ class Persona {
 ' ==============================================================
 ' Enumerazioni
 ' ==============================================================
+
+enum AmbitoIniziativa {
+    Sociali
+    Volontariato
+}
 
 enum RuoloPersona {
     Presidente
@@ -164,6 +170,10 @@ note right of Iniziativa
     Il tipo salvato è "initiative"
     e i riferimenti sono "initiatives"
     per mantenere coerenti modello e linguaggio del sito.
+    Il campo "area" vale "social" o "volunteering".
+    Cambiarlo mantiene ID, slug e riferimenti.
+    L'ambito è obbligatorio per pubblicare.
+    I nuovi documenti nascono con una delle due scelte.
 end note
 
 note right of Articolo

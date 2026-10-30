@@ -24,6 +24,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@types/sanitize-html": "^2.16.2",
+    "groq-js": "^2.0.0",
     "jsdom": "^29.1.1",
     "typescript": "^6.0.3"
   }

@@ -6,6 +6,7 @@ export const coverageIncludes = [
   'src/scripts/**/*.ts',
   'src/content/providers/**/*.ts',
   'shared/**/*.ts',
+  'studio/structure/**/*.ts',
   'studio/schemaTypes/slugValidation.ts',
   'studio/schemaTypes/editorialImage.ts',
   'studio/schemaTypes/galleryUpload.ts',
@@ -24,7 +25,7 @@ export function missingCoverage(root, lcov) {
   const covered = new Set(lcov.split('\n').filter((line) => line.startsWith('SF:'))
     .map((line) => path.resolve(root, line.slice(3).trim())));
   const expected = [
-    ...['src/utils', 'src/scripts', 'src/content/providers', 'shared']
+    ...['src/utils', 'src/scripts', 'src/content/providers', 'shared', 'studio/structure']
       .flatMap((directory) => sourceFiles(path.join(root, directory))),
     ...coverageIncludes.filter((pattern) => !pattern.includes('*')).map((filename) => path.join(root, filename)),
   ];
